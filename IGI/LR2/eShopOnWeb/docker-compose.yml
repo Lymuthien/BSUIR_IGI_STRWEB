@@ -1,0 +1,41 @@
+version: '3.4'
+
+services:
+  eshopwebmvc:
+    image: ${DOCKER_REGISTRY-}eshopwebmvc
+    build:
+      context: .
+      dockerfile: src/Web/Dockerfile
+    depends_on:
+      - "sqlserver"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ASPNETCORE_URLS=http://+:8080
+      - ConnectionStrings:DefaultConnection=Server=sqlserver;Database=master;User=sa;Password=@someThingComplicated1234;TrustServerCertificate=True
+    ports:
+      - "5106:8080"
+    networks:
+      - app-network
+    volumes:
+      - ~/.aspnet/https:/root/.aspnet/https:ro
+      - app-secrets:/root/.microsoft/usersecrets:ro
+  sqlserver:
+    image: mcr.microsoft.com/azure-sql-edge
+    ports:
+      - "1433:1433"
+    environment:
+      - SA_PASSWORD=@someThingComplicated1234
+      - ACCEPT_EULA=Y
+    volumes:
+      - sql-data:/var/opt/mssql
+    networks:
+      - app-network
+
+volumes:
+  sql-data:
+  app-secrets:
+
+networks:
+  app-network:
+    driver: bridge
+
