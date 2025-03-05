@@ -14,5 +14,4 @@ def main():
 
 
 if __name__ == '__main__':
-    print(calc_ln_using_taylor_series.__doc__)
     main()
