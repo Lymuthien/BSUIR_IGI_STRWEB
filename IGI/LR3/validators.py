@@ -17,3 +17,12 @@ def validate_any_input(value, validator: callable) -> bool:
         return True
     except Exception:
         return False
+
+
+# Could use the previous function instead of this, but the task requires that specific exception classes be handled
+def validate_octal_string(string: str) -> bool:
+    try:
+        int(string, 8)
+        return True
+    except ValueError:
+        return False

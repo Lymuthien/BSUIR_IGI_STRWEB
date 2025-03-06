@@ -2,6 +2,7 @@ import math
 from mathematics import find_n_for_series, calculate_natural_nums
 from utils import repeating_program, init_with_validating_user_input, init_with_random
 from io_functions import input_with_validating
+from validators import validate_octal_string
 
 
 @repeating_program
@@ -29,5 +30,13 @@ def task2():
     print(f'Count of numbers: {len(numbers)}. Count of natural numbers: {len(calculate_natural_nums(numbers))}')
 
 
+@repeating_program
+def task3():
+    string = input('Enter string: ')
+    print(['It is not octal number.', 'It is octal number.'][validate_octal_string(string)])
+
+
+
 if __name__ == '__main__':
-    task2()
+    task3()
+
