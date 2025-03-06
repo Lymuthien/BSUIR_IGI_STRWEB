@@ -11,6 +11,9 @@ def validate_any_input(value, validator: callable) -> bool:
     :param validator: callable, The validator function to use.
     :return: bool, True if the value passes validation, False otherwise."""
     try:
-        return validator(value)
+        result = validator(value)
+        if isinstance(result, bool):
+            return result
+        return True
     except Exception:
         return False

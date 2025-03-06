@@ -22,3 +22,5 @@ def ask_for_repeat() -> bool:
     """
     choice = input("Repeat? (y/otherwise): ").lower()
     return True if choice == 'y' else False
+
+

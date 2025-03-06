@@ -1,4 +1,5 @@
-from validators import validate_any_input, validate_ln_calc_input
+from validators import validate_ln_calc_input
+from math import log
 
 
 def calc_ln_using_taylor_series(x: float, n: int) -> float:
@@ -29,3 +30,29 @@ def find_n_for_series(epsilon: float, value: float) -> tuple[float, int]:
             return result, num_of_members
 
     return result, num_of_members
+
+
+# In case if eps is the difference between math.log and result:
+# def find_n_for_series(epsilon: float, value: float) -> tuple[float, int]:
+#     """Approximates ln(value) using Taylor series expansion.
+#
+#     :param epsilon: float, Required precision (acceptable error threshold).
+#     :param value: float, Input value for natural logarithm calculation.
+#     :return: Tuple containing (approximation result, terms used).
+#     """
+#     result = 0
+#     math_result = log(value)
+#     num_of_members = 1
+#
+#     for num_of_members in range(1, 501):
+#         result = calc_ln_using_taylor_series(value, num_of_members)
+#         if abs(result - math_result) < epsilon:
+#             return result, num_of_members
+#
+#     return result, num_of_members
+
+
+def calculate_natural_nums(numbers: list):
+    return tuple(filter(lambda x: x > 0, numbers))
+
+
