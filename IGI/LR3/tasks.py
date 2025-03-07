@@ -1,8 +1,10 @@
 import math
-from mathematics import find_n_for_series, calculate_natural_nums
+from mathematics import find_n_for_series, calculate_natural_nums, calculate_sum_of_odd_indexed_elements, \
+    calculate_sum_of_elements_between_negative_elements
 from utils import repeating_program, init_with_validating_user_input, init_with_random
 from io_functions import input_with_validating
 from validators import validate_octal_string
+from string_handler import find_words_with_odd_count_of_letters, find_shortest_word, find_repeating_words
 
 
 @repeating_program
@@ -36,7 +38,40 @@ def task3():
     print(['It is not octal number.', 'It is octal number.'][validate_octal_string(string)])
 
 
+@repeating_program
+def task4():
+    string = ('So she was considering in her own mind, as well as she could, for the hot day made her feel very sleepy '
+              'and stupid, whether the pleasure of making a daisy-chain would be worth the trouble of getting up and '
+              'picking the daisies, when suddenly a White Rabbit with pink eyes ran close by her.')
+    string_lst = [word for el in string.lower().split(',') for word in el.strip().split()]
+
+    word_count = len(string_lst)
+    words_with_odd_count_of_letters = find_words_with_odd_count_of_letters(string_lst)
+    shortest_word_with_first_i = find_shortest_word(string_lst, 'i')
+    repeating_words = find_repeating_words(string_lst)
+
+    print('Count of words:', word_count)
+    print('Words with odd count of letters:', *words_with_odd_count_of_letters)
+    print('Shortest word starting with i:', end=' ')
+    print(shortest_word_with_first_i if shortest_word_with_first_i else 'no word')
+    print('Repeating words:', *repeating_words)
+
+
+@repeating_program
+def task5():
+    numbers = input_with_validating(lambda s: tuple(map(float, s.strip().split())),
+                                    'Enter the list (separated by space): ')
+    numbers = tuple(map(float, numbers.strip().split()))
+    sum_of_elements_with_odd_index = calculate_sum_of_odd_indexed_elements(numbers)
+    sum_of_elements_between_first_last_negative = calculate_sum_of_elements_between_negative_elements(numbers)
+
+    print('Sum of elements with odd index:', end=' ')
+    print(sum_of_elements_with_odd_index if sum_of_elements_with_odd_index is not None else 'no elements odd indexed')
+    print('Sum of elements between first and last negative:', end=' ')
+    print(sum_of_elements_between_first_last_negative if sum_of_elements_between_first_last_negative
+          else 'not enough negative elements or they are located nearby')
+
+
 
 if __name__ == '__main__':
-    task3()
-
+    task5()

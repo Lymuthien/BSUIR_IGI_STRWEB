@@ -52,7 +52,21 @@ def find_n_for_series(epsilon: float, value: float) -> tuple[float, int]:
 #     return result, num_of_members
 
 
-def calculate_natural_nums(numbers: list):
+def calculate_natural_nums(numbers: list) -> tuple:
     return tuple(filter(lambda x: x > 0, numbers))
 
 
+def calculate_sum_of_odd_indexed_elements(numbers: tuple | list) -> float | None:
+    return sum(numbers[1::2]) if len(numbers) >= 2 else None
+
+
+def calculate_sum_of_elements_between_negative_elements(numbers: tuple | list) -> float | None:
+    negative_elements = tuple(filter(lambda x: x < 0, numbers))
+
+    if len(negative_elements) <= 1:
+        return None
+
+    first_index = numbers.index(negative_elements[0])
+    second_index = len(numbers) - numbers[::-1].index(negative_elements[-1]) - 1
+
+    return None if abs(first_index - second_index) <= 1 else sum(numbers[first_index + 1:second_index])
