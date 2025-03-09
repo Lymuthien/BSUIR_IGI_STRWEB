@@ -14,44 +14,45 @@ def calc_ln_using_taylor_series(x: float, n: int) -> float:
     return sum(pow(-1, i - 1) * pow(x, i) / i for i in range(1, n + 1))
 
 
-def find_n_for_series(epsilon: float, value: float) -> tuple[float, int]:
-    """
-    Approximates ln(value) using taylor series expansion.
-
-    :param epsilon: Required precision (acceptable error threshold).
-    :param value: Input value for natural logarithm calculation.
-    :return: Tuple containing approximation result, terms used.
-    """
-    old_result = calc_ln_using_taylor_series(value, 1)
-    result = 0.1
-    num_of_members = 1
-
-    for num_of_members in range(2, 501):
-        result = calc_ln_using_taylor_series(value, num_of_members)
-        if abs(result - old_result) < epsilon:
-            return result, num_of_members
-
-    return result, num_of_members
-
-
-# In case if eps is the difference between math.log and result:
+# In case if eps is the difference between old and new result:
 # def find_n_for_series(epsilon: float, value: float) -> tuple[float, int]:
-#     """Approximates ln(value) using Taylor series expansion.
-#
-#     :param epsilon: float, Required precision (acceptable error threshold).
-#     :param value: float, Input value for natural logarithm calculation.
-#     :return: Tuple containing (approximation result, terms used).
 #     """
-#     result = 0
-#     math_result = log(value)
+#     Approximates ln(value) using taylor series expansion.
+#
+#     :param epsilon: Required precision (acceptable error threshold).
+#     :param value: Input value for natural logarithm calculation.
+#     :return: Tuple containing approximation result, terms used.
+#     """
+#     old_result = calc_ln_using_taylor_series(value, 1)
+#     result = 0.1
 #     num_of_members = 1
 #
-#     for num_of_members in range(1, 501):
+#     for num_of_members in range(2, 501):
 #         result = calc_ln_using_taylor_series(value, num_of_members)
-#         if abs(result - math_result) < epsilon:
+#         if abs(result - old_result) <= epsilon:
 #             return result, num_of_members
 #
 #     return result, num_of_members
+
+
+# In case if eps is the difference between math.log and result:
+def find_n_for_series(epsilon: float, value: float) -> tuple[float, int]:
+    """Approximates ln(value) using Taylor series expansion.
+
+    :param epsilon: Required precision (acceptable error threshold).
+    :param value: Input value for natural logarithm calculation.
+    :return: Tuple containing (approximation result, terms used).
+    """
+    result = 0
+    math_result = log(value + 1)
+    num_of_members = 1
+
+    for num_of_members in range(1, 501):
+        result = calc_ln_using_taylor_series(value, num_of_members)
+        if abs(result - math_result) <= epsilon:
+            return result, num_of_members
+
+    return result, num_of_members
 
 
 def calculate_natural_nums(numbers: tuple| list) -> tuple:

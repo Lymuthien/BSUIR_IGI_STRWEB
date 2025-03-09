@@ -1,6 +1,7 @@
 import random
 
 from io_functions import ask_for_repeat, input_with_validating
+from functools import wraps
 
 
 def repeating_program(foo: callable) -> callable:
@@ -11,6 +12,7 @@ def repeating_program(foo: callable) -> callable:
     :return: Wrapped function with repeat logic.
     """
 
+    @wraps(foo)
     def wrapper():
         while True:
             foo()
