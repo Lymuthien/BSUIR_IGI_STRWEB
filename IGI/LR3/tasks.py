@@ -52,8 +52,8 @@ def task4():
 
     print('Count of words:', word_count)
     print('Words with odd count of letters:', *words_with_odd_count_of_letters)
-    print('Shortest word starting with i:', end=' ')
-    print(shortest_word_with_first_i if shortest_word_with_first_i else 'no word')
+    print('Shortest word starting with i: ' +
+          f"{shortest_word_with_first_i}" if shortest_word_with_first_i else 'no word')
     print('Repeating words:', *repeating_words)
 
 
