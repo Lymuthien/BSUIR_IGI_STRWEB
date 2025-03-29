@@ -2,6 +2,8 @@ import csv
 import pickle
 from abc import ABC, abstractmethod
 
+from io_functions import input_with_validating
+
 
 # models
 class ExportedProduct(object):
@@ -22,6 +24,7 @@ class ExportedProduct(object):
     def export_count(self) -> int:
         return self._export_count
 
+
 # models
 class ExportProductRepository:
     def __init__(self):
@@ -40,6 +43,7 @@ class ExportProductRepository:
 
     def clear(self):
         self._products.clear()
+
 
 # services
 class ExportProductFileHandler(ABC):
@@ -80,6 +84,7 @@ class CSVExportProductFileHandler(ExportProductFileHandler):
                     row['Name'], row['Country'], row['Count']
                 ))
 
+
 # services
 class ExportProductService(object):
     def __init__(self, repository: ExportProductRepository):
@@ -106,28 +111,30 @@ class ExportProductService(object):
         for product_record in self._repo.products.values():
             product_record.sort(key=lambda product: product.country, reverse=reverse)
 
-def task1():
-    repository = ExportProductRepository()
-    service = ExportProductService(repository)
 
-    export_method = input('Enter export method (pickle, csv): ').lower().strip()
-    if export_method == 'pickle':
-        PickleExportProductFileHandler().load(repository, 'products.pickle')
-    elif export_method == 'csv':
-        CSVExportProductFileHandler().load(repository, 'products.csv')
-    else:
-        raise ValueError('Invalid export method')
+class Task1(object):
+    def __init__(self):
+        self._repo = ExportProductRepository()
+        self._service = ExportProductService(self._repo)
+        self._export_methods: dict[str, ExportProductFileHandler] = {'pickle': PickleExportProductFileHandler(),
+                                                                     'csv': CSVExportProductFileHandler()}
 
-    service.sort_by_country()
+    def run(self):
+        export_method = input_with_validating(lambda msg: msg.lower().strip() in self._export_methods,
+                                              'Enter export method (pickle, csv): ').lower().strip()
+        self._export_methods[export_method].load(self._repo, f'products.{export_method}')
+        self._service.sort_by_country()
 
-    product_name = input('Enter product name: ').lower().strip()
-    print(*service.find_product_info(product_name).items(), sep='\n')
+        self._find_product_info()
+
+    def _find_product_info(self) -> dict | None:
+        product_name = input('Enter product name: ').lower().strip()
+        try:
+            print(*self._service.find_product_info(product_name).items(), sep='\n')
+        except Exception as e:
+            print('No item.')
 
 
 
-
-
-
-task1()
-
-
+task = Task1()
+task.run()
