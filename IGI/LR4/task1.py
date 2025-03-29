@@ -2,6 +2,7 @@ import csv
 import pickle
 from abc import ABC, abstractmethod
 
+from IGI.LR4.utils import repeating_program
 from io_functions import input_with_validating
 
 
@@ -119,6 +120,7 @@ class Task1(object):
         self._export_methods: dict[str, ExportProductFileHandler] = {'pickle': PickleExportProductFileHandler(),
                                                                      'csv': CSVExportProductFileHandler()}
 
+    @repeating_program
     def run(self):
         export_method = input_with_validating(lambda msg: msg.lower().strip() in self._export_methods,
                                               'Enter export method (pickle, csv): ').lower().strip()
@@ -133,7 +135,6 @@ class Task1(object):
             print(*self._service.find_product_info(product_name).items(), sep='\n')
         except Exception as e:
             print('No item.')
-
 
 
 task = Task1()
