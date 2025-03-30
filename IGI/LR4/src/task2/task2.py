@@ -86,21 +86,23 @@ class TextAnalyzer(object):
 
 
 class Task2(object):
-    def __init__(self):
-        self._text = FileManager.load('../../data/text.txt')
+    def __init__(self, filepath: str, archive_path: str):
+        self._text = FileManager.load('data/text.txt')
         self._string_handler = TextAnalyzer()
         self._final_text = ''
+        self._file_path = filepath
+        self._archive_name = archive_path
 
     def run(self):
         self._calculate_results()
 
-        FileManager.save(self._final_text, '../../data/final_text.txt')
-        ZipManager.save('../../data/final_text.txt', '../../data/final_text.zip')
+        FileManager.save(self._final_text, self._file_path)
+        ZipManager.save(self._file_path, self._archive_name)
 
-        text = ZipManager.load('../../data/final_text.zip', 'final_text.txt')
+        text = ZipManager.load(self._archive_name, self._file_path.split('/')[-1])
         print(f'Текст из архива:\n{text}')
 
-        info = ZipManager.file_info('../../data/final_text.zip', 'final_text.txt')
+        info = ZipManager.file_info(self._archive_name, self._file_path.split('/')[-1])
         print(f'Информация о файле в архиве:\n{self._file_info(info)}')
 
     def _calculate_results(self):
@@ -127,7 +129,8 @@ class Task2(object):
                             f'Слова, у которых число гласных равно числу согласных и позиция:\n{words}\n' + \
                             f'Слова в порядке убывания длин:\n{sorted_words}\n'
 
-    def _file_info(self, info: zipfile.ZipInfo):
+    @staticmethod
+    def _file_info(info: zipfile.ZipInfo):
         return (f'Исходный размер: {info.file_size} байт. '
                 f'\nСжатый размер: {info.compress_size} байт')
 
