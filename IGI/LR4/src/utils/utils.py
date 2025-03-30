@@ -1,5 +1,5 @@
 from functools import wraps
-from io_functions import ask_for_repeat
+from .io_functions import ask_for_repeat
 
 def repeating_program(foo: callable) -> callable:
     """

@@ -2,8 +2,8 @@ import csv
 import pickle
 from abc import ABC, abstractmethod
 
-from IGI.LR4.utils import repeating_program
-from io_functions import input_with_validating
+from ..utils.io_functions import input_with_validating
+from ..utils.utils import repeating_program
 
 
 # models
@@ -135,7 +135,3 @@ class Task1(object):
             print(*self._service.find_product_info(product_name).items(), sep='\n')
         except Exception as e:
             print('No item.')
-
-
-task = Task1()
-task.run()
