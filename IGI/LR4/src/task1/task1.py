@@ -124,7 +124,7 @@ class Task1(object):
     def run(self):
         export_method = input_with_validating(lambda msg: msg.lower().strip() in self._export_methods,
                                               'Enter export method (pickle, csv): ').lower().strip()
-        self._export_methods[export_method].load(self._repo, f'products.{export_method}')
+        self._export_methods[export_method].load(self._repo, f'data/products.{export_method}')
         self._service.sort_by_country()
 
         self._find_product_info()
