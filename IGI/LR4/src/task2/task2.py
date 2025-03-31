@@ -2,6 +2,8 @@ import os
 import re
 import zipfile
 
+from ..utils.utils import repeating_program
+
 
 class FileManager(object):
     @staticmethod
@@ -93,6 +95,7 @@ class Task2(object):
         self._file_path = filepath
         self._archive_name = archive_path
 
+    @repeating_program
     def run(self):
         self._calculate_results()
 
@@ -133,8 +136,3 @@ class Task2(object):
     def _file_info(info: zipfile.ZipInfo):
         return (f'Исходный размер: {info.file_size} байт. '
                 f'\nСжатый размер: {info.compress_size} байт')
-
-
-if __name__ == '__main__':
-    task2 = Task2()
-    task2.run()
