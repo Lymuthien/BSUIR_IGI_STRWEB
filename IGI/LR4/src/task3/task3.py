@@ -34,38 +34,51 @@ class TaylorSeries(object):
         return pstdev(self._series)
 
 
-class TableDrawer(object):
+class Drawer(object):
     def __init__(self):
         self._colors = ('b-', 'r-', 'g-', 'c-', 'm-', 'y-', 'k-')
 
-    def plot(self,
-             graphics: tuple[tuple[tuple[float, ...], tuple[float, ...]], ...],
-             coord_names: tuple[str, str],
-             graphic_names: tuple[str, ...],
-             title: str,
-             filename: str, ):
+    def plot_table(self,
+                   graphics: tuple[tuple[tuple[float, ...], tuple[float, ...]], ...],
+                   coord_names: tuple[str, str],
+                   graphic_names: tuple[str, ...],
+                   title: str,
+                   filename: str, ):
         plt.figure(figsize=(10, 6))
 
         for i, graphic in enumerate(graphics):
             plt.plot(*graphic, self._colors[i], label=graphic_names[i])
 
         self._set_plot_settings(*coord_names, title=title)
+        plt.show()
+        plt.savefig(filename)
+
+    def plot_by_coords(self, x: tuple[float, ...], y: tuple[float, ...], title: str, filename: str, color: str = 'b-'):
+        plt.figure(figsize=(10, 10))
+        plt.plot(x, y, color=color, linewidth=2)
+        plt.fill(x, y, color=color, alpha=0.5)
+        plt.scatter(x[:-1], y[:-1], color='black', zorder=5)
+
+        self._set_plot_settings('x', 'y', title, legend=False)
+        plt.axis("equal")
+        plt.show()
         plt.savefig(filename)
 
     @staticmethod
-    def _set_plot_settings(x: str, y: str, title: str):
+    def _set_plot_settings(x: str, y: str, title: str, legend: bool = True):
         plt.grid(True)
         plt.xlabel(x)
         plt.ylabel(y)
         plt.title(title)
-        plt.legend()
+        if legend:
+            plt.legend()
 
 
 class Task3(object):
     def __init__(self):
         self._log_handler = TaylorSeriesLog()
         self._table = None
-        self._drawer = TableDrawer()
+        self._drawer = Drawer()
 
     def run(self):
         """
@@ -102,8 +115,8 @@ class Task3(object):
         y_taylor = tuple(row[2] for row in self._table)
         y_math = tuple(row[3] for row in self._table)
 
-        self._drawer.plot(((x, y_taylor), (x, y_math)), ('x', 'y'),
-                          ('y = taylor_ln(x)', 'y = math_ln(x)'),
+        self._drawer.plot_table(((x, y_taylor), (x, y_math)), ('x', 'y'),
+                                ('y = taylor_ln(x)', 'y = math_ln(x)'),
                           'Сравнение графиков натуральных логарифмов через ряд тейлора и math',
                           'data/ln_graphics.png')
 
@@ -111,7 +124,7 @@ class Task3(object):
         x = tuple(row[0] for row in self._table)
         n = tuple(row[1] for row in self._table)
 
-        self._drawer.plot(((x, n),), ('x', 'n'), ('n(x)',),
+        self._drawer.plot_table(((x, n),), ('x', 'n'), ('n(x)',),
                           'Зависимость n членов ряда тейлора от x',
                           'data/n_graphics.png')
 

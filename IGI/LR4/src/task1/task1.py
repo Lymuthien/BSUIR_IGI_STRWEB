@@ -8,6 +8,14 @@ from ..utils.utils import repeating_program
 
 # models
 class ExportedProduct(object):
+    """
+    Represents a product that is exported from one country to another.
+
+    This class encapsulates the details of a product that is being exported,
+    such as the product name, the country it is exported from, and the number of
+    times the product has been exported. It provides read-only access to these
+    attributes through its properties.
+    """
     def __init__(self, name: str, country: str, export_count: int | str):
         self._name = name
         self._country = country
@@ -15,10 +23,24 @@ class ExportedProduct(object):
 
     @property
     def name(self) -> str:
+        """
+        Provides the name of the object as a string.
+        The name represents the specific identifier or label associated with the instance of the class.
+
+        :return: The name of the object.
+        """
         return self._name
 
     @property
     def country(self) -> str:
+        """
+        Returns the country attribute.
+
+        This property retrieves the value of the _country attribute, which represents the
+        country associated with the object instance.
+
+        :return: str: The country value as a string.
+        """
         return self._country
 
     @property
