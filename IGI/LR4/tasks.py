@@ -15,8 +15,8 @@ from src.task4.task4 import Task4
 from src.task5.task5 import Task5
 
 if __name__ == '__main__':
-    # t = Task1()
-    # t.run()
+    t = Task1(filepath='data/products')
+    t.run()
     # t = Task2(filepath='data/final_text.txt', archive_path='data/final_text.zip')
     # t.run()
     # t = Task3()
