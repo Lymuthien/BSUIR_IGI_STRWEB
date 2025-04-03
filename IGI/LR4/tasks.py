@@ -12,6 +12,7 @@ from src.task1.task1 import Task1
 from src.task2.task2 import Task2
 from src.task3.task3 import Task3
 from src.task4.task4 import Task4
+from src.task5.task5 import Task5
 
 if __name__ == '__main__':
     # t = Task1()
@@ -20,5 +21,7 @@ if __name__ == '__main__':
     # t.run()
     # t = Task3()
     # t.run()
-    t = Task4()
+    # t = Task4()
+    # t.run()
+    t = Task5()
     t.run()
