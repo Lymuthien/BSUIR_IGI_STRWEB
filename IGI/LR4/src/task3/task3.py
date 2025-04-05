@@ -1,14 +1,15 @@
 import math
 
 from .drawer import Drawer
-from .math_models import TaylorSeries, TaylorSeriesLog
+from .math_models import TaylorSeries, TaylorSeriesLogarithm
 from ..utils.io_functions import input_with_validating
 
 
 class Task3(object):
-    def __init__(self):
-        self._log_handler = TaylorSeriesLog()
+    def __init__(self, directory: str):
+        self._log_handler = TaylorSeriesLogarithm
         self._table = None
+        self._directory = directory
         self._drawer = Drawer()
 
     def run(self):
@@ -16,10 +17,11 @@ class Task3(object):
         Calculate the value of the function ln(1+x) using the expansion of the function into a
         taylor series with a given calculation accuracy.
         """
+
         x, eps = self._input_values()
 
-        f_x, n = self._log_handler.find_n_for_series(eps, x)
-        self._print_info_about_series(f_x)
+        series = self._log_handler(eps, x)
+        self._print_info_about_series(series)
 
         self._table = self._create_x_table(eps)
         self._plot_ln()
@@ -27,17 +29,17 @@ class Task3(object):
 
     @staticmethod
     def _print_info_about_series(series: TaylorSeries):
-        print(f'СА элементов: {series.average_value()}\n'
-              f'Медиана: {series.median()}\n'
-              f'Мода: {series.mode()}\n'
-              f'Дисперсия: {series.variance()}\n'
-              f'СКО: {series.stdev()}')
+        print(f'Average value: {series.average_value()}\n'
+              f'Median: {series.median()}\n'
+              f'Mode: {series.mode()}\n'
+              f'Variance: {series.variance()}\n'
+              f'Stdev: {series.stdev()}')
 
     def _create_x_table(self, eps: float):
         table = []
-        for x in range(-99, 99, 10):
-            f_x, n = self._log_handler.find_n_for_series(eps, x * 0.01)
-            table.append((x * 0.01, n, f_x.sum(), math.log(x * 0.01 + 1), eps))
+        for x in range(-99, 99, 1):
+            f_x = self._log_handler(eps, x * 0.01)
+            table.append((x * 0.01, f_x.n, f_x.sum(), math.log(x * 0.01 + 1), eps))
 
         return table
 
@@ -48,16 +50,16 @@ class Task3(object):
 
         self._drawer.plot_table(((x, y_taylor), (x, y_math)), ('x', 'y'),
                                 ('y = taylor_ln(x)', 'y = math_ln(x)'),
-                                'Сравнение графиков натуральных логарифмов через ряд тейлора и math',
-                                'data/ln_graphics.png')
+                                'Comparison of natural logarithm graphs using Taylor series and math',
+                                f'{self._directory}/ln_graphics.png')
 
     def _plot_n(self):
         x = tuple(row[0] for row in self._table)
         n = tuple(row[1] for row in self._table)
 
         self._drawer.plot_table(((x, n),), ('x', 'n'), ('n(x)',),
-                                'Зависимость n членов ряда тейлора от x',
-                                'data/n_graphics.png')
+                                'Dependence of the number of Taylor series terms on x',
+                                f'{self._directory}/n_graphics.png')
 
     @staticmethod
     def _input_values():
