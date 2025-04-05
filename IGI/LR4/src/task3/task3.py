@@ -3,6 +3,7 @@ import math
 from .drawer import Drawer
 from .math_models import TaylorSeries, TaylorSeriesLogarithm
 from ..utils.io_functions import input_with_validating
+from ..utils.utils import repeating_program
 
 
 class Task3(object):
@@ -12,6 +13,7 @@ class Task3(object):
         self._directory = directory
         self._drawer = Drawer()
 
+    @repeating_program
     def run(self):
         """
         Calculate the value of the function ln(1+x) using the expansion of the function into a
