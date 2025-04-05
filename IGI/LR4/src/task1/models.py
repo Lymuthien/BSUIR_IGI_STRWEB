@@ -41,7 +41,7 @@ class ExportedProduct(object):
         return self._export_count
 
 
-class ExportProductRepository:
+class ExportProductRepository(object):
     """
     Provides an in-memory repository for managing exported products.
 
@@ -75,11 +75,6 @@ class ExportProductRepository:
     def add_product(self, product: ExportedProduct):
         """
         Adds a product to the internal product storage.
-
-        The method stores the provided product in a dictionary where the key is the
-        lowercase version of the product name and the value is a list of products
-        with the same name. If the product name already exists in the storage, the
-        new product is appended to the existing list.
 
         :param product: The product to be added to the internal storage.
         """

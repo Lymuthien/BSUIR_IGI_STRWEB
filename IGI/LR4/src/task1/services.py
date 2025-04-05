@@ -19,9 +19,9 @@ class ExportProductService(object):
         Fetch the set of countries associated with a given product name.
 
         :param product_name: The name of the product to look up in the repository.
-
         :return: A set containing the names of countries associated with the specified product name.
         """
+
         return set(product.country for product in self._repo.products.get(product_name))
 
     def get_total_export(self, product_name: str) -> int:
@@ -29,7 +29,6 @@ class ExportProductService(object):
         Calculates the total export count for a specified product.
 
         :param product_name: The name of the product for which the total export count is to be calculated.
-
         :return: The total sum of export counts for the specified product.
         """
 
@@ -41,7 +40,6 @@ class ExportProductService(object):
         is exported and the total export count.
 
         :param product_name: The name of the product for which the information is to be fetched.
-
         :return: A dictionary containing the product name, the countries exporting the product, and
             the total export value. Returns None if no data exists for the specified product name.
         """

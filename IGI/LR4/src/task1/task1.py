@@ -30,6 +30,7 @@ class Task1(object):
 
         :raise ValueError: If provided input for the export method is not valid.
         """
+
         export_method = input_with_validating(lambda msg: msg.lower().strip() in self._export_methods,
                                               'Enter export method (pickle, csv): ').lower().strip()
         self._export_methods[export_method].load(self._repo, f'{self._filepath}.{export_method}')
@@ -43,6 +44,7 @@ class Task1(object):
 
         :return: The product information retrieved, or None if no such product exists or an error occurs.
         """
+
         product_name = input('Enter product name: ').lower().strip()
         try:
             print(*self._service.find_product_info(product_name).items(), sep='\n')
