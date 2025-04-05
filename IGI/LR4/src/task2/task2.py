@@ -8,8 +8,21 @@ from ..itask import ITask
 
 class Task2(ITask):
     """
-    A class for processing a text file, analyzing its content, saving results to a file,
-    archiving the file, and extracting information from the archive.
+    The text is read from the source file. Using regular expressions, the required information
+    is obtained, displayed on the screen and saved to another file, archived. Information about
+    the file in the archive is provided.
+
+    Initial information:
+        – number of sentences in the text;
+        – number of sentences in the text of each type separately (narrative, interrogative and imperative);
+        – average sentence length in characters (only words are counted);
+        – average word length in the text in characters;
+        – number of emoticons in the given text;
+        – list of hexadecimal numbers;
+        – existence of digits followed by "+";
+        – number of words whose length is 4 characters;
+        – words whose number of vowels is equal to the number of consonants and their ordinal numbers;
+        – words in descending order of their lengths.
     """
 
     def __init__(self, filepath: str, archive_path: str):
@@ -63,8 +76,8 @@ class Task2(ITask):
         average_word_length_in_sentence = tuple(self._string_handler.average_sentence_length(self._text))
         average_word_length_in_text = round(sum(average_word_length_in_sentence) / sentence_count, 2)
         smileys_count = len(self._string_handler.get_smileys(self._text))
-        hex_count = len(self._string_handler.get_hex_numbers(self._text))
-        plus_after_digit_count = len(self._string_handler.plus_after_digit_count(self._text))
+        hex_words = self._string_handler.get_hex_numbers(self._text)
+        plus_after_digit = bool(len(self._string_handler.plus_after_digit_count(self._text)))
         all_words_len_4 = len(self._string_handler.get_words_with_len(self._text, 4))
         words = tuple(self._string_handler.find_words_with_same_vowel_and_consonant(self._text))
         sorted_words = sorted(self._string_handler.get_words(self._text), key=len, reverse=True)
@@ -75,8 +88,8 @@ class Task2(ITask):
                             f'Average sentence length in characters: {average_word_length_in_sentence}\n' + \
                             f'Average word length in the text in characters: {average_word_length_in_text}\n' + \
                             f'Number of smileys: {smileys_count}\n' + \
-                            f'Number of hexadecimal numbers: {hex_count}\n' + \
-                            f'Number of digits followed by "+": {plus_after_digit_count}\n' + \
+                            f'Hexadecimal numbers: {hex_words}\n' + \
+                            f'Number of digits followed by "+" in text: {plus_after_digit}\n' + \
                             f'Words with a length of 4: {all_words_len_4}\n' + \
                             f'Words in which the number of vowels equals the number of consonants and their positions:\n{words}\n' + \
                             f'Words sorted in descending order of length:\n{sorted_words}\n'

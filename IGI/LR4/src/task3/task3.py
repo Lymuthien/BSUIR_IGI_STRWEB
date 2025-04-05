@@ -8,6 +8,19 @@ from ..itask import ITask
 
 
 class Task3(ITask):
+    """
+    Expansion according to the given accuracy in the Taylor logarithm series for the given x.
+    Definition:
+        - arithmetic mean of the elements of the sequence;
+        - median;
+        - mode;
+        - dispersion;
+        - standard deviation of the sequence;
+
+    Graphs of different colors are drawn in one coordinate axis
+    (for the expansion of math.log and manual in the Taylor series).
+    """
+
     def __init__(self, directory: str):
         self._log_handler = TaylorSeriesLogarithm
         self._table = None

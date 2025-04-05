@@ -8,8 +8,11 @@ from ..itask import ITask
 
 class Task1(ITask):
     """
-    This class manages export product processing by utilizing different file handlers (pickle and csv)
-    and providing functionalities to find, sort and retrieve product information.
+    The source data in the form of a dictionary are placed in files (pickle and csv).
+    Data reading, searching, and sorting are organized.
+    The summary of exported goods indicates: the name of the product, the country exporting the product,
+    the volume of the supplied batch in pieces. A list of countries to which the product is exported and
+    the total volume of its export are printed. Information about the product entered from the keyboard displayed.
     """
 
     def __init__(self, filepath: str):

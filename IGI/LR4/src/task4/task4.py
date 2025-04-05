@@ -9,8 +9,15 @@ from ..itask import ITask
 
 class Task4(ITask):
     """
-    Class for running Task 4: working with triangles, taking user input for triangle properties,
-    and visualizing the triangle.
+    A triangle is constructed on three sides
+    Class testing is performed.
+
+    Functionality:
+        - user input of parameter values;
+        - checking the correctness of the entered data;
+        - construction, coloring of the figure in the selected color entered from the keyboard,
+        and signature of the figure with text entered from the keyboard;
+        - output of the figure to the screen and to a file.
     """
 
     @staticmethod
