@@ -4,9 +4,10 @@ from .drawer import Drawer
 from .math_models import TaylorSeries, TaylorSeriesLogarithm
 from ..utils.io_functions import input_with_validating
 from ..utils.utils import repeating_program
+from ..itask import ITask
 
 
-class Task3(object):
+class Task3(ITask):
     def __init__(self, directory: str):
         self._log_handler = TaylorSeriesLogarithm
         self._table = None

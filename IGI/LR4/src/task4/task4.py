@@ -4,9 +4,10 @@ from .models import Triangle
 from ..task3.task3 import Drawer
 from ..utils.io_functions import input_with_validating
 from ..utils.utils import repeating_program
+from ..itask import ITask
 
 
-class Task4:
+class Task4(ITask):
     """
     Class for running Task 4: working with triangles, taking user input for triangle properties,
     and visualizing the triangle.

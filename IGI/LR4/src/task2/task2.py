@@ -3,9 +3,10 @@ import zipfile
 from .file_managers import FileManager, ZipManager
 from .text_analyzer import TextAnalyzer
 from ..utils.utils import repeating_program
+from ..itask import ITask
 
 
-class Task2(object):
+class Task2(ITask):
     """
     A class for processing a text file, analyzing its content, saving results to a file,
     archiving the file, and extracting information from the archive.

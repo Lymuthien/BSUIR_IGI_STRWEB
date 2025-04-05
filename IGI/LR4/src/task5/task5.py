@@ -2,9 +2,10 @@ import numpy
 
 from ..utils.io_functions import input_with_validating
 from ..utils.utils import repeating_program
+from ..itask import ITask
 
 
-class Task5(object):
+class Task5(ITask):
     """
     Creates a matrix of random elements with given dimensions and performs some actions with the matrix.
 
@@ -17,17 +18,21 @@ class Task5(object):
     def run(self):
         """Do task actions with array and print results."""
 
-        n, m = self._input_values()
+        try:
+            n, m = self._input_values()
 
-        arr = numpy.random.randint(-100, 100, size=(n, m))
-        print(arr)
+            arr = numpy.random.randint(-100, 100, size=(n, m))
+            print(arr)
 
-        new_matrix = self._divide_matrix_by_max_abs_elem(arr)
-        print("New matrix after divide:\n", new_matrix)
+            new_matrix = self._divide_matrix_by_max_abs_elem(arr)
+            print("New matrix after divide:\n", new_matrix)
 
-        var_func, var_formula = self._divide_matrix_by_max_abs_elem(new_matrix)
-        print("Variance of array elements (with numpy method):", round(var_func, 2))
-        print("Variance of elements (by formula):", round(var_formula, 2))
+            var_func, var_formula = self._get_variance(new_matrix)
+
+            print("Variance of array elements (with numpy method):", round(var_func, 2))
+            print("Variance of elements (by formula):", round(var_formula, 2))
+        except Exception as e:
+            print(e)
 
     @staticmethod
     def _input_values():
@@ -80,7 +85,3 @@ class Task5(object):
         variance_formula = numpy.sum((arr - mean_value) ** 2) / arr.size
 
         return variance_std_func, variance_formula
-
-
-if __name__ == '__main__':
-    Task5().run()

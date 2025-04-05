@@ -7,21 +7,41 @@ v1.0
 Development date:
 .04.2025
 """
-
+from IGI.LR4.src.itask import ITask
 from src.task1.task1 import Task1
 from src.task2.task2 import Task2
 from src.task3.task3 import Task3
 from src.task4.task4 import Task4
 from src.task5.task5 import Task5
 
+
+class Menu(object):
+    def __init__(self):
+        self.tasks: dict[str, ITask] = {
+            '1': Task1(filepath='data/products'),
+            '2': Task2(filepath='data/final_text.txt', archive_path='data/final_text.zip'),
+            '3': Task3(directory='data'),
+            '4': Task4(),
+            '5': Task5()
+        }
+
+    def show(self):
+        while True:
+            choice = input('\nComplete task - 1..5'
+                           '\nShow task condition - 1d..5d'
+                           '\nExit - 0\n').strip()
+
+            match choice:
+                case cmd if cmd in self.tasks:
+                    self.tasks[cmd].run()
+                case cmd if cmd.endswith('d') and (num := cmd[:-1]) in self.tasks:
+                    print(self.tasks[num].__doc__)
+                case '0':
+                    break
+                case _:
+                    print('Invalid choice.')
+
+
 if __name__ == '__main__':
-    t = Task1(filepath='data/products')
-    t.run()
-    # t = Task2(filepath='data/final_text.txt', archive_path='data/final_text.zip')
-    # t.run()
-    # t = Task3()
-    # t.run()
-    # t = Task4()
-    # t.run()
-    t = Task5()
-    t.run()
+    menu = Menu()
+    menu.show()

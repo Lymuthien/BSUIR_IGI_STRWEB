@@ -3,9 +3,10 @@ from .serializers import ExportProductFileHandler, PickleExportProductFileHandle
 from .services import ExportProductService
 from ..utils.io_functions import input_with_validating
 from ..utils.utils import repeating_program
+from ..itask import ITask
 
 
-class Task1(object):
+class Task1(ITask):
     """
     This class manages export product processing by utilizing different file handlers (pickle and csv)
     and providing functionalities to find, sort and retrieve product information.
