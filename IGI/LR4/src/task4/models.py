@@ -10,17 +10,13 @@ class Color(object):
     def __init__(self, color: str):
         self._color: str = color
 
-    @property
-    def color(self) -> str:
+    def get_color(self):
         return self._color
 
-    @color.setter
-    def color(self, value: str):
+    def set_color(self, value):
         self._color = value
 
-    @color.deleter
-    def color(self):
-        del self._color
+    color = property(fget=get_color, fset=set_color, doc='Color property')
 
 
 class Triangle(Figure):
@@ -33,14 +29,14 @@ class Triangle(Figure):
         self._color: Color = Color(color)
         self.validate_sides(a, b, c)
 
+    def __str__(self):
+        return 'a: {}, b: {}, c: {}, color: {}, square: {}'.format(
+            self._a, self._b, self._c, self._color.color, self.square())
+
     def square(self) -> float:
         s = (self._a + self._b + self._c) / 2
         area = (s * (s - self._a) * (s - self._b) * (s - self._c)) ** 0.5
         return area
-
-    def __str__(self):
-        return 'a: {}, b: {}, c: {}, color: {}, square: {}'.format(
-            self._a, self._b, self._c, self._color.color, self.square())
 
     def sides(self) -> tuple[float, float, float]:
         return self._a, self._b, self._c
