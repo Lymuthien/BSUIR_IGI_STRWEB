@@ -81,7 +81,13 @@ class ExportProductRepository(object):
 
         self._products.setdefault(product.name.lower(), []).append(product)
 
+
+class ClearingProductMixin(object):
     def clear(self):
         """Clears all items from the internal product storage, making it empty."""
 
         self._products.clear()
+
+
+class ClearingExportProductRepository(ExportProductRepository, ClearingProductMixin):
+    pass

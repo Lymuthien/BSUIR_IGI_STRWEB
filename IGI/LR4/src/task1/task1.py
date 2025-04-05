@@ -1,4 +1,4 @@
-from .models import ExportProductRepository
+from .models import ClearingExportProductRepository
 from .serializers import ExportProductFileHandler, PickleExportProductFileHandler, CSVExportProductFileHandler
 from .services import ExportProductService
 from ..utils.io_functions import input_with_validating
@@ -12,7 +12,7 @@ class Task1(object):
     """
 
     def __init__(self, filepath: str):
-        self._repo = ExportProductRepository()
+        self._repo = ClearingExportProductRepository()
         self._service = ExportProductService(self._repo)
         self._export_methods: dict[str, ExportProductFileHandler] = {
             'pickle': PickleExportProductFileHandler(),
