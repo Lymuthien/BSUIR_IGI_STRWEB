@@ -34,14 +34,17 @@ class Task3(ITask):
         taylor series with a given calculation accuracy.
         """
 
-        x, eps = self._input_values()
+        try:
+            x, eps = self._input_values()
 
-        series = self._log_handler(eps, x)
-        print(series)
+            series = self._log_handler(eps, x)
+            print(series)
 
-        self._table = self._table_manager.create_table(self._log_handler, eps)
-        self._plot_ln()
-        self._plot_n()
+            self._table = self._table_manager.create_table(self._log_handler, eps)
+            self._plot_ln()
+            self._plot_n()
+        except Exception as e:
+            print(e)
 
     def _plot_ln(self):
         """Plots the graphs of the natural logarithm using the Taylor series and the math.log function."""

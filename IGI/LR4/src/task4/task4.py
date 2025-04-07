@@ -1,6 +1,5 @@
-import math
-
 from .models import Triangle
+from .services import TriangleManager
 from ..task3.task3 import Drawer
 from ..utils.io_functions import input_with_validating
 from ..utils.utils import repeating_program
@@ -9,7 +8,7 @@ from ..itask import ITask
 
 class Task4(ITask):
     """
-    A triangle is constructed on three sides
+    A triangle is constructed on three sides.
     Class testing is performed.
 
     Functionality:
@@ -52,40 +51,10 @@ class Task4(ITask):
         If the triangle cannot be created due to invalid input values, the program prompts the user again.
         """
         try:
+            triangle_manager = TriangleManager(self._directory, Drawer())
             triangle = Triangle(*self.input_figure())
-        except ValueError as e:
-            print(e)
-            return
 
-        print(triangle.name_of_class() + ': ' + str(triangle))
-        self.draw_triangle(triangle, input('Enter figure title: '))
-
-    def draw_triangle(self, triangle: Triangle, title: str):
-        """
-        Draws the triangle using the `Drawer` utility and saves its visualization to a file.
-
-        The method uses the triangle's sides to compute the vertex coordinates
-        and then calls a plotting utility to generate a visualization. The resulting
-        image is saved as 'data/triangle.png'.
-
-        :param triangle: A `Triangle` instance to be visualized.
-        :param title: The title of the visualization, provided by the user.
-        """
-
-        a, b, c = triangle.sides
-        color = triangle.color
-
-        x1, y1 = 0, 0
-        x2, y2 = a, 0
-
-        angle = math.acos((a ** 2 + c ** 2 - b ** 2) / (2 * a * c))
-        x3 = c * math.cos(angle)
-        y3 = c * math.sin(angle)
-
-        x_coords = (x1, x2, x3, x1)
-        y_coords = (y1, y2, y3, y1)
-
-        try:
-            Drawer().plot_by_coords(x_coords, y_coords, title, f'{self._directory}triangle.png', color)
+            print(triangle.name_of_class() + ': ' + str(triangle))
+            triangle_manager.draw_triangle(triangle, input('Enter figure title: '))
         except Exception as e:
             print(e)

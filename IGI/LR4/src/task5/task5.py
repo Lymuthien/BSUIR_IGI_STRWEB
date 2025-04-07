@@ -1,5 +1,4 @@
-import numpy
-
+from .math_models import MatrixProcessor
 from ..utils.io_functions import input_with_validating
 from ..utils.utils import repeating_program
 from ..itask import ITask
@@ -21,16 +20,16 @@ class Task5(ITask):
         try:
             n, m = self._input_values()
 
-            arr = numpy.random.randint(-100, 100, size=(n, m))
-            print(arr)
+            processor = MatrixProcessor(n, m)
+            print("Original matrix:\n", processor.matrix)
 
-            new_matrix = self._divide_matrix_by_max_abs_elem(arr)
-            print("New matrix after divide:\n", new_matrix)
+            normalized_matrix = processor.normalize_by_max_abs()
+            print("Normalized matrix:\n", normalized_matrix)
 
-            var_func, var_formula = self._get_variance(new_matrix)
+            var_func, var_formula = processor.compute_variance()
+            print("Variance with numpy method:", round(var_func, 2))
+            print("Variance with formula:", round(var_formula, 2))
 
-            print("Variance of array elements (with numpy method):", round(var_func, 2))
-            print("Variance of elements (by formula):", round(var_formula, 2))
         except Exception as e:
             print(e)
 
@@ -48,40 +47,3 @@ class Task5(ITask):
         m = int(input_with_validating(lambda x: int(x) > 0, 'Enter m: '))
 
         return n, m
-
-    @staticmethod
-    def _divide_matrix_by_max_abs_elem(arr: numpy.ndarray):
-        """
-        Divides each element of a given matrix by its maximum absolute element.
-
-        :param arr: A NumPy array representing the matrix whose elements will be divided by the maximum
-        absolute element.
-
-        :return: A NumPy array where each element is divided by the maximum absolute element of the input array.
-        """
-
-        max_abs_elem = numpy.max(numpy.abs(arr))
-
-        return arr / max_abs_elem
-
-    @staticmethod
-    def _get_variance(arr: numpy.ndarray):
-        """
-        Computes the variance of an array using both the statistical function and a manual formula.
-
-        This static method calculates the variance of the given numpy array using two different approaches:
-        the built-in numpy statistical function and a formula that manually implements variance computation.
-        It returns both results for comparison.
-
-        :param arr: The input array for which the variance is to be calculated.
-        :return: A tuple containing two values:
-            - The variance calculated using numpy's built-in function.
-            - The variance calculated using the manual formula.
-        """
-
-        variance_std_func = numpy.var(arr)
-
-        mean_value = numpy.mean(arr)
-        variance_formula = numpy.sum((arr - mean_value) ** 2) / arr.size
-
-        return variance_std_func, variance_formula
