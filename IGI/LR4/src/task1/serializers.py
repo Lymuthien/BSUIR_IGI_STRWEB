@@ -62,8 +62,7 @@ class CSVExportProductFileHandler(ExportProductFileHandler):
             writer = csv.writer(file)
             writer.writerow(['Name', 'Country', 'Count'])
             for product_records in repo.products.values():
-                for product in product_records:
-                    writer.writerow([product.name, product.country, product.export_count])
+                writer.writerows([product.name, product.country, product.export_count] for product in product_records)
 
     def load(self, repo: ClearingExportProductRepository, filename: str):
         """

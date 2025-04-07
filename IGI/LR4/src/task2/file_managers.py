@@ -62,8 +62,7 @@ class ZipManager(object):
         """
 
         with zipfile.ZipFile(archive_name, 'r', zipfile.ZIP_DEFLATED) as zf:
-            with zf.open(filename) as file:
-                return file.read().decode("utf-8")
+            return zf.read(filename).decode('utf-8')
 
     @staticmethod
     def file_info(archive_name: str, filename: str):

@@ -1,5 +1,6 @@
 import math
 from statistics import median, mode, pvariance, pstdev
+from typing import Any
 
 
 class TaylorSeries(object):
@@ -54,6 +55,18 @@ class TaylorSeries(object):
 
         return pstdev(self._series)
 
+    def __str__(self):
+        """Returns a string representation of the Taylor series."""
+
+        return (f'n: {self.n}\n'
+                f'F(x): {self.sum()}\n'
+                f'Average value: {self.average_value()}\n'
+                f'Median: {self.median()}\n'
+                f'Mode: {self.mode()}\n'
+                f'Variance: {self.variance()}\n'
+                f'Stdev: {self.stdev()}')
+
+
 
 class TaylorSeriesLogarithm(TaylorSeries):
     """Provides methods to approximate the natural logarithm using Taylor series expansion."""
@@ -90,3 +103,50 @@ class TaylorSeriesLogarithm(TaylorSeries):
                 return num_of_members
 
         return num_of_members
+
+
+class TaylorSeriesLogTable(object):
+    """
+    Provides functionality for creating and processing a Taylor series logarithm table.
+
+    This class facilitates the generation of a table for approximations of logarithmic
+    functions using the Taylor series, and allows extraction of specific columns from
+    the table for further analysis or processing.
+    """
+
+    @staticmethod
+    def create_table(log_handler: type[TaylorSeriesLogarithm], eps: float):
+        """
+        Creates a table of approximations for logarithmic functions using the Taylor series.
+
+        :param log_handler: The class representing the logarithmic function to be approximated.
+        :param eps: The acceptable error threshold for approximation.
+        :return: A list of dictionaries representing the table entries.
+        """
+
+        table = []
+        for x in range(-99, 99, 1):
+            f_x = log_handler(eps, x * 0.01)
+            table.append({
+                'x': x * 0.01,
+                'n': f_x.n,
+                'fx': f_x.sum(),
+                'math_f': math.log(x * 0.01 + 1),
+                'eps': eps
+            })
+
+        return table
+
+    @staticmethod
+    def extract_columns(table: list[dict[str, Any]], *column_values: str):
+        """
+        Extracts specified columns from the table.
+
+        :param table: The table from which columns will be extracted.
+        :param column_values: The names of the columns to be extracted.
+        :return: A tuple of tuples containing the extracted column values.
+        """
+
+        return tuple(tuple(row[i] for row in table) for i in column_values)
+
+
