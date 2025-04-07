@@ -2,23 +2,23 @@ import csv
 import pickle
 from abc import ABC, abstractmethod
 
-from .models import ExportProductRepository, ExportedProduct
+from .models import ClearingExportProductRepository, ExportedProduct
 
 
 class ExportProductFileHandler(ABC):
     """Abstract base class responsible for handling the export and import of product files."""
 
     @abstractmethod
-    def save(self, repo: ExportProductRepository, filename: str): ...
+    def save(self, repo: ClearingExportProductRepository, filename: str): ...
 
     @abstractmethod
-    def load(self, repo: ExportProductRepository, filename: str): ...
+    def load(self, repo: ClearingExportProductRepository, filename: str): ...
 
 
 class PickleExportProductFileHandler(ExportProductFileHandler):
     """Handles the export and import of product files using the pickle module."""
 
-    def save(self, repo: ExportProductRepository, filename: str):
+    def save(self, repo: ClearingExportProductRepository, filename: str):
         """
         Saves the products from the given repository to a file in binary format using pickle.
 
@@ -30,7 +30,7 @@ class PickleExportProductFileHandler(ExportProductFileHandler):
         with open(filename, 'wb') as file:
             file.write(data)
 
-    def load(self, repo: ExportProductRepository, filename: str):
+    def load(self, repo: ClearingExportProductRepository, filename: str):
         """
         Loads product data from a file and updates the repository with the loaded products.
 
@@ -50,7 +50,7 @@ class PickleExportProductFileHandler(ExportProductFileHandler):
 class CSVExportProductFileHandler(ExportProductFileHandler):
     """Handles operations related to exporting and importing product data to and from CSV files."""
 
-    def save(self, repo: ExportProductRepository, filename: str):
+    def save(self, repo: ClearingExportProductRepository, filename: str):
         """
         Saves product data from a given repository to a CSV file.
 
@@ -65,7 +65,7 @@ class CSVExportProductFileHandler(ExportProductFileHandler):
                 for product in product_records:
                     writer.writerow([product.name, product.country, product.export_count])
 
-    def load(self, repo: ExportProductRepository, filename: str):
+    def load(self, repo: ClearingExportProductRepository, filename: str):
         """
         Load data from a CSV file into the repository.
 

@@ -35,22 +35,25 @@ class Task1(ITask):
         :raise ValueError: If provided input for the export method is not valid.
         """
 
-        export_method = input_with_validating(lambda msg: msg.lower().strip() in self._export_methods,
-                                              'Enter export method (pickle, csv): ').lower().strip()
-        self._export_methods[export_method].load(self._repo, f'{self._filepath}.{export_method}')
-        self._service.sort_by_country()
+        try:
+            export_method = input_with_validating(lambda msg: msg.lower().strip() in self._export_methods,
+                                                  'Enter export method (pickle, csv): ').lower().strip()
+            self._export_methods[export_method].load(self._repo, f'{self._filepath}.{export_method}')
+            self._service.sort_by_country()
 
-        self._find_product_info()
+            print(*self._find_product_info(), sep='\n')
+        except Exception as e:
+            print(e)
 
-    def _find_product_info(self) -> dict | None:
+    def _find_product_info(self):
         """
         Find product information based on user input and display the results.
 
-        :return: The product information retrieved, or None if no such product exists or an error occurs.
+        :return: The product information retrieved.
         """
 
         product_name = input('Enter product name: ').lower().strip()
         try:
-            print(*self._service.find_product_info(product_name).items(), sep='\n')
-        except Exception as e:
-            print('No item.')
+            return self._service.find_product_info(product_name).items()
+        except KeyError:
+            raise KeyError('No such product exists')

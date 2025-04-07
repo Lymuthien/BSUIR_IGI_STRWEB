@@ -22,7 +22,7 @@ class ExportProductService(object):
         :return: A set containing the names of countries associated with the specified product name.
         """
 
-        return set(product.country for product in self._repo.products.get(product_name))
+        return set(product.country for product in self._repo.products[product_name])
 
     def get_total_export(self, product_name: str) -> int:
         """
