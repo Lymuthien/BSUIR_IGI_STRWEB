@@ -21,7 +21,7 @@ class TriangleManager(object):
         :param title: The title of the visualization, provided by the user.
         """
 
-        x_coords, y_coords = self._calculate_coordinates(triangle)
+        x_coords, y_coords = self.calculate_coordinates(triangle)
 
         self._drawer.plot_by_coords(
                 x_coords,
@@ -32,7 +32,7 @@ class TriangleManager(object):
         )
 
     @staticmethod
-    def _calculate_coordinates(triangle: Triangle) -> tuple[tuple[float, ...], tuple[float, ...]]:
+    def calculate_coordinates(triangle: Triangle) -> tuple[tuple[float, ...], tuple[float, ...]]:
         """
         Calculates the x, y coordinates of the triangle's vertices based on the sides.
 
