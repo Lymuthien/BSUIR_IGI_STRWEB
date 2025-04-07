@@ -58,9 +58,9 @@ class Triangle(Figure):
         """
         Initialize a triangle with the given sides and color.
 
-        :param a: The length of side a (must be > 0).
-        :param b: The length of side b (must be > 0).
-        :param c: The length of side c (must be > 0).
+        :param a: The length of side a.
+        :param b: The length of side b.
+        :param c: The length of side c.
         :param color: The color of the triangle as a string.
         :raises ValueError: If the side lengths are invalid (e.g., non-positive or not forming a valid triangle).
         """
@@ -69,7 +69,7 @@ class Triangle(Figure):
         self._b: float = b
         self._c: float = c
         self._color: Color = Color(color)
-        self.validate_sides(a, b, c)
+        self._validate_sides(a, b, c)
 
     def __str__(self):
         """
@@ -94,6 +94,7 @@ class Triangle(Figure):
         area = (s * (s - self._a) * (s - self._b) * (s - self._c)) ** 0.5
         return area
 
+    @property
     def sides(self) -> tuple[float, float, float]:
         """
         Get the lengths of the sides of the triangle.
@@ -103,6 +104,7 @@ class Triangle(Figure):
 
         return self._a, self._b, self._c
 
+    @property
     def color(self) -> str:
         """
         Get the color of the triangle.
@@ -113,7 +115,7 @@ class Triangle(Figure):
         return self._color.color
 
     @staticmethod
-    def validate_sides(a: float, b: float, c: float):
+    def _validate_sides(a: float, b: float, c: float):
         """
         Validate the lengths of the triangle's sides.
 

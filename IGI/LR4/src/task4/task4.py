@@ -20,26 +20,24 @@ class Task4(ITask):
         - output of the figure to the screen and to a file.
     """
 
+    def __init__(self, directory: str):
+        self._directory = directory
+
     @staticmethod
     def input_figure():
         """
         Prompts the user to input the sides and color of a triangle, validates the input,
         and creates a `Triangle` instance.
 
-        :return: A `Triangle` instance representing the input figure, or `None` if the input
-                 values are invalid.
+        :return: Tuple containing the sides and color of the triangle.
         """
 
         a = float(input_with_validating(lambda i: float(i) > 0, 'Enter a: '))
         b = float(input_with_validating(lambda i: float(i) > 0, 'Enter b: '))
         c = float(input_with_validating(lambda i: float(i) > 0, 'Enter c: '))
-        color = input('Enter figure color (red, green, blue): ').strip().lower()
+        color = input('Enter figure color (#rgb, #rrggbb or color name...): ').strip().lower()
 
-        try:
-            return Triangle(a, b, c, color)
-        except ValueError as e:
-            print(e)
-            return None
+        return a, b, c, color
 
     @repeating_program
     def run(self):
@@ -53,15 +51,16 @@ class Task4(ITask):
 
         If the triangle cannot be created due to invalid input values, the program prompts the user again.
         """
-        triangle = self.input_figure()
-        if triangle is None:
+        try:
+            triangle = Triangle(*self.input_figure())
+        except ValueError as e:
+            print(e)
             return
 
-        print('Triangle: ' + str(triangle))
+        print(triangle.name_of_class() + ': ' + str(triangle))
         self.draw_triangle(triangle, input('Enter figure title: '))
 
-    @staticmethod
-    def draw_triangle(triangle: Triangle, title: str):
+    def draw_triangle(self, triangle: Triangle, title: str):
         """
         Draws the triangle using the `Drawer` utility and saves its visualization to a file.
 
@@ -73,24 +72,20 @@ class Task4(ITask):
         :param title: The title of the visualization, provided by the user.
         """
 
-        a, b, c = triangle.sides()
-        color = triangle.color()
+        a, b, c = triangle.sides
+        color = triangle.color
 
-        # Calculate the triangle's vertex coordinates
         x1, y1 = 0, 0
         x2, y2 = a, 0
 
-        # Calculate the angle between sides a and c
         angle = math.acos((a ** 2 + c ** 2 - b ** 2) / (2 * a * c))
         x3 = c * math.cos(angle)
         y3 = c * math.sin(angle)
 
-        # Set up coordinates for the triangle
         x_coords = (x1, x2, x3, x1)
         y_coords = (y1, y2, y3, y1)
 
-        # Attempt to visualize the triangle
         try:
-            Drawer().plot_by_coords(x_coords, y_coords, title, 'data/triangle.png', color)
+            Drawer().plot_by_coords(x_coords, y_coords, title, f'{self._directory}triangle.png', color)
         except Exception as e:
             print(e)

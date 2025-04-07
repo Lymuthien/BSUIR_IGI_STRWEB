@@ -67,7 +67,7 @@ class Task3(ITask):
         self._drawer.plot_table(((x, y_taylor), (x, y_math)), ('x', 'y'),
                                 ('y = taylor_ln(x)', 'y = math_ln(x)'),
                                 'Comparison of natural logarithm graphs using Taylor series and math',
-                                f'{self._directory}/ln_graphics.png')
+                                f'{self._directory}ln_graphics.png')
 
     def _plot_n(self):
         x = tuple(row[0] for row in self._table)
@@ -75,7 +75,7 @@ class Task3(ITask):
 
         self._drawer.plot_table(((x, n),), ('x', 'n'), ('n(x)',),
                                 'Dependence of the number of Taylor series terms on x',
-                                f'{self._directory}/n_graphics.png')
+                                f'{self._directory}n_graphics.png')
 
     @staticmethod
     def _input_values():
