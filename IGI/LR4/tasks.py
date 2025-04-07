@@ -19,7 +19,9 @@ class Menu(object):
     def __init__(self):
         self.tasks: dict[str, ITask] = {
             '1': Task1(filepath='data/products'),
-            '2': Task2(filepath='data/final_text.txt', archive_path='data/final_text.zip'),
+            '2': Task2(original_text_path='data/text.txt',
+                       filepath='data/final_text.txt',
+                       archive_path='data/final_text.zip'),
             '3': Task3(directory='data/'),
             '4': Task4(directory='data/'),
             '5': Task5()

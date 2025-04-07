@@ -25,7 +25,7 @@ class Task2(ITask):
         – words in descending order of their lengths.
     """
 
-    def __init__(self, filepath: str, archive_path: str):
+    def __init__(self, original_text_path: str, filepath: str, archive_path: str):
         """
         Initializes the Task2 object with paths to the text file and archive.
 
@@ -33,11 +33,11 @@ class Task2(ITask):
         :param archive_path: The path to save the archive file.
         """
 
-        self._text = FileManager.load('data/text.txt')
+        self._text = FileManager.load(original_text_path)
         self._string_handler = TextAnalyzer()
         self._final_text = ''
         self._file_path = filepath
-        self._archive_name = archive_path
+        self._archive_path = archive_path
 
     @repeating_program
     def run(self):
@@ -49,16 +49,19 @@ class Task2(ITask):
         - Extracts and prints file content and archive information.
         """
 
-        self._calculate_results()
+        try:
+            self._calculate_results()
 
-        FileManager.save(self._final_text, self._file_path)
-        ZipManager.save(self._file_path, self._archive_name)
+            FileManager.save(self._final_text, self._file_path)
+            ZipManager.save(self._file_path, self._archive_path)
 
-        text = ZipManager.load(self._archive_name, self._file_path.split('/')[-1])
-        print(f'Text from archive:\n{text}')
+            text = ZipManager.load(self._archive_path, self._file_path.split('/')[-1])
+            print(f'Text from archive:\n{text}')
 
-        info = ZipManager.file_info(self._archive_name, self._file_path.split('/')[-1])
-        print(f'Information about file:\n{self._file_info(info)}')
+            info = ZipManager.file_info(self._archive_path, self._file_path.split('/')[-1])
+            print(f'Information about file:\n{self._file_info(info)}')
+        except Exception as e:
+            print(e)
 
     def _calculate_results(self):
         """
