@@ -7,12 +7,8 @@ v1.0
 Development date:
 .04.2025
 """
-from IGI.LR4.src.itask import ITask
-from src.task1.task1 import Task1
-from src.task2.task2 import Task2
-from src.task3.task3 import Task3
-from src.task4.task4 import Task4
-from src.task5.task5 import Task5
+
+from src import ITask, Task5, Task2, Task4, Task3, Task1
 
 
 class Menu(object):
