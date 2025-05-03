@@ -3,15 +3,10 @@ from django.contrib import admin
 from .models import (
     Category,
     Estate,
-    Employee,
     Sale,
-    Client,
-    Owner,
     ServiceCategory,
     Service,
 )
-
-admin.site.register(Owner)
 
 
 class EstateInline(admin.TabularInline):
@@ -36,19 +31,9 @@ class ServiceCategoryAdmin(admin.ModelAdmin):
     inlines = (ServiceInline,)
 
 
-@admin.register(Employee)
-class EmployeeAdmin(admin.ModelAdmin):
-    inlines = [SaleInline]
-
-
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     inlines = [EstateInline]
-
-
-@admin.register(Client)
-class ClientAdmin(admin.ModelAdmin):
-    list_filter = ["name", "email", "phone_number"]
 
 
 @admin.register(Estate)
