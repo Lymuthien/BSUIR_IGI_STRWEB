@@ -3,20 +3,6 @@ from django.db import models
 from django.urls import reverse
 
 
-class PromoCode(models.Model):
-    code = models.CharField(max_length=100)
-    description = models.TextField()
-    discount = models.DecimalField(
-        decimal_places=2,
-        max_digits=10,
-        validators=[MinValueValidator(0.0), MaxValueValidator(100.0)],
-        help_text="Enter percentage discount",
-    )
-
-    def __str__(self):
-        return self.code
-
-
 class Category(models.Model):
     """
     Model representing an estate category (e.g. Land plot, Commercial estate).
@@ -132,33 +118,14 @@ class Sale(models.Model):
     date_of_sale = models.DateField()
     estate = models.OneToOneField(Estate, on_delete=models.CASCADE)
     service = models.ForeignKey(Service, on_delete=models.SET_NULL, null=True)
-    promo_code = models.ForeignKey(
-        PromoCode, on_delete=models.SET_NULL, null=True, blank=True
-    )
-
-    service_cost = models.DecimalField(
-        max_digits=12,
-        decimal_places=2,
-        verbose_name="Service cost",
-        default=0,
-    )
-    cost = models.DecimalField(
-        max_digits=12,
-        decimal_places=2,
-        verbose_name="Cost",
-        default=0,
-    )
+    service_cost = models.DecimalField(max_digits=10, decimal_places=2)
+    cost = models.DecimalField(max_digits=10, decimal_places=2)
 
     def save(self, *args, **kwargs):
-        if self.service_cost == 0:
-            service_cost = 0
-            if self.service:
-                service_cost = self.service.cost
-            if self.promo_code:
-                service_cost -= service_cost * self.promo_code.discount / 100
-            self.service_cost = round(service_cost, 2)
+        if self.service_cost is None and self.service:
+            self.service_cost = self.service.cost
 
-        self.cost = round(self.service_cost + self.estate.cost, 2)
+        self.cost = self.service_cost + self.estate.cost
 
         super().save(*args, **kwargs)
 

@@ -9,11 +9,9 @@ from .models import (
     Owner,
     ServiceCategory,
     Service,
-    PromoCode,
 )
 
 admin.site.register(Owner)
-admin.site.register(PromoCode)
 
 
 class EstateInline(admin.TabularInline):
@@ -68,7 +66,6 @@ class SaleAdmin(admin.ModelAdmin):
             "fields": (
                 "employee",
                 "client",
-                "promo_code"
             )
         }),
         ("Estate", {
