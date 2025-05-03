@@ -1,3 +1,4 @@
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.urls import reverse
 
@@ -15,10 +16,16 @@ class Category(models.Model):
 
 class Estate(models.Model):
     cost = models.DecimalField(
-        decimal_places=2, max_digits=10, help_text="Enter the estate cost"
+        decimal_places=2,
+        max_digits=10,
+        help_text="Enter the estate cost",
+        validators=[MinValueValidator(0.01)],
     )
     area = models.DecimalField(
-        decimal_places=2, max_digits=10, help_text="Enter the estate area"
+        decimal_places=2,
+        max_digits=10,
+        help_text="Enter the estate area",
+        validators=[MinValueValidator(0.01)],
     )
     category = models.ForeignKey(
         Category,
@@ -31,15 +38,6 @@ class Estate(models.Model):
     )
     address = models.CharField(max_length=200)
     owner = models.ManyToManyField("Owner", blank=True)
-
-    STATUS = (
-        ("o", "On sale"),
-        ("s", "Sold"),
-    )
-
-    status = models.CharField(
-        max_length=10, choices=STATUS, default="o", help_text="Enter the estate status"
-    )
 
     class Meta:
         ordering = ("-cost",)
@@ -81,6 +79,9 @@ class Buyer(models.Model):
 
 class Employee(models.Model):
     name = models.CharField(max_length=200, help_text="Enter the employee name")
+    email = models.EmailField(
+        max_length=200, help_text="Enter the employee email", default="<EMAIL>"
+    )
 
     def __str__(self):
         return self.name
@@ -91,7 +92,7 @@ class Sale(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True)
     date_of_contract = models.DateField()
     date_of_sale = models.DateField()
-    estate = models.ForeignKey(Estate, on_delete=models.CASCADE)
+    estate = models.OneToOneField(Estate, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.employee.name} - {self.date_of_contract}"
