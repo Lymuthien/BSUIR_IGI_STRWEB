@@ -1,8 +1,19 @@
 from django.contrib import admin
 
-from .models import Category, Estate, Employee, Sale, Buyer, Owner
+from .models import (
+    Category,
+    Estate,
+    Employee,
+    Sale,
+    Buyer,
+    Owner,
+    ServiceCategory,
+    Service,
+    PromoCode,
+)
 
 admin.site.register(Owner)
+admin.site.register(PromoCode)
 
 
 class EstateInline(admin.TabularInline):
@@ -11,6 +22,20 @@ class EstateInline(admin.TabularInline):
 
 class SaleInline(admin.TabularInline):
     model = Sale
+
+
+class ServiceInline(admin.TabularInline):
+    model = Service
+
+
+@admin.register(Service)
+class ServiceAdmin(admin.ModelAdmin):
+    list_display = ("name", "cost", "category")
+
+
+@admin.register(ServiceCategory)
+class ServiceCategoryAdmin(admin.ModelAdmin):
+    inlines = (ServiceInline,)
 
 
 @admin.register(Employee)
@@ -35,4 +60,22 @@ class EstateAdmin(admin.ModelAdmin):
 
 @admin.register(Sale)
 class SaleAdmin(admin.ModelAdmin):
-    list_display = ["employee", "date_of_sale", "estate"]
+    list_display = ["employee", "date_of_sale", "estate", "service_cost"]
+
+    fieldsets = (
+        (None, {
+            "fields": (
+                "employee",
+                "buyer",
+                "promo_code"
+            )
+        }),
+        ("Estate", {
+            "fields": (
+                "estate",
+                "date_of_sale",
+                "date_of_contract",
+                "service",
+            )
+        }),
+    )
