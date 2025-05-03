@@ -5,7 +5,7 @@ from .models import (
     Estate,
     Employee,
     Sale,
-    Buyer,
+    Client,
     Owner,
     ServiceCategory,
     Service,
@@ -48,8 +48,8 @@ class CategoryAdmin(admin.ModelAdmin):
     inlines = [EstateInline]
 
 
-@admin.register(Buyer)
-class BuyerAdmin(admin.ModelAdmin):
+@admin.register(Client)
+class ClientAdmin(admin.ModelAdmin):
     list_filter = ["name", "email", "phone_number"]
 
 
@@ -60,13 +60,14 @@ class EstateAdmin(admin.ModelAdmin):
 
 @admin.register(Sale)
 class SaleAdmin(admin.ModelAdmin):
-    list_display = ["employee", "date_of_sale", "estate", "service_cost"]
+    list_display = ["employee", "date_of_sale", "estate", "service_cost", "cost"]
+    list_filter = ["date_of_sale", "employee"]
 
     fieldsets = (
         (None, {
             "fields": (
                 "employee",
-                "buyer",
+                "client",
                 "promo_code"
             )
         }),

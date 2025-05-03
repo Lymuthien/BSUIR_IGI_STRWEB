@@ -70,11 +70,11 @@ class Owner(models.Model):
         return self.name
 
 
-class Buyer(models.Model):
-    name = models.CharField(max_length=200, help_text="Enter the buyer name")
-    email = models.EmailField(max_length=200, help_text="Enter the buyer email")
+class Client(models.Model):
+    name = models.CharField(max_length=200, help_text="Enter the client name")
+    email = models.EmailField(max_length=200, help_text="Enter the client email")
     phone_number = models.CharField(
-        max_length=11, help_text="Enter the buyer phone number"
+        max_length=11, help_text="Enter the client phone number"
     )
 
     GENDERS = (
@@ -84,7 +84,7 @@ class Buyer(models.Model):
     )
 
     gender = models.CharField(
-        max_length=10, choices=GENDERS, help_text="Enter the buyer gender"
+        max_length=10, choices=GENDERS, help_text="Enter the client gender"
     )
 
     def __str__(self):
@@ -96,6 +96,7 @@ class Employee(models.Model):
     email = models.EmailField(
         max_length=200, help_text="Enter the employee email", default="<EMAIL>"
     )
+    clients = models.ManyToManyField(Client, blank=True)
 
     def __str__(self):
         return self.name
@@ -124,20 +125,27 @@ class Service(models.Model):
         return self.name
 
 
-
 class Sale(models.Model):
-    buyer = models.ForeignKey(Buyer, on_delete=models.SET_NULL, null=True)
+    client = models.ForeignKey(Client, on_delete=models.SET_NULL, null=True)
     employee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True)
     date_of_contract = models.DateField()
     date_of_sale = models.DateField()
     estate = models.OneToOneField(Estate, on_delete=models.CASCADE)
     service = models.ForeignKey(Service, on_delete=models.SET_NULL, null=True)
-    promo_code = models.ForeignKey(PromoCode, on_delete=models.SET_NULL, null=True, blank=True)
+    promo_code = models.ForeignKey(
+        PromoCode, on_delete=models.SET_NULL, null=True, blank=True
+    )
 
     service_cost = models.DecimalField(
         max_digits=12,
         decimal_places=2,
         verbose_name="Service cost",
+        default=0,
+    )
+    cost = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+        verbose_name="Cost",
         default=0,
     )
 
@@ -149,6 +157,8 @@ class Sale(models.Model):
             if self.promo_code:
                 service_cost -= service_cost * self.promo_code.discount / 100
             self.service_cost = round(service_cost, 2)
+
+        self.cost = round(self.service_cost + self.estate.cost, 2)
 
         super().save(*args, **kwargs)
 
