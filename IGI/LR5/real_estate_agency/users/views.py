@@ -1,15 +1,17 @@
 from django.contrib.auth import login
 from django.shortcuts import render, redirect
+from django.urls import reverse_lazy
+from django.views.generic import CreateView
+
 from .forms import ClientSignUpForm
 
-def signup(request):
-    if request.method == 'POST':
-        form = ClientSignUpForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)
-            return redirect('home')
-    else:
-        form = ClientSignUpForm()
+class SignUpView(CreateView):
+    form_class = ClientSignUpForm
+    template_name = 'signup.html'
+    success_url = reverse_lazy('home')
 
-    return render(request, 'signup.html', {'form': form})
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        user = self.object
+        login(self.request, user)
+        return response
