@@ -43,5 +43,16 @@ def promo(request):
         {"active_promos": active_promos, "archived_promos": archived_promos},
     )
 
+
 def policy(request):
     return render(request, "policy.html")
+
+
+def vacancy(request):
+    vacancies = Vacancy.objects.all()
+
+    return render(
+        request,
+        "vacancies.html",
+        {"vacancies": vacancies},
+    )

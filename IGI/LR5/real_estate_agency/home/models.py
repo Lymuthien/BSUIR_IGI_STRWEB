@@ -62,11 +62,12 @@ class Policy(models.Model):
 
 
 class Vacancy(models.Model):
-    title = models.CharField(max_length=100)
+    position = models.CharField(max_length=100, default="")
+    salary = models.IntegerField()
     description = models.TextField()
 
     def __str__(self):
-        return self.title
+        return self.position
 
 
 class Review(models.Model):
