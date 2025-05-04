@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Главная{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <h2>Последняя новость</h2>
+        <div class="card mb-4">
+            {% if last_news %}
+            {% if last_news.image %}
+            <img src="{{ last_news.image.url }}" class="card-img-top" alt="{{ last_news.title }}">
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ last_news.title }}</h5>
+                <p class="card-text">{{ last_news.summary }}</p>
+                <p class="card-text">{{ last_news.create }}</p>
+            </div>
+            {% else %}
+            <div class="card-body">
+                <p>Новостей пока нет</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

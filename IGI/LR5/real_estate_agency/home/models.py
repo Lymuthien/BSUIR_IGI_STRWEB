@@ -4,8 +4,6 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 
 from django.db import models
 
-# from ..real_estate_agency import settings
-
 
 class AboutCompany(models.Model):
     text = models.TextField(help_text="Enter the company text")
@@ -18,10 +16,12 @@ class News(models.Model):
     title = models.CharField(max_length=100)
     summary = models.TextField()
     image = models.ImageField(upload_to='media/', blank=True)
+    created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name = "News"
         verbose_name_plural = "News"
+        ordering = ['-created']
 
     def __str__(self):
         return self.title
