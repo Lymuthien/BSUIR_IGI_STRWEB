@@ -5,7 +5,7 @@
 {% block content %}
 <h1 class="mb-4">Наша команда</h1>
 <div class="row">
-    {% for contact in contacts %}
+    {% for contact in contact_list %}
         <div class="col-md-4 mb-4">
             <div class="card h-100">
                 <img src="{{ contact.photo.url }}" class="card-img-top" alt="{{ contact.name }}">

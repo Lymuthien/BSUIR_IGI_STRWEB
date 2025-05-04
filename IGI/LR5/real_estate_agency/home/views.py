@@ -1,104 +1,113 @@
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
 from django.utils import timezone
+from django.views.generic import (
+    ListView,
+    CreateView,
+    UpdateView,
+    DeleteView,
+)
 
-from .models import AboutCompany, FAQ, Vacancy, Contact, PromoCode, Review, News
+from .models import AboutCompany, FAQ, Vacancy, Contact, PromoCode, Review, News, Policy
 from .forms import ReviewForm
 
 
-def home(request):
-    last_news = News.objects.first()
+class HomeView(ListView):
+    template_name = "home.html"
+    context_object_name = "last_news"
 
-    return render(request, "home.html", {"last_news": last_news if last_news else None})
+    def get_queryset(self):
+        return News.objects.first()
 
-
-def about(request):
-    about_info = AboutCompany.objects.first()
-
-    return render(request, "about.html", {"about_info": about_info})
-
-
-def news(request):
-    news_list = News.objects.all()
-
-    return render(request, "news.html", {"news_list": news_list})
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["last_news"] = self.get_queryset()
+        return context
 
 
-def faq(request):
-    faq_list = FAQ.objects.all()
+class AboutView(ListView):
+    model = AboutCompany
+    template_name = "about.html"
+    context_object_name = "about_info"
 
-    return render(request, "faq.html", {"faq_list": faq_list})
-
-
-def contact(request):
-    contacts = Contact.objects.all()
-
-    return render(request, "contacts.html", {"contacts": contacts})
+    def get_queryset(self):
+        return AboutCompany.objects.first()
 
 
-def promo(request):
-    active_promos = PromoCode.objects.filter(status=True)
-    archived_promos = PromoCode.objects.filter(status=False)
-
-    return render(
-        request,
-        "promo-codes.html",
-        {"active_promos": active_promos, "archived_promos": archived_promos},
-    )
+class NewsListView(ListView):
+    model = News
+    template_name = "news_list.html"
 
 
-def policy(request):
-    return render(request, "policy.html")
+class FAQListView(ListView):
+    model = FAQ
+    template_name = "faq_list.html"
 
 
-def vacancy(request):
-    vacancies = Vacancy.objects.all()
-
-    return render(
-        request,
-        "vacancies.html",
-        {"vacancies": vacancies},
-    )
-
-def review(request):
-    reviews = Review.objects.all()
-
-    return render(request, "reviews.html", {"reviews": reviews, "user": request.user, "form": ReviewForm()})
+class ContactListView(ListView):
+    model = Contact
+    template_name = "contact_list.html"
 
 
-@login_required
-def add_review(request):
-    if request.method == 'POST':
-        form = ReviewForm(request.POST)
-        if form.is_valid():
-            form_review = form.save(commit=False)
-            form_review.user = request.user
-            form_review.date = timezone.now()
-            form_review.save()
-            return redirect('reviews')
-    else:
-        form = ReviewForm()
-
-    return render(request, 'add_review.html', {'form': form,})
+class PolicyView(ListView):
+    model = Policy
+    template_name = "policy.html"
 
 
-@login_required
-def edit_review(request, review_id):
-    review = get_object_or_404(Review, id=review_id, user=request.user)
-    if request.method == 'POST':
-        form = ReviewForm(request.POST, instance=review)
-        if form.is_valid():
-            form.save()
-            return redirect('reviews')
-    else:
-        form = ReviewForm(instance=review)
+class VacancyListView(ListView):
+    model = Vacancy
+    template_name = "vacancy_list.html"
 
-    return render(request, 'edit_review.html', {'form': form, 'review': review})
 
-@login_required
-def delete_review(request, review_id):
-    review = get_object_or_404(Review, id=review_id, user=request.user)
-    if request.method == 'POST':
-        review.delete()
+class PromoCodeView(ListView):
+    model = PromoCode
+    template_name = "promo-codes.html"
 
-    return redirect('reviews')
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["active_promos"] = PromoCode.objects.filter(status=True)
+        context["archived_promos"] = PromoCode.objects.filter(status=False)
+        return context
+
+
+class ReviewListView(ListView):
+    model = Review
+    template_name = "review_list.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["form"] = ReviewForm()
+        return context
+
+
+class AddReviewView(LoginRequiredMixin, CreateView):
+    model = Review
+    form_class = ReviewForm
+    template_name = "review_add.html"
+    success_url = reverse_lazy("reviews")
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        form.instance.date = timezone.now()
+        return super().form_valid(form)
+
+
+class EditReviewView(LoginRequiredMixin, UpdateView):
+    model = Review
+    form_class = ReviewForm
+    template_name = "review_edit.html"
+    success_url = reverse_lazy("reviews")
+
+    def get_queryset(self):
+        return Review.objects.filter(user=self.request.user)
+
+
+class DeleteReviewView(LoginRequiredMixin, DeleteView):
+    model = Review
+    success_url = reverse_lazy("reviews")
+
+    def get_queryset(self):
+        return Review.objects.filter(user=self.request.user)
+
+    def get(self, request, *args, **kwargs):
+        return self.post(request, *args, **kwargs)
