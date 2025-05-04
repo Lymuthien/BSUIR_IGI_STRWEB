@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 
-{% block title %}Редактировать отзыв{% endblock %}
+{% block title %}Оставить отзыв{% endblock %}
 
 {% block content %}
-<h1 class="mb-4">Редактировать отзыв</h1>
+<h1 class="mb-4">Оставить отзыв</h1>
 <div class="card">
     <div class="card-body">
         {% if form.errors %}
@@ -17,23 +17,22 @@
             </ul>
         </div>
         {% endif %}
-        <form method="post" action="{% url 'edit_review' review.id %}">
+        <form method="post" action="{% url 'add_review' %}">
             {% csrf_token %}
             <div class="mb-3">
                 <label for="id_rating" class="form-label">Оценка</label>
                 <select class="form-select" id="id_rating" name="rating" required>
+                    <option value="" disabled selected>Выберите оценку</option>
                     {% for value, text in form.rating.field.choices %}
-                        {% if value == review.rating %}
-                            <option value="{{ value }}" selected>{{ text }}</option>
-                        {% endif %}
+                        <option value="{{ value }}">{{ text }}</option>
                     {% endfor %}
                 </select>
             </div>
             <div class="mb-3">
                 <label for="id_text" class="form-label">Текст отзыва</label>
-                <textarea class="form-control" id="id_text" name="text" rows="4" required>{{ review.text }}</textarea>
-            </div>
-            <button type="submit" class="btn btn-primary">Сохранить</button>
+                    <textarea class="form-control" id="id_text" name="text" rows="4" required placeholder="Ваш отзыв"></textarea>
+                </div>
+            <button type="submit" class="btn btn-primary">Отправить</button>
             <a href="{% url 'reviews' %}" class="btn btn-secondary">Отмена</a>
         </form>
     </div>

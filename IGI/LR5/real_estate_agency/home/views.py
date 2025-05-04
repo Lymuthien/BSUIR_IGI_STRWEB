@@ -75,8 +75,11 @@ def add_review(request):
             form_review.user = request.user
             form_review.date = timezone.now()
             form_review.save()
+            return redirect('reviews')
+    else:
+        form = ReviewForm()
 
-    return redirect('reviews')
+    return render(request, 'add_review.html', {'form': form,})
 
 
 @login_required

@@ -7,9 +7,7 @@
 
 <div class="mb-4">
     {% if user.is_authenticated %}
-        <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#reviewForm" aria-expanded="false" aria-controls="reviewForm">
-            Добавить отзыв
-        </button>
+        <a href="{% url 'add_review' %}" class="btn btn-secondary">Добавить отзыв</a>
     {% else %}
         <a href="{% url 'login' %}?next={% url 'reviews' %}" class="btn btn-secondary">Добавить отзыв</a>
         <div class="alert alert-info mt-2">
@@ -17,33 +15,6 @@
         </div>
     {% endif %}
 </div>
-
-{% if user.is_authenticated %}
-<div class="collapse mb-4" id="reviewForm">
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Оставить отзыв</h5>
-            <form method="post" action="{% url 'add_review' %}">
-                {% csrf_token %}
-                <div class="mb-3">
-                    <label for="id_rating" class="form-label">Оценка</label>
-                    <select class="form-select" id="id_rating" name="rating" required>
-                        <option value="" disabled selected>Выберите оценку</option>
-                        {% for value, text in form.rating.field.choices %}
-                            <option value="{{ value }}">{{ text }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="id_text" class="form-label">Текст отзыва</label>
-                    <textarea class="form-control" id="id_text" name="text" rows="4" required placeholder="Ваш отзыв"></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">Отправить</button>
-            </form>
-        </div>
-    </div>
-</div>
-{% endif %}
 
 <div class="reviews-list">
     {% for review in reviews %}

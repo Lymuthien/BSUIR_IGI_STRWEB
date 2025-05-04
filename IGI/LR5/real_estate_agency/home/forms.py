@@ -15,3 +15,9 @@ class ReviewForm(forms.ModelForm):
                 'class': 'form-select'
             })
         }
+
+    def clean_text(self):
+        text = self.cleaned_data['text']
+        if len(text) < 10:
+            raise forms.ValidationError("Текст отзыва должен содержать не менее 10 символов.")
+        return text
