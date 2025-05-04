@@ -9,3 +9,17 @@ def home(request):
     return render(
         request, "home.html", {"last_news": last_news if last_news else None}
     )
+
+def about(request):
+    about_info = AboutCompany.objects.first()
+
+    return render(
+        request, "about.html", {"about_info": about_info}
+    )
+
+def news(request):
+    news_list = News.objects.all()
+
+    return render(
+        request, "news.html", {"news_list": news_list}
+    )
