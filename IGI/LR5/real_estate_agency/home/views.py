@@ -6,20 +6,22 @@ from .models import AboutCompany, FAQ, Vacancy, Contact, PromoCode, Policy, Revi
 def home(request):
     last_news = News.objects.first()
 
-    return render(
-        request, "home.html", {"last_news": last_news if last_news else None}
-    )
+    return render(request, "home.html", {"last_news": last_news if last_news else None})
+
 
 def about(request):
     about_info = AboutCompany.objects.first()
 
-    return render(
-        request, "about.html", {"about_info": about_info}
-    )
+    return render(request, "about.html", {"about_info": about_info})
+
 
 def news(request):
     news_list = News.objects.all()
 
-    return render(
-        request, "news.html", {"news_list": news_list}
-    )
+    return render(request, "news.html", {"news_list": news_list})
+
+
+def faq(request):
+    faq_list = FAQ.objects.all()
+
+    return render(request, "faq.html", {"faq_list": faq_list})
