@@ -75,11 +75,8 @@ def add_review(request):
             form_review.user = request.user
             form_review.date = timezone.now()
             form_review.save()
-            return redirect('reviews')
-    else:
-        form = ReviewForm()
 
-    return render(request, 'reviews.html', {'form': form})
+    return redirect('reviews')
 
 
 @login_required
@@ -93,7 +90,7 @@ def edit_review(request, review_id):
     else:
         form = ReviewForm(instance=review)
 
-    return render(request, 'reviews/edit_review.html', {'form': form, 'review': review})
+    return render(request, 'edit_review.html', {'form': form, 'review': review})
 
 @login_required
 def delete_review(request, review_id):
