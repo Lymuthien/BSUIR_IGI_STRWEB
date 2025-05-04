@@ -37,6 +37,7 @@ class AboutView(ListView):
 class NewsListView(ListView):
     model = News
     template_name = "news_list.html"
+    paginate_by = 10
 
 
 class FAQListView(ListView):
@@ -73,6 +74,7 @@ class PromoCodeView(ListView):
 class ReviewListView(ListView):
     model = Review
     template_name = "review_list.html"
+    paginate_by = 10
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
