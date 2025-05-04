@@ -25,3 +25,8 @@ def faq(request):
     faq_list = FAQ.objects.all()
 
     return render(request, "faq.html", {"faq_list": faq_list})
+
+def contact(request):
+    contacts = Contact.objects.all()
+
+    return render(request, "contacts.html", {"contacts": contacts})

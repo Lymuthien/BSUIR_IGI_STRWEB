@@ -37,7 +37,9 @@ class FAQ(models.Model):
 
 
 class Contact(models.Model):
-    photo = models.ImageField(upload_to='media/', blank=True)
+    name = models.CharField(max_length=100, default="")
+    position = models.CharField(max_length=100, default="")
+    photo = models.ImageField(upload_to='media/')
     description = models.TextField()
     phone = models.CharField(max_length=20)
     email = models.EmailField()
@@ -52,7 +54,7 @@ class Contact(models.Model):
             raise ValidationError("Valid +375 (29) XXX-XX-XX")
 
     def __str__(self):
-        return self.phone
+        return self.name
 
 
 class Policy(models.Model):
