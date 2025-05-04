@@ -26,7 +26,19 @@ def faq(request):
 
     return render(request, "faq.html", {"faq_list": faq_list})
 
+
 def contact(request):
     contacts = Contact.objects.all()
 
     return render(request, "contacts.html", {"contacts": contacts})
+
+
+def promo(request):
+    active_promos = PromoCode.objects.filter(status=True)
+    archived_promos = PromoCode.objects.filter(status=False)
+
+    return render(
+        request,
+        "promo-codes.html",
+        {"active_promos": active_promos, "archived_promos": archived_promos},
+    )

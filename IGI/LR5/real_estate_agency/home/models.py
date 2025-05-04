@@ -81,6 +81,8 @@ class Review(models.Model):
 
 class PromoCode(models.Model):
     code = models.CharField(max_length=50)
+    discount = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(100)])
+    description = models.TextField(default="")
     status = models.BooleanField(default=True)
 
     def __str__(self):
