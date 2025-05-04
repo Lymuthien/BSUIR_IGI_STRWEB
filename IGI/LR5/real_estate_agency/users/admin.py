@@ -34,6 +34,7 @@ class CustomUserAdmin(UserAdmin):
                 "last_name",
                 "email",
                 "phone_number",
+                "birth_date",
             )}
          ),
         ("Permissions", {
