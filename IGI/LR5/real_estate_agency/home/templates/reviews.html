@@ -11,7 +11,7 @@
     {% else %}
         <a href="{% url 'login' %}?next={% url 'reviews' %}" class="btn btn-secondary">Добавить отзыв</a>
         <div class="alert alert-info mt-2">
-            Чтобы оставить отзыв, пожалуйста, <a href="{% url 'login' %}">войдите</a> или <a href="{% url 'register' %}">зарегистрируйтесь</a>.
+            Чтобы оставить отзыв, пожалуйста, <a href="{% url 'login' %}">войдите</a> или <a href="{% url 'signup' %}">зарегистрируйтесь</a>.
         </div>
     {% endif %}
 </div>
