@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
+from django.utils import timezone
 
 from .models import AboutCompany, FAQ, Vacancy, Contact, PromoCode, Review, News
 from .forms import ReviewForm
@@ -62,7 +63,7 @@ def vacancy(request):
 def review(request):
     reviews = Review.objects.all()
 
-    return render(request, "reviews.html", {"reviews": reviews, "user": request.user})
+    return render(request, "reviews.html", {"reviews": reviews, "user": request.user, "form": ReviewForm()})
 
 
 @login_required
@@ -72,6 +73,7 @@ def add_review(request):
         if form.is_valid():
             form_review = form.save(commit=False)
             form_review.user = request.user
+            form_review.date = timezone.now()
             form_review.save()
             return redirect('reviews')
     else:
