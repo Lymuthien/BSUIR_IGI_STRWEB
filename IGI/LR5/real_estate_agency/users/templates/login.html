@@ -6,6 +6,17 @@
 <h1 class="mb-4">Вход</h1>
 <div class="card">
     <div class="card-body">
+        {% if form.errors %}
+            <div class="alert alert-danger">
+                <ul>
+                    {% for field, errors in form.errors.items %}
+                        {% for error in errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
         <form method="post" action="{% url 'login' %}">
             {% csrf_token %}
             <div class="mb-3">

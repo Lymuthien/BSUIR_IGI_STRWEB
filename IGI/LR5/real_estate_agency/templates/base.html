@@ -33,6 +33,10 @@
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li><a class="dropdown-item" href="">Профиль</a></li>
                                 <li><hr class="dropdown-divider"></li>
+                                {% if user.is_superuser %}
+                                    <li><a href="{% url 'admin:index' %}" class="dropdown-item">Панель управления</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                {% endif %}
                                 <li>
                                     <form action="{% url 'logout' %}" method="post" class="d-inline">
                                         {% csrf_token %}
