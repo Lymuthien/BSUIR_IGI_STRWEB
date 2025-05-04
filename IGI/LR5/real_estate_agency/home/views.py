@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from .models import AboutCompany, FAQ, Vacancy, Contact, PromoCode, Policy, Review, News
+from .models import AboutCompany, FAQ, Vacancy, Contact, PromoCode, Review, News
 
 
 def home(request):
@@ -42,3 +42,6 @@ def promo(request):
         "promo-codes.html",
         {"active_promos": active_promos, "archived_promos": archived_promos},
     )
+
+def policy(request):
+    return render(request, "policy.html")
