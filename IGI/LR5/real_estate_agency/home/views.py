@@ -1,6 +1,8 @@
-from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
 
 from .models import AboutCompany, FAQ, Vacancy, Contact, PromoCode, Review, News
+from .forms import ReviewForm
 
 
 def home(request):
@@ -56,3 +58,23 @@ def vacancy(request):
         "vacancies.html",
         {"vacancies": vacancies},
     )
+
+def review(request):
+    reviews = Review.objects.all()
+
+    return render(request, "reviews.html", {"reviews": reviews, "user": request.user})
+
+
+@login_required
+def add_review(request):
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            form_review = form.save(commit=False)
+            form_review.user = request.user
+            form_review.save()
+            return redirect('reviews')
+    else:
+        form = ReviewForm()
+
+    return render(request, 'reviews.html', {'form': form})

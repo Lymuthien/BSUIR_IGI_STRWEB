@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 from django.db import models
+from real_estate_agency import settings
 
 
 class AboutCompany(models.Model):
@@ -71,8 +72,16 @@ class Vacancy(models.Model):
 
 
 class Review(models.Model):
-    # user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    rating = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    RATING_CHOICES = [
+        (1, '1 - Ужасно'),
+        (2, '2 - Плохо'),
+        (3, '3 - Удовлетворительно'),
+        (4, '4 - Хорошо'),
+        (5, '5 - Отлично'),
+    ]
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    rating = models.IntegerField(choices=RATING_CHOICES, default=5)
     text = models.TextField()
     date = models.DateField()
 

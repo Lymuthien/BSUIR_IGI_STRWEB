@@ -11,4 +11,5 @@ urlpatterns = [
     path('promo-codes/', views.promo, name='promo-codes'),
     path('policy/', views.policy, name='policy'),
     path('vacancies/', views.vacancy, name='vacancies'),
+    path('reviews/', views.review, name='reviews'),
 ]
