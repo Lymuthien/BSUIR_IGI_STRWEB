@@ -7,11 +7,11 @@
 
 <div class="mb-4">
     {% if user.is_authenticated %}
-        <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#reviewForm" aria-expanded="false" aria-controls="reviewForm">
+        <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#reviewForm" aria-expanded="false" aria-controls="reviewForm">
             Добавить отзыв
         </button>
     {% else %}
-        <a href="{% url 'login' %}?next={% url 'reviews' %}" class="btn btn-primary">Добавить отзыв</a>
+        <a href="{% url 'login' %}?next={% url 'reviews' %}" class="btn btn-secondary">Добавить отзыв</a>
         <div class="alert alert-info mt-2">
             Чтобы оставить отзыв, пожалуйста, <a href="{% url 'login' %}">войдите</a> или <a href="{% url 'register' %}">зарегистрируйтесь</a>.
         </div>
@@ -59,6 +59,16 @@
                 </div>
                 <p class="card-text">{{ review.text }}</p>
                 <p class="text-muted small">Дата: {{ review.date|date:"d.m.Y" }}</p>
+
+                {% if user.is_authenticated and user == review.user %}
+                <div class="mt-2">
+                    <a href="{% url 'edit_review' review.id %}" class="btn btn-sm btn-secondary">Редактировать</a>
+                    <form method="post" action="{% url 'delete_review' review.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-danger">Удалить</button>
+                    </form>
+                </div>
+                {% endif %}
             </div>
         </div>
     {% empty %}

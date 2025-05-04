@@ -13,4 +13,6 @@ urlpatterns = [
     path('vacancies/', views.vacancy, name='vacancies'),
     path('reviews/', views.review, name='reviews'),
     path('reviews/add/', views.add_review, name='add_review'),
+    path('reviews/edit/<int:id>/', views.edit_review, name='edit_review'),
+    path('reviews/delete/<int:review_id>/', views.delete_review, name='delete_review'),
 ]
