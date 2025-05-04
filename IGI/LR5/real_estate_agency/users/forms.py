@@ -1,7 +1,8 @@
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 
-from .models import User, restrict_age
+from .models import User, restrict_age, Client
+
 
 class ClientSignUpForm(UserCreationForm):
     phone_number = forms.CharField(
@@ -12,20 +13,21 @@ class ClientSignUpForm(UserCreationForm):
     birth_date = forms.DateField(
         validators=[restrict_age],
         widget=forms.DateInput(attrs={'type': 'date'}),
-        help_text="You must be at least 18 years old."
+        help_text="Пользователь должен достигнуть 18 лет."
     )
 
     class Meta:
         model = User
-        fields = ("username", "email", "phone_number", "birth_date", "password1", "password2")
+        fields = (
+        "username", "email", "phone_number", "birth_date", "password1", "password2", "first_name", "last_name")
 
     def save(self, commit=True):
         user = super().save(commit=False)
-        user.email = self.cleaned_data['email']
-        user.role = User.ROLE_CHOICES["client"]
+        user.role = "client"
+        user.last_name = self.cleaned_data['last_name']
+
         if commit:
-            user.phone_number = self.cleaned_data['phone_number']
-            user.birth_date = self.cleaned_data['birth_date']
             user.save()
+            Client.objects.create(user=user)
         return user
 

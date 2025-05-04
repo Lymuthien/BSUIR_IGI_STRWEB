@@ -10,7 +10,7 @@ def restrict_age(birth_date):
     today = date.today()
     age = today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
     if age < 18:
-        raise ValidationError("User must be at least 18 years old.")
+        raise ValidationError("Пользователь должен достигнуть 18 лет.")
 
 
 class User(AbstractUser):
@@ -22,7 +22,7 @@ class User(AbstractUser):
 
     phone_regex = RegexValidator(
         regex=r'^\+375\(29\)\d{3}-\d{2}-\d{2}$',
-        message="Phone number must be +375(29)XXX-XX-XX"
+        message="Формат номера: +375(29)XXX-XX-XX"
     )
 
     role = models.CharField(max_length=20, choices=ROLE_CHOICES)
