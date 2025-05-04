@@ -5,7 +5,7 @@
 {% block content %}
 <div class="row">
     <div class="col-md-8">
-        <h2>Последняя новость</h2>
+        <h2>Последние новости</h2>
         <div class="card mb-4">
             {% if last_news %}
             {% if last_news.image %}
@@ -15,6 +15,7 @@
                 <h5 class="card-title">{{ last_news.title }}</h5>
                 <p class="card-text">{{ last_news.summary }}</p>
                 <p class="card-text">{{ last_news.create }}</p>
+                <a href="" class="btn btn-secondary">Читать далее</a>
             </div>
             {% else %}
             <div class="card-body">
