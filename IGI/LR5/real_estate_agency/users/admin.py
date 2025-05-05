@@ -24,6 +24,23 @@ class CustomUserAdmin(UserAdmin):
     list_filter = ("role", "is_staff")
     inlines = (EmployeeInline, ClientInline, ProfileInline)
 
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': (
+                'username',
+                'email',
+                'phone_number',
+                'birth_date',
+                'first_name',
+                'last_name',
+                'password1',
+                'password2',
+                'role'
+            ),
+        }),
+    )
+
     fieldsets = (
         (None, {
             "fields": (

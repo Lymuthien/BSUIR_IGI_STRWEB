@@ -5,7 +5,6 @@ from .models import (
     Estate,
     Sale,
     ServiceCategory,
-    Service,
 )
 
 
@@ -17,18 +16,13 @@ class SaleInline(admin.TabularInline):
     model = Sale
 
 
-class ServiceInline(admin.TabularInline):
-    model = Service
-
-
-@admin.register(Service)
-class ServiceAdmin(admin.ModelAdmin):
-    list_display = ("name", "cost", "category")
+class CategoryInline(admin.TabularInline):
+    model = Category
 
 
 @admin.register(ServiceCategory)
 class ServiceCategoryAdmin(admin.ModelAdmin):
-    inlines = (ServiceInline,)
+    inlines = (CategoryInline, )
 
 
 @admin.register(Category)
@@ -58,7 +52,7 @@ class SaleAdmin(admin.ModelAdmin):
                 "estate",
                 "date_of_sale",
                 "date_of_contract",
-                "service",
+                "category",
             )
         }),
     )

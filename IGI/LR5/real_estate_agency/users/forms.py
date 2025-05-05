@@ -8,7 +8,7 @@ class ClientSignUpForm(UserCreationForm):
     phone_number = forms.CharField(
         max_length=17,
         validators=[User.phone_regex],
-        help_text="Format: +375(29)XXX-XX-XX"
+        help_text="Формат: +375(29)XXX-XX-XX"
     )
     birth_date = forms.DateField(
         validators=[restrict_age],

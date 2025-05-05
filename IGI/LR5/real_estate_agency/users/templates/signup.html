@@ -37,9 +37,9 @@
                        id="id_first_name" name="first_name" value="{{ form.first_name.value|default:'' }}" required>
             </div>
             <div class="mb-3">
-                <label for="id_second_name" class="form-label">Фамилия</label>
-                <input type="text" class="form-control {% if form.second_name.errors %}is-invalid{% endif %}"
-                       id="id_second_name" name="second_name" value="{{ form.second_name.value|default:'' }}" required>
+                <label for="id_last_name" class="form-label">Фамилия</label>
+                <input type="text" class="form-control {% if form.last_name.errors %}is-invalid{% endif %}"
+                       id="id_last_name" name="last_name" value="{{ form.last_name.value|default:'' }}" required>
             </div>
             <div class="mb-3">
                 <label for="id_email" class="form-label">Электронная почта</label>
