@@ -37,7 +37,7 @@ class AboutView(ListView):
 class NewsListView(ListView):
     model = News
     template_name = "news_list.html"
-    paginate_by = 10
+    paginate_by = 9
 
 
 class FAQListView(ListView):
@@ -90,7 +90,6 @@ class AddReviewView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.user = self.request.user
-        form.instance.date = timezone.now()
         return super().form_valid(form)
 
 
@@ -102,6 +101,10 @@ class EditReviewView(LoginRequiredMixin, UpdateView):
 
     def get_queryset(self):
         return Review.objects.filter(user=self.request.user)
+
+    def form_valid(self, form):
+        form.instance.updated_at = timezone.now()
+        return super().form_valid(form)
 
 
 class DeleteReviewView(LoginRequiredMixin, DeleteView):

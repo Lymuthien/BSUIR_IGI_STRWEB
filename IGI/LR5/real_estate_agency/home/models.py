@@ -83,7 +83,8 @@ class Review(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     rating = models.IntegerField(choices=RATING_CHOICES, default=5)
     text = models.TextField()
-    date = models.DateField()
+    created_at = models.DateField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.text[:40]}..."

@@ -28,6 +28,8 @@ class User(AbstractUser):
     role = models.CharField(max_length=20, choices=ROLE_CHOICES)
     phone_number = models.CharField(max_length=20, validators=[phone_regex])
     birth_date = models.DateField(validators=[restrict_age])
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
 
     def __str__(self):
         return f"{self.username} {self.role}"
