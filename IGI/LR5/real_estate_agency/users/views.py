@@ -1,11 +1,8 @@
 import calendar
 
 from django.contrib.auth import login
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.utils import timezone
-from django.views import View
 from django.views.generic import CreateView, DetailView
 
 from .forms import ClientSignUpForm
