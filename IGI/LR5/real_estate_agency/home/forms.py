@@ -1,23 +1,34 @@
+import logging
+
 from django import forms
+
 from .models import Review
+
+logger = logging.getLogger(__name__)
+
 
 class ReviewForm(forms.ModelForm):
     class Meta:
         model = Review
-        fields = ['rating', 'text']
+        fields = ["rating", "text"]
         widgets = {
-            'text': forms.Textarea(attrs={
-                'class': 'form-control',
-                'rows': 3,
-                'placeholder': 'Ваш отзыв...'
-            }),
-            'rating': forms.Select(attrs={
-                'class': 'form-select'
-            })
+            "text": forms.Textarea(
+                attrs={
+                    "class": "form-control",
+                    "rows": 3,
+                    "placeholder": "Ваш отзыв...",
+                }
+            ),
+            "rating": forms.Select(attrs={"class": "form-select"}),
         }
 
     def clean_text(self):
-        text = self.cleaned_data['text']
+        text = self.cleaned_data["text"]
+        logger.debug(f"Validating review text: length={len(text)}")
         if len(text) < 10:
-            raise forms.ValidationError("Текст отзыва должен содержать не менее 10 символов.")
+            logger.error("Review text too short: less than 10 characters")
+            raise forms.ValidationError(
+                "Текст отзыва должен содержать не менее 10 символов."
+            )
+        logger.info("Review text validation passed")
         return text

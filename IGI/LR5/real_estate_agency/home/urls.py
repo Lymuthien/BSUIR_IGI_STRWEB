@@ -13,6 +13,6 @@ urlpatterns = [
     re_path(r'^vacancies/$', views.VacancyListView.as_view(), name='vacancies'),
     re_path(r'^reviews/$', views.ReviewListView.as_view(), name='reviews'),
     re_path(r'^reviews/add/$', views.AddReviewView.as_view(), name='add_review'),
-    re_path(r'^reviews/edit/(?P<pk>\d+)$', views.EditReviewView.as_view(), name='edit_review'),
+    re_path(r'^reviews/edit/(?P<pk>\d+)$', views.UpdateReviewView.as_view(), name='edit_review'),
     re_path(r'^reviews/delete/(?P<pk>\d+)$', views.DeleteReviewView.as_view(), name='delete_review'),
 ]

@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.utils import timezone
@@ -8,8 +10,10 @@ from django.views.generic import (
     DeleteView,
 )
 
-from .models import AboutCompany, FAQ, Vacancy, Contact, PromoCode, Review, News, Policy
 from .forms import ReviewForm
+from .models import AboutCompany, FAQ, Vacancy, Contact, PromoCode, Review, News, Policy
+
+logger = logging.getLogger(__name__)
 
 
 class HomeView(ListView):
@@ -17,11 +21,16 @@ class HomeView(ListView):
     context_object_name = "last_news"
 
     def get_queryset(self):
-        return News.objects.first()
+        logger.debug("Fetching latest news")
+        news = News.objects.first()
+        if not news:
+            logger.warning("No news found")
+        return news
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["last_news"] = self.get_queryset()
+        logger.debug("Prepared context for HomeView")
         return context
 
 
@@ -31,13 +40,20 @@ class AboutView(ListView):
     context_object_name = "about_info"
 
     def get_queryset(self):
-        return AboutCompany.objects.first()
+        logger.debug("Fetching AboutCompany info")
+        about = AboutCompany.objects.first()
+        if not about:
+            logger.warning("No AboutCompany info found")
+        return about
 
 
 class NewsListView(ListView):
     model = News
     template_name = "news_list.html"
     paginate_by = 9
+
+    def get_queryset(self):
+        return super().get_queryset().order_by("-created")
 
 
 class FAQListView(ListView):
@@ -68,6 +84,7 @@ class PromoCodeView(ListView):
         context = super().get_context_data(**kwargs)
         context["active_promos"] = PromoCode.objects.filter(status=True)
         context["archived_promos"] = PromoCode.objects.filter(status=False)
+        logger.debug(f"Prepared promo codes: {context['active_promos'].count()} active, {context['archived_promos'].count()} archived")
         return context
 
 
@@ -79,6 +96,7 @@ class ReviewListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["form"] = ReviewForm()
+        logger.debug(f"Prepared Review list, page: {self.request.GET.get('page', 1)}")
         return context
 
 
@@ -89,22 +107,37 @@ class AddReviewView(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy("reviews")
 
     def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super().form_valid(form)
+        logger.debug(f"User {self.request.user.username} adding review")
+        try:
+            form.instance.user = self.request.user
+            response = super().form_valid(form)
+            logger.info(f"User {self.request.user.username} added review ID: {form.instance.id}")
+            return response
+        except Exception:
+            logger.exception(f"Error adding review by {self.request.user.username}")
+            raise
 
 
-class EditReviewView(LoginRequiredMixin, UpdateView):
+class UpdateReviewView(LoginRequiredMixin, UpdateView):
     model = Review
     form_class = ReviewForm
     template_name = "review_edit.html"
     success_url = reverse_lazy("reviews")
 
     def get_queryset(self):
+        logger.debug(f"User {self.request.user.username} fetching review for edit")
         return Review.objects.filter(user=self.request.user)
 
     def form_valid(self, form):
-        form.instance.updated_at = timezone.now()
-        return super().form_valid(form)
+        logger.debug(f"User {self.request.user.username} editing review ID: {self.object.id}")
+        try:
+            form.instance.updated_at = timezone.now()
+            response = super().form_valid(form)
+            logger.info(f"User {self.request.user.username} updated review ID: {self.object.id}")
+            return response
+        except Exception:
+            logger.exception(f"Error updating review ID: {self.object.id} by {self.request.user.username}")
+            raise
 
 
 class DeleteReviewView(LoginRequiredMixin, DeleteView):
@@ -112,7 +145,19 @@ class DeleteReviewView(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy("reviews")
 
     def get_queryset(self):
+        logger.debug(f"User {self.request.user.username} fetching review for delete")
         return Review.objects.filter(user=self.request.user)
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        logger.debug(f"User {request.user.username} deleting review ID: {self.object.id}")
+        try:
+            response = super().delete(request, *args, **kwargs)
+            logger.info(f"User {request.user.username} deleted review ID: {self.object.id}")
+            return response
+        except Exception:
+            logger.exception(f"Error deleting review ID: {self.object.id} by {request.user.username}")
+            raise
 
     def get(self, request, *args, **kwargs):
         return self.post(request, *args, **kwargs)
