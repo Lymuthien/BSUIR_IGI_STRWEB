@@ -6,7 +6,7 @@ from django.utils import timezone
 from django.views.generic import CreateView, DetailView
 
 from .forms import ClientSignUpForm
-from .models import Profile
+from .models import Profile, Client, Employee
 from .services.timezone_service import TimezoneService
 from home.models import Review
 
@@ -33,6 +33,8 @@ class ProfileView(DetailView):
         user = profile.user
 
         reviews = Review.objects.filter(user=user).order_by('-created_at')
+        context['is_client'] = Client.objects.filter(user=user).exists()
+        context['is_employee'] = Employee.objects.filter(user=user).exists()
 
         user_timezone = TimezoneService.get_timezone(self.request)
         utc_now = timezone.now()

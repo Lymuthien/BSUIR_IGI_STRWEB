@@ -8,6 +8,11 @@
 <div class="card mb-4">
     <div class="card-body">
         <h5 class="card-title">Информация о пользователе</h5>
+        {% if is_client %}
+            <p>Клиент</p>
+        {% elif is_employee %}
+            <p>Сотрудник</p>
+        {% endif %}
         <p><strong>Имя пользователя:</strong> {{ profile.user.username }}</p>
         <p><strong>Имя:</strong> {{ profile.user.first_name }}</p>
         <p><strong>Фамилия:</strong> {{ profile.user.last_name }}</p>
