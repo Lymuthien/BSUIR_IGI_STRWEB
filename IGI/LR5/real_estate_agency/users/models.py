@@ -5,12 +5,22 @@ from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 from django.db import models
 
-
 def restrict_age(birth_date):
     today = date.today()
-    age = today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
+    age = (
+        today.year
+        - birth_date.year
+        - ((today.month, today.day) < (birth_date.month, birth_date.day))
+    )
     if age < 18:
         raise ValidationError("Пользователь должен достигнуть 18 лет.")
+
+
+class Profile(models.Model):
+    user = models.OneToOneField("User", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.user.username} Profile"
 
 
 class User(AbstractUser):
@@ -21,15 +31,22 @@ class User(AbstractUser):
     }
 
     phone_regex = RegexValidator(
-        regex=r'^\+375\(29\)\d{3}-\d{2}-\d{2}$',
-        message="Формат номера: +375(29)XXX-XX-XX"
+        regex=r"^\+375\(29\)\d{3}-\d{2}-\d{2}$",
+        message="Формат номера: +375(29)XXX-XX-XX",
     )
 
     role = models.CharField(max_length=20, choices=ROLE_CHOICES)
     phone_number = models.CharField(max_length=20, validators=[phone_regex])
     birth_date = models.DateField(validators=[restrict_age])
+    created_at = models.DateTimeField(auto_now_add=True)
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
+
+    def save(self, *args, **kwargs):
+        created = not self.pk
+        super().save(*args, **kwargs)
+        if created:
+            Profile.objects.create(user=self)
 
     def __str__(self):
         return f"{self.username} {self.role}"

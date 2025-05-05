@@ -117,11 +117,14 @@ LOGOUT_REDIRECT_URL = "/"
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "Europe/Moscow"
+TIME_ZONE = 'UTC'
 
 USE_I18N = True
 
 USE_TZ = True
+
+GEOIP_PATH = os.path.join(BASE_DIR, 'GeoLite2-City.mmdb')
+
 
 
 # Static files (CSS, JavaScript, Images)
