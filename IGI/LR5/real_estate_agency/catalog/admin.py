@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 from .models import (
-    Category,
+    Service,
     Estate,
     Sale,
     ServiceCategory,
@@ -17,7 +17,7 @@ class SaleInline(admin.TabularInline):
 
 
 class CategoryInline(admin.TabularInline):
-    model = Category
+    model = Service
 
 
 @admin.register(ServiceCategory)
@@ -25,7 +25,7 @@ class ServiceCategoryAdmin(admin.ModelAdmin):
     inlines = (CategoryInline, )
 
 
-@admin.register(Category)
+@admin.register(Service)
 class CategoryAdmin(admin.ModelAdmin):
     inlines = [EstateInline]
 

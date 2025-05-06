@@ -20,7 +20,7 @@ class Estate(models.Model):
         validators=[MinValueValidator(0.01)],
     )
     category = models.ForeignKey(
-        "Category",
+        "Service",
         on_delete=models.SET_NULL,
         null=True,
         help_text="Enter the estate category",
@@ -48,7 +48,7 @@ class ServiceCategory(models.Model):
         return self.name
 
 
-class Category(models.Model):
+class Service(models.Model):
     name = models.CharField(max_length=200, help_text="Enter the estate category name")
     category = models.ForeignKey(
         ServiceCategory,
@@ -72,7 +72,7 @@ class Sale(models.Model):
     date_of_contract = models.DateField()
     date_of_sale = models.DateField()
     estate = models.OneToOneField(Estate, on_delete=models.CASCADE)
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True)
+    category = models.ForeignKey(Service, on_delete=models.SET_NULL, null=True)
     service_cost = models.DecimalField(max_digits=10, decimal_places=2)
     cost = models.DecimalField(max_digits=10, decimal_places=2)
 

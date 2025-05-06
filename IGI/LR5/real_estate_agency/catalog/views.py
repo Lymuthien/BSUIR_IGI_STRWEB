@@ -1,10 +1,10 @@
 from django.views.generic import ListView
-from .models import ServiceCategory, Category
+from .models import ServiceCategory, Service
 
 
-class CategoryListView(ListView):
-    model = Category
-    template_name = "category_list.html"
+class ServiceListView(ListView):
+    model = Service
+    template_name = "service_list.html"
 
     def get_queryset(self):
         queryset = super().get_queryset()

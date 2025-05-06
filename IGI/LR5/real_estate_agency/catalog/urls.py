@@ -3,6 +3,6 @@ from . import views
 
 
 urlpatterns = [
-    re_path(r'^services/$', views.CategoryListView.as_view(), name='services'),
+    re_path(r'^services/$', views.ServiceListView.as_view(), name='services'),
 
 ]
