@@ -12,12 +12,12 @@ class ClientSignUpForm(UserCreationForm):
     phone_number = forms.CharField(
         max_length=17,
         validators=[User.phone_regex],
-        help_text="Формат: +375(29)XXX-XX-XX",
+        help_text="Format: +375(29)XXX-XX-XX",
     )
     birth_date = forms.DateField(
         validators=[restrict_age],
         widget=forms.DateInput(attrs={"type": "date"}),
-        help_text="Пользователь должен достигнуть 18 лет.",
+        help_text="User must be at least 18 y.o.",
     )
 
     class Meta:

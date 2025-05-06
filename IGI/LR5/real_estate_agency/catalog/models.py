@@ -20,7 +20,7 @@ class Estate(models.Model):
         validators=[MinValueValidator(0.01)],
     )
     category = models.ForeignKey(
-        'Category',
+        "Category",
         on_delete=models.SET_NULL,
         null=True,
         help_text="Enter the estate category",
@@ -55,9 +55,11 @@ class Category(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
+        related_name="services",
     )
     cost = models.DecimalField(
-        max_digits=10, decimal_places=2,
+        max_digits=10,
+        decimal_places=2,
     )
 
     def __str__(self):
