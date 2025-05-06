@@ -2,10 +2,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView
+import logging
 
 from .forms import PurchaseRequestForm
 from .models import ServiceCategory, Service, Estate, Sale, PurchaseRequest
 from users.models import Client
+
+logger = logging.getLogger(__name__)
 
 
 class ServiceListView(ListView):

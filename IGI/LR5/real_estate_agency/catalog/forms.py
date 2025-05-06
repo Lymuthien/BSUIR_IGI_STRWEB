@@ -1,5 +1,10 @@
 from django import forms
+import logging
+
+
 from .models import PurchaseRequest
+
+logger = logging.getLogger(__name__)
 
 class PurchaseRequestForm(forms.ModelForm):
     class Meta:

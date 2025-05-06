@@ -5,8 +5,8 @@ from .models import (
     Estate,
     Sale,
     ServiceCategory,
+    PurchaseRequest
 )
-
 
 class EstateInline(admin.TabularInline):
     model = Estate
@@ -33,6 +33,11 @@ class CategoryAdmin(admin.ModelAdmin):
 @admin.register(Estate)
 class EstateAdmin(admin.ModelAdmin):
     list_display = ["address", "cost", "category"]
+
+
+@admin.register(PurchaseRequest)
+class PurchaseRequestAdmin(admin.ModelAdmin):
+    list_display = ["client", "estate", "created_at", "status"]
 
 
 @admin.register(Sale)
