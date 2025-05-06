@@ -1,5 +1,6 @@
 from django.core.validators import MinValueValidator
 from django.db import models
+from django.db.models import Count
 from django.urls import reverse
 from real_estate_agency import settings
 from users.models import Employee, Client
@@ -96,6 +97,24 @@ class Sale(models.Model):
         return f"{self.employee.user.username} - {self.date_of_contract}"
 
 
+class PurchaseRequestManager(models.Manager):
+    def create_with_assignment(self, **kwargs):
+        active_statuses = ['new', 'in_progress']
+        employee = (
+            Employee.objects
+            .annotate(request_count=Count('purchaserequest', filter=models.Q(purchaserequest__status__in=active_statuses)))
+            .order_by('request_count')
+            .first()
+        )
+
+        if employee:
+            kwargs['employee'] = employee
+        else:
+            raise ValueError("Employee does not exist.")
+
+        return self.create(**kwargs)
+
+
 class PurchaseRequest(models.Model):
     STATUS_CHOICES = [
         ("new", "New"),
@@ -105,9 +124,21 @@ class PurchaseRequest(models.Model):
 
     estate = models.ForeignKey(Estate, on_delete=models.CASCADE)
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    employee = models.ForeignKey(
+        Employee,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        help_text="Employee for the purchase",
+    )
     message = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="new")
 
+    objects = PurchaseRequestManager()
+
     class Meta:
         unique_together = ["estate", "client"]
+
+    def __str__(self):
+        return f"{self.estate} - {self.client.user.username}"

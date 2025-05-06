@@ -1,14 +1,15 @@
+import logging
+
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView
-import logging
+from users.models import Client
 
 from .forms import PurchaseRequestForm
 from .models import ServiceCategory, Service, Estate, Sale, PurchaseRequest
-from users.models import Client
 
 logger = logging.getLogger(__name__)
 
@@ -107,36 +108,36 @@ class EstateDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["form"] = PurchaseRequestForm(initial={"estate": self.object.id})
-        if self.request.user.is_authenticated and hasattr(self.request.user, 'client'):
-            context['request_exists'] = PurchaseRequest.objects.filter(
-                client=self.request.user.client,
-                estate=self.object
+        if self.request.user.is_authenticated and hasattr(self.request.user, "client"):
+            context["request_exists"] = PurchaseRequest.objects.filter(
+                client=self.request.user.client, estate=self.object
             ).exists()
         else:
-            context['request_exists'] = False
+            context["request_exists"] = False
         return context
 
 
 class CreatePurchaseRequestView(LoginRequiredMixin, CreateView):
     model = PurchaseRequest
     form_class = PurchaseRequestForm
-    template_name = 'estate_detail.html'
+    template_name = "estate_detail.html"
 
     def form_valid(self, form):
         form.instance.client = Client.objects.filter(user=self.request.user)[0]
-        form.instance.estate_id = self.kwargs['pk']
+        form.instance.estate_id = self.kwargs["pk"]
 
         if PurchaseRequest.objects.filter(
-                client=self.request.user.client,
-                estate_id=self.kwargs['pk']
+            client=self.request.user.client, estate_id=self.kwargs["pk"]
         ).exists():
-            messages.error(
-                self.request,
-                "You have already purchased this request."
+            messages.error(self.request, "You have already purchased this request.")
+        else:
+            PurchaseRequest.objects.create_with_assignment(
+                client=self.request.user.client,
+                estate_id=self.kwargs["pk"],
+                message=form.cleaned_data["message"],
             )
-            return redirect(self.get_success_url())
 
-        return super().form_valid(form)
+        return redirect(self.get_success_url())
 
     def get_success_url(self):
-        return reverse_lazy('estate_detail', kwargs={'pk': self.kwargs['pk']})
+        return reverse_lazy("estate_detail", kwargs={"pk": self.kwargs["pk"]})
