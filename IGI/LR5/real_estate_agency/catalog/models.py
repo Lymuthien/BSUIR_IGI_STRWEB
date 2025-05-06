@@ -1,9 +1,8 @@
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.urls import reverse
-
-from users.models import Employee, Client
 from real_estate_agency import settings
+from users.models import Employee, Client
 
 
 class Estate(models.Model):
@@ -33,12 +32,12 @@ class Estate(models.Model):
     owner = models.ManyToManyField(Client, blank=True)
 
     def get_image_url(self):
-        if self.image and hasattr(self.image, 'url'):
+        if self.image and hasattr(self.image, "url"):
             return self.image.url
-        return '/media/image_placeholder.jpg'
+        return "/media/image_placeholder.jpg"
 
     class Meta:
-        ordering = ("-cost",)
+        ordering = ("-id",)
 
     def __str__(self):
         return f"{self.address}: {self.cost}"
@@ -69,7 +68,7 @@ class Service(models.Model):
     )
 
     class Meta:
-        ordering = ['category__name', 'name']
+        ordering = ["category__name", "name"]
 
     def __str__(self):
         return f"{self.category} - {self.name}"
@@ -95,3 +94,17 @@ class Sale(models.Model):
 
     def __str__(self):
         return f"{self.employee.user.username} - {self.date_of_contract}"
+
+
+class PurchaseRequest(models.Model):
+    STATUS_CHOICES = [
+        ("new", "New"),
+        ("in_progress", "In progress"),
+        ("completed", "Completed"),
+    ]
+
+    estate = models.ForeignKey(Estate, on_delete=models.CASCADE)
+    client = models.ForeignKey(Client, on_delete=models.CASCADE)
+    message = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="new")
