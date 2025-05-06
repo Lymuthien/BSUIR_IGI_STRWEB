@@ -1,5 +1,7 @@
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
+from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView
 import logging
@@ -97,7 +99,7 @@ class AvailableEstateListView(ListView):
         return context
 
 
-class EstateDetailView(DetailView):
+class EstateDetailView(LoginRequiredMixin, DetailView):
     model = Estate
     template_name = "estate_detail.html"
     context_object_name = "estate"
@@ -105,6 +107,13 @@ class EstateDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["form"] = PurchaseRequestForm(initial={"estate": self.object.id})
+        if self.request.user.is_authenticated and hasattr(self.request.user, 'client'):
+            context['request_exists'] = PurchaseRequest.objects.filter(
+                client=self.request.user.client,
+                estate=self.object
+            ).exists()
+        else:
+            context['request_exists'] = False
         return context
 
 
@@ -116,6 +125,17 @@ class CreatePurchaseRequestView(LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.client = Client.objects.filter(user=self.request.user)[0]
         form.instance.estate_id = self.kwargs['pk']
+
+        if PurchaseRequest.objects.filter(
+                client=self.request.user.client,
+                estate_id=self.kwargs['pk']
+        ).exists():
+            messages.error(
+                self.request,
+                "You have already purchased this request."
+            )
+            return redirect(self.get_success_url())
+
         return super().form_valid(form)
 
     def get_success_url(self):
