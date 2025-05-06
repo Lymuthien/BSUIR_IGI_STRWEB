@@ -41,6 +41,9 @@
                                 {% elif user.client %}
                                     <li><a href="{% url 'client_dashboard' %}" class="dropdown-item">Мои покупки</a></li>
                                     <li><hr class="dropdown-divider"></li>
+                                {% elif user.employee %}
+                                    <li><a href="{% url 'employee_dashboard' %}" class="dropdown-item">Мои клиенты</a></li>
+                                    <li><hr class="dropdown-divider"></li>
                                 {% endif %}
                                 <li>
                                     <form action="{% url 'logout' %}" method="post" class="d-inline">
