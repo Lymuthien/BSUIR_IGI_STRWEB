@@ -3,9 +3,10 @@ import logging
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView
+from django.utils import timezone
+from django.views.generic import ListView, DetailView, CreateView, TemplateView
 from users.models import Client
 
 from .forms import PurchaseRequestForm
@@ -141,3 +142,60 @@ class CreatePurchaseRequestView(LoginRequiredMixin, CreateView):
 
     def get_success_url(self):
         return reverse_lazy("estate_detail", kwargs={"pk": self.kwargs["pk"]})
+
+
+class ClientDashboardView(LoginRequiredMixin, TemplateView):
+    template_name = 'client_dashboard.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if not hasattr(self.request.user, 'client'):
+            messages.error(self.request, "You have not client assigned.")
+            return context
+
+        context['requests'] = PurchaseRequest.objects.filter(
+            client=self.request.user.client
+        ).select_related('estate', 'employee')
+
+        context['sales'] = Sale.objects.filter(
+            client=self.request.user.client
+        ).select_related('estate', 'employee', 'category')
+
+        return context
+
+    def post(self, request, *args, **kwargs):
+        action = request.POST.get('action')
+        request_id = request.POST.get('request_id')
+
+        if not request_id:
+            messages.error(request, "Неверный запрос.")
+            return redirect('client_dashboard')
+
+        purchase_request = get_object_or_404(PurchaseRequest, pk=request_id, client=self.request.user.client)
+
+        if action == 'buy':
+            if purchase_request.status in ['new', 'in_progress']:
+                Sale.objects.create(
+                    client=purchase_request.client,
+                    employee=purchase_request.employee,
+                    date_of_contract=timezone.now().date(),
+                    date_of_sale=timezone.now().date(),
+                    estate=purchase_request.estate,
+                    category=purchase_request.estate.category,
+                    service_cost=purchase_request.estate.category.cost if purchase_request.estate.category else 0,
+                    cost=purchase_request.estate.cost
+                )
+
+                purchase_request.status = 'completed'
+                purchase_request.save()
+            else:
+                messages.error(request, "This purchase is already completed.")
+
+        elif action == 'cancel':
+            if purchase_request.status in ['new', 'in_progress']:
+                purchase_request.status = 'completed'
+                purchase_request.save()
+            else:
+                messages.error(request, "This purchase is already completed.")
+
+        return redirect('client_dashboard')

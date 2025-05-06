@@ -99,16 +99,20 @@ class Sale(models.Model):
 
 class PurchaseRequestManager(models.Manager):
     def create_with_assignment(self, **kwargs):
-        active_statuses = ['new', 'in_progress']
+        active_statuses = ["new", "in_progress"]
         employee = (
-            Employee.objects
-            .annotate(request_count=Count('purchaserequest', filter=models.Q(purchaserequest__status__in=active_statuses)))
-            .order_by('request_count')
+            Employee.objects.annotate(
+                request_count=Count(
+                    "purchaserequest",
+                    filter=models.Q(purchaserequest__status__in=active_statuses),
+                )
+            )
+            .order_by("request_count")
             .first()
         )
 
         if employee:
-            kwargs['employee'] = employee
+            kwargs["employee"] = employee
         else:
             raise ValueError("Employee does not exist.")
 

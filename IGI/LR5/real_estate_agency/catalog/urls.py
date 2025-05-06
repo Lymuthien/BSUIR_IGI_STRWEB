@@ -7,4 +7,5 @@ urlpatterns = [
     re_path(r'^services/$', views.ServiceListView.as_view(), name='services'),
     re_path(r'^estate/(?P<pk>\d+)/$', views.EstateDetailView.as_view(), name='estate_detail'),
     re_path(r'^estate/(?P<pk>\d+)/request/$', views.CreatePurchaseRequestView.as_view(), name='create_request'),
+    re_path(r'^dashboard/$', views.ClientDashboardView.as_view(), name='client_dashboard'),
 ]
