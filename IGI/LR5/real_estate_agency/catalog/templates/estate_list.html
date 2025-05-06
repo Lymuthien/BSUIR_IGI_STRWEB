@@ -84,6 +84,7 @@
         {% for estate in estate_list %}
         <div class="col-md-4 mb-4">
             <div class="card h-100">
+                <img src="{{ estate.get_image_url }}" class="card-img-top" alt="image">
                 <div class="card-body">
                     <h5 class="card-title">{{ estate.address }}</h5>
                     <h6 class="card-subtitle mb-2 text-muted">
@@ -92,7 +93,6 @@
                         {% endif %}
                     </h6>
                     <div class="card-text">
-                        <p><strong>Площадь:</strong> {{ estate.area }} м²</p>
                         <p><strong>Цена:</strong> {{ estate.cost }} $</p>
                         <p class="text-truncate">{{ estate.description }}</p>
                     </div>
