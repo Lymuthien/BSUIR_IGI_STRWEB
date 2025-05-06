@@ -1,5 +1,7 @@
+from django.db.models import Q
+from django.db.models.functions import Collate
 from django.views.generic import ListView
-from .models import ServiceCategory, Service
+from .models import ServiceCategory, Service, Estate, Sale
 
 
 class ServiceListView(ListView):
@@ -26,4 +28,61 @@ class ServiceListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['service_categories'] = ServiceCategory.objects.all()
+        return context
+
+
+class AvailableEstateListView(ListView):
+    model = Estate
+    template_name = 'estate_list.html'
+    paginate_by = 9
+    ordering = '-cost'
+
+    def get_queryset(self):
+        sold_estates_ids = Sale.objects.all().values_list('estate_id', flat=True)
+        queryset = Estate.objects.exclude(id__in=sold_estates_ids).select_related('category')
+
+        search_query = self.request.GET.get('search')
+        if search_query:
+            queryset = queryset.filter(
+                Q(address__icontains=search_query) |
+                Q(description__icontains=search_query) |
+                Q(category__name__icontains=search_query)
+            )
+
+        category_id = self.request.GET.get('category')
+        if category_id:
+            queryset = queryset.filter(category_id=category_id)
+
+        service_category_id = self.request.GET.get('service_category')
+        if service_category_id:
+            queryset = queryset.filter(category__category_id=service_category_id)
+
+        min_price = self.request.GET.get('min_price')
+        max_price = self.request.GET.get('max_price')
+        if min_price:
+            queryset = queryset.filter(cost__gte=min_price)
+        if max_price:
+            queryset = queryset.filter(cost__lte=max_price)
+
+        sort = self.request.GET.get('sort')
+        if sort:
+            if sort == 'price_asc':
+                queryset = queryset.order_by('cost')
+            elif sort == 'price_desc':
+                queryset = queryset.order_by('-cost')
+            elif sort == 'area_asc':
+                queryset = queryset.order_by('area')
+            elif sort == 'area_desc':
+                queryset = queryset.order_by('-area')
+        else:
+            queryset = queryset.order_by(self.ordering)
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = Service.objects.all()
+        context['service_categories'] = ServiceCategory.objects.all()
+        context['search_query'] = self.request.GET.get('search', '')
+        context['current_sort'] = self.request.GET.get('sort')
         return context

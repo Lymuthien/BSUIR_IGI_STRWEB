@@ -62,8 +62,11 @@ class Service(models.Model):
         decimal_places=2,
     )
 
+    class Meta:
+        ordering = ['category__name', 'name']
+
     def __str__(self):
-        return f"{self.name} - {self.category}"
+        return f"{self.category} - {self.name}"
 
 
 class Sale(models.Model):

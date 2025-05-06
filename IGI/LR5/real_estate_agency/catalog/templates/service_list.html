@@ -13,10 +13,8 @@
                     <select name="service_category" class="form-select">
                         <option value="">Все категории услуг</option>
                         {% for sc in service_categories %}
-                        <option value="{{ sc.id }}">
-                            {% if request.GET.service_category == sc.id|stringformat:"s" %}
-                                Выбрано:
-                            {% endif %}
+                        <option value="{{ sc.id }}"
+                            {% if request.GET.service_category == sc.id|stringformat:"s" %}selected{% endif %}>
                             {{ sc.name }}
                         </option>
                         {% endfor %}
