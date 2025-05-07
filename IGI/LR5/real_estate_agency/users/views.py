@@ -10,7 +10,7 @@ from home.models import Review
 
 from .forms import ClientSignUpForm
 from .models import Profile, Client, Employee
-from .services.timezone_service import TimezoneService
+from .utils.timezone_service import TimezoneService
 
 logger = logging.getLogger(__name__)
 

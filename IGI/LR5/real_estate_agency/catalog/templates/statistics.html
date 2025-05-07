@@ -66,6 +66,7 @@
                     <div class="card-header bg-primary text-white">
                         <i class="bi bi-house"></i>Популярный тип недвижимости
                     </div>
+                    <img src="{{ chart_images.services_by_sold_count }}" class="card-img-top">
                     <div class="card-body">
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item">
@@ -84,13 +85,14 @@
                     <div class="card-header bg-primary text-white">
                         <i class="bi bi-cash-stack"></i>Сервисная прибыль
                     </div>
+                    <img src="{{ chart_images.services_by_service_profit }}" class="card-img-top">
                     <div class="card-body">
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item">
-                              <strong>Категория:</strong> {{ profitable_service_category|default:"Нет данных" }}
+                              <strong>Категория:</strong> {{ profitable_service|default:"Нет данных" }}
                             </li>
                             <li class="list-group-item">
-                              <strong>Сумма:</strong> {{ profitable_service_category.total_service_cost|floatformat:2 }} $
+                              <strong>Сумма:</strong> {{ profitable_service.total_service_cost|floatformat:2 }} $
                             </li>
                         </ul>
                     </div>
@@ -102,6 +104,7 @@
                     <div class="card-header bg-primary text-white">
                         <i class="bi bi-person-workspace"></i>Сотрудники: Стоимость услуг (последний месяц)
                     </div>
+                    <img src="{{ chart_images.employee_service_stats }}" class="card-img-top">
                     <div class="card-body">
                         {% for emp in employee_service_stats %}
                             <p class="mb-2">
@@ -120,6 +123,7 @@
                     <div class="card-header bg-primary text-white">
                         <i class="bi bi-wallet2"></i>Сотрудники: Общая стоимость (последний месяц)
                     </div>
+                    <img src="{{ chart_images.employee_total_stats }}" class="card-img-top">
                     <div class="card-body">
                         {% for emp in employee_total_stats %}
                             <p class="mb-2">
@@ -138,13 +142,14 @@
                     <div class="card-header bg-primary text-white">
                         <i class="bi bi-trophy"></i>Наибольшая общая стоимость
                     </div>
+                    <img src="{{ chart_images.services_by_full_costs }}" class="card-img-top">
                     <div class="card-body">
                         <ul class="list-group list-group-flush">
                             <li class="list-group-item">
-                              <strong>Категория:</strong> {{ highest_value_category|default:"Нет данных" }}
+                              <strong>Категория:</strong> {{ highest_cost_service|default:"Нет данных" }}
                             </li>
                             <li class="list-group-item">
-                              <strong>Сумма:</strong> {{ highest_value_category.total_value|floatformat:2 }} $
+                              <strong>Сумма:</strong> {{ highest_cost_service.total_value|floatformat:2 }} $
                             </li>
                         </ul>
                     </div>

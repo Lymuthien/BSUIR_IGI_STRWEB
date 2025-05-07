@@ -27,7 +27,6 @@ class ServiceCategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Service)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ("name", "cost")
     inlines = [EstateInline]
 
 

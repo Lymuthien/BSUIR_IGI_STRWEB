@@ -1,18 +1,19 @@
 import logging
-from datetime import timedelta
 
-import pandas as pd
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Q, Count, Sum
+from django.db.models import Q
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.generic import ListView, DetailView, CreateView, TemplateView
 from users.models import Client, Employee
+from real_estate_agency.settings import MEDIA_URL
 
 from .forms import PurchaseRequestForm
 from .models import ServiceCategory, Service, Estate, Sale, PurchaseRequest
+from .utils.statistic_calculator import StatisticsCalculator
+from .utils.plotter import Plotter
 
 logger = logging.getLogger(__name__)
 
@@ -305,91 +306,71 @@ class StatisticsView(LoginRequiredMixin, TemplateView):
         )
         context = super().get_context_data(**kwargs)
 
-        sales = Sale.objects.all()
+        cost_stats, service_stats = StatisticsCalculator.get_sale_cost_stats()
+        client_stats = StatisticsCalculator.get_client_stats()
+        services_by_sold_count, counts = (
+            StatisticsCalculator.get_services_by_sold_count()
+        )
+        services_by_service_profit, service_profits = (
+            StatisticsCalculator.get_services_by_service_profit()
+        )
+        services_by_full_costs, full_costs = (
+            StatisticsCalculator.get_services_by_full_costs()
+        )
+        employee_service_stats, employee_service_costs = (
+            StatisticsCalculator.get_employees_by_service_profit()
+        )
+        employee_total_stats, total_costs = (
+            StatisticsCalculator.get_employees_by_full_costs()
+        )
 
-        estate_df = pd.Series([float(s.cost) for s in sales])
-        cost_stats = {
-            "mean_cost": estate_df.mean() or 0,
-            "median_cost": estate_df.median() or 0,
-            "mode_cost": estate_df.mode().get(0) or 0,
+        image_paths = {
+            "services_by_sold_count": f"{MEDIA_URL}services_by_sold_count.jpg",
+            "services_by_service_profit": f"{MEDIA_URL}services_by_service_profit.jpg",
+            "employee_service_stats": f"{MEDIA_URL}employee_service_stats.jpg",
+            "employee_total_stats": f"{MEDIA_URL}employee_total_stats.jpg",
+            "services_by_full_costs": f"{MEDIA_URL}services_by_full_costs.jpg",
         }
-        logger.debug(f"cost_stats: {cost_stats}")
-        context["cost_stats"] = cost_stats
 
-        service_df = pd.Series([float(s.service_cost) for s in sales if s.service_cost])
-        service_stats = {
-            "mean_cost": service_df.mean() or 0,
-            "median_cost": service_df.median() or 0,
-            "mode_cost": service_df.mode().get(0) or 0,
-        }
-        logger.debug(f"service_stats: {service_stats}")
-        context["service_stats"] = service_stats
-
-        clients = Client.objects.filter(user__birth_date__isnull=False)
-        today = timezone.now().date()
-        ages = [
-            today.year
-            - client.user.birth_date.year
-            - (
-                (today.month, today.day)
-                < (client.user.birth_date.month, client.user.birth_date.day)
-            )
-            for client in clients
-        ]
-
-        ages_df = pd.Series(ages)
-        client_stats = {"mean_age": ages_df.mean(), "median_age": ages_df.median()}
-        logger.debug(f"client_stats: {client_stats}")
-        context["client_stats"] = client_stats
-
-        popular_category = (
-            Service.objects.filter(estate__sale__isnull=False)
-            .annotate(count=Count("estate"))
-            .order_by("-count")
-            .first()
+        Plotter.plt_bars(
+            counts,
+            path=image_paths['services_by_sold_count'][1:],
+            categories=(str(s)[:12] for s in services_by_sold_count),
         )
-        logger.debug(f"popular_category: {popular_category}")
-        context["popular_category"] = popular_category
-
-        profitable_service_category = (
-            Service.objects.filter(
-                estate__sale__isnull=False,
-            )
-            .annotate(total_service_cost=Sum("estate__category__cost"))
-            .order_by("-total_service_cost")
-            .first()
+        Plotter.plt_bars(
+            service_profits,
+            path=image_paths['services_by_service_profit'][1:],
+            categories=(str(s)[:12] for s in services_by_sold_count),
         )
-        logger.debug(f"profitable_service_category: {profitable_service_category}")
-        context["profitable_service_category"] = profitable_service_category
-
-        one_month_ago = timezone.now() - timedelta(days=30)
-        employee_service_stats = (
-            Employee.objects.filter(sale__date_of_sale__gte=one_month_ago)
-            .annotate(total_service_cost=Sum("sale__service_cost"))
-            .order_by("-total_service_cost")
+        Plotter.plt_bars(
+            employee_service_costs,
+            path=image_paths['employee_service_stats'][1:],
+            categories=(e.user.username for e in employee_service_stats),
         )
-        logger.debug(f"employee_service_stats: {employee_service_stats}")
-        context["employee_service_stats"] = employee_service_stats
-
-        employee_total_stats = (
-            Employee.objects.filter(sale__date_of_sale__gte=one_month_ago)
-            .annotate(total_cost=Sum("sale__cost"))
-            .order_by("-total_cost")
+        Plotter.plt_bars(
+            total_costs,
+            path=image_paths['employee_total_stats'][1:],
+            categories=(e.user.username for e in employee_total_stats),
         )
-        logger.debug(f"employee_total_stats: {employee_total_stats}")
-        context["employee_total_stats"] = employee_total_stats
-
-        highest_value_category = (
-            Service.objects.filter(
-                estate__sale__isnull=False
-            )
-            .annotate(total_value=Sum("estate__cost") + Sum("cost"))
-            .order_by("-total_value")
-            .first()
+        Plotter.plt_bars(
+            full_costs,
+            path=image_paths['services_by_full_costs'][1:],
+            categories=(str(s)[:12] for s in services_by_full_costs),
         )
 
-        logger.debug(f"highest_value_category: {highest_value_category}")
-        context["highest_value_category"] = highest_value_category
+        context.update(
+            {
+                "cost_stats": cost_stats,
+                "service_stats": service_stats,
+                "client_stats": client_stats,
+                "popular_category": services_by_sold_count.first(),
+                "profitable_service": services_by_service_profit.first(),
+                "employee_service_stats": employee_service_stats,
+                "employee_total_stats": employee_total_stats,
+                "highest_cost_service": services_by_full_costs.first(),
+                "chart_images": image_paths,
+            }
+        )
 
         logger.info(
             f"StatisticsViewContext prepared for user: {self.request.user.username}"

@@ -71,7 +71,7 @@ class Service(models.Model):
         ordering = ["category__name", "name"]
 
     def __str__(self):
-        return f"{self.category} - {self.name}"
+        return f"({str(self.category)[:2]}) - {self.name}"
 
 
 class Sale(models.Model):
