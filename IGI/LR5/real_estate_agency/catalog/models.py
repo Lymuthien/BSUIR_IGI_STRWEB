@@ -30,7 +30,6 @@ class Estate(models.Model):
     )
     image = models.ImageField(blank=True, null=True, upload_to="media/")
     address = models.CharField(max_length=200)
-    owner = models.ManyToManyField(Client, blank=True)
 
     def get_image_url(self):
         if self.image and hasattr(self.image, "url"):
