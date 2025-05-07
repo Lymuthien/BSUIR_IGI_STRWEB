@@ -44,8 +44,8 @@ class PurchaseRequestAdmin(admin.ModelAdmin):
 
 @admin.register(Sale)
 class SaleAdmin(admin.ModelAdmin):
-    list_display = ["employee", "date_of_sale", "estate", "service_cost", "cost"]
-    list_filter = ["date_of_sale", "employee"]
+    list_display = ["employee", "date_of_sale", "estate", "service_cost", "cost", "estate__category"]
+    list_filter = ["date_of_sale", "employee", "estate__category"]
 
     fieldsets = (
         (None, {

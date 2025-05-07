@@ -81,6 +81,7 @@
                             <th>Клиент</th>
                             <th>Дата продажи</th>
                             <th>Стоимость</th>
+                            <th>Услуги риэлтора</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -90,6 +91,7 @@
                                 <td>{{ sale.client.user.get_full_name|default:"Не указан" }}</td>
                                 <td>{{ sale.date_of_sale|date:"d.m.Y" }}</td>
                                 <td>{{ sale.cost }} $</td>
+                                <td>{{ sale.service_cost }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>

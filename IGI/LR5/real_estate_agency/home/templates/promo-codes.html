@@ -27,10 +27,10 @@
                 <div class="row">
                     {% for promo in active_promos %}
                         <div class="col-md-6 mb-3">
-                            <div class="card border-success" style="border-color: #699BCE !important;" >
-                                <div class="card-header" style="background-color: #699BCE; color: #ffffff;">
+                            <div class="card border-primary">
+                                <div class="card-header bg-primary text-white">
                                     {{ promo.code }}
-                                    <span class="badge bg-light float-end" style="color: #699BCE;">
+                                    <span class="badge bg-light float-end text-primary">
                                         Скидка {{ promo.discount }}%
                                     </span>
                                 </div>

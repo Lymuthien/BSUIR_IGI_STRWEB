@@ -38,6 +38,8 @@
                                 {% if user.is_superuser %}
                                     <li><a href="{% url 'admin:index' %}" class="dropdown-item">Панель управления</a></li>
                                     <li><hr class="dropdown-divider"></li>
+                                    <li><a href="{% url 'statistics' %}" class="dropdown-item">Статистика</a></li>
+                                    <li><hr class="dropdown-divider"></li>
                                 {% elif user.client %}
                                     <li><a href="{% url 'client_dashboard' %}" class="dropdown-item">Мои покупки</a></li>
                                     <li><hr class="dropdown-divider"></li>
