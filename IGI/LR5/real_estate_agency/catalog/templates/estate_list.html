@@ -3,6 +3,22 @@
 {% block title %}Доступная недвижимость{% endblock %}
 
 {% block content %}
+<style>
+    .estate-image-container {
+        width: 100%;
+        height: 400px;
+        overflow: hidden;
+        position: relative;
+    }
+    .estate-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
+        display: block;
+    }
+</style>
+
 <div class="container mt-4">
     <h1 class="mb-4">Доступная недвижимость</h1>
 
@@ -84,7 +100,9 @@
         {% for estate in estate_list %}
         <div class="col-md-4 mb-4">
             <div class="card h-100">
-                <img src="{{ estate.get_image_url }}" class="card-img-top" alt="image">
+                <div class="estate-image-container">
+                    <img src="{{ estate.get_image_url }}" class="estate-image" alt="{{ estate.title }}">
+                </div>
                 <div class="card-body">
                     <h5 class="card-title">{{ estate.address }}</h5>
                     <h6 class="card-subtitle mb-2 text-muted">

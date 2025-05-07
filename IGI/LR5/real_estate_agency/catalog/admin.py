@@ -27,12 +27,14 @@ class ServiceCategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Service)
 class CategoryAdmin(admin.ModelAdmin):
+    list_display = ("name", "cost")
     inlines = [EstateInline]
 
 
 @admin.register(Estate)
 class EstateAdmin(admin.ModelAdmin):
-    list_display = ["address", "cost", "category"]
+    list_display = ["address", "cost", "category", "sale"]
+    list_filter = ["category", "category__category"]
 
 
 @admin.register(PurchaseRequest)
