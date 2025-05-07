@@ -73,6 +73,7 @@
                             <th>Недвижимость</th>
                             <th>Дата покупки</th>
                             <th>Стоимость</th>
+                            <th>Услуги риэлтора</th>
                             <th>Риэлтор</th>
                         </tr>
                     </thead>
@@ -82,6 +83,7 @@
                                 <td>{{ sale.estate.address }}</td>
                                 <td>{{ sale.date_of_sale|date:"d.m.Y" }}</td>
                                 <td>{{ sale.cost }} $</td>
+                                <td>{{ sale.service_cost }} $</td>
                                 <td>{{ sale.employee.user.get_full_name|default:"Не указан" }}</td>
                             </tr>
                         {% endfor %}

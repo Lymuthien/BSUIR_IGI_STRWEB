@@ -2,6 +2,7 @@ import calendar
 import logging
 
 from django.contrib.auth import login
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.generic import CreateView, DetailView
@@ -42,7 +43,7 @@ class SignUpView(CreateView):
         return super().form_invalid(form)
 
 
-class ProfileView(DetailView):
+class ProfileView(LoginRequiredMixin, DetailView):
     model = Profile
     template_name = "profile-detail.html"
 
