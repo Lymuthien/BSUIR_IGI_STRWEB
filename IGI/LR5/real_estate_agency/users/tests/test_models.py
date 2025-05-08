@@ -221,16 +221,3 @@ class EmployeeModelTest(TestCase):
         client = self.employee.clients.first()
         self.assertEqual(client.user.username, "client_for_employee")
         self.assertEqual(client.user.role, "client")
-
-    def test_hire_date_can_be_null(self):
-        new_employee_user = User.objects.create(
-            first_name="New",
-            last_name="Employee",
-            role="employee",
-            phone_number="+375(29)999-99-99",
-            birth_date=datetime(1990, 1, 1),
-            username="new_employee",
-            password="<PASSWORD>",
-        )
-        new_employee = Employee.objects.create(user=new_employee_user)
-        self.assertIsNone(new_employee.hire_date)

@@ -1,9 +1,6 @@
-import phonenumbers
-from django.core.exceptions import ValidationError
-from django.core.validators import MinValueValidator, MaxValueValidator
-
+from django.conf import settings
+from django.core.validators import MinValueValidator, MaxValueValidator, RegexValidator
 from django.db import models
-from real_estate_agency import settings
 
 
 class AboutCompany(models.Model):
@@ -16,13 +13,13 @@ class AboutCompany(models.Model):
 class News(models.Model):
     title = models.CharField(max_length=100)
     summary = models.TextField()
-    image = models.ImageField(upload_to='news/', blank=True)
+    image = models.ImageField(upload_to="news/", blank=True)
     created = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         verbose_name = "News"
         verbose_name_plural = "News"
-        ordering = ['-created']
+        ordering = ["-created"]
 
     def __str__(self):
         return self.title
@@ -31,28 +28,27 @@ class News(models.Model):
 class FAQ(models.Model):
     question = models.CharField(max_length=100)
     answer = models.TextField()
-    added_date = models.DateField()
+    added_date = models.DateField(auto_now_add=True)
 
     def __str__(self):
         return self.question
 
 
 class Contact(models.Model):
-    name = models.CharField(max_length=100, default="")
-    position = models.CharField(max_length=100, default="")
-    photo = models.ImageField(upload_to='media/')
+    name = models.CharField(max_length=100)
+    position = models.CharField(max_length=100)
+    photo = models.ImageField(upload_to="contacts/")
     description = models.TextField()
-    phone = models.CharField(max_length=20)
+    phone = models.CharField(
+        max_length=20,
+        validators=[
+            RegexValidator(
+                message="Phone number must be +375(29)XXX-XX-XX",
+                regex="^\\+375\\(29\\)\\d{3}-\\d{2}-\\d{2}$",
+            )
+        ],
+    )
     email = models.EmailField()
-
-    def clean(self):
-        try:
-            phone_number = phonenumbers.parse(self.phone, 'BY')
-            if not phonenumbers.is_valid_number(phone_number):
-                raise ValidationError("Invalid phone number")
-            self.phone = phonenumbers.format_number(phone_number, phonenumbers.PhoneNumberFormat.INTERNATIONAL)
-        except phonenumbers.NumberParseException:
-            raise ValidationError("Valid +375 (29) XXX-XX-XX")
 
     def __str__(self):
         return self.name
@@ -63,7 +59,7 @@ class Policy(models.Model):
 
 
 class Vacancy(models.Model):
-    position = models.CharField(max_length=100, default="")
+    position = models.CharField(max_length=100)
     salary = models.IntegerField()
     description = models.TextField()
 
@@ -73,11 +69,11 @@ class Vacancy(models.Model):
 
 class Review(models.Model):
     RATING_CHOICES = [
-        (1, '1 - Ужасно'),
-        (2, '2 - Плохо'),
-        (3, '3 - Удовлетворительно'),
-        (4, '4 - Хорошо'),
-        (5, '5 - Отлично'),
+        (1, "1 - Ужасно"),
+        (2, "2 - Плохо"),
+        (3, "3 - Удовлетворительно"),
+        (4, "4 - Хорошо"),
+        (5, "5 - Отлично"),
     ]
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -92,10 +88,11 @@ class Review(models.Model):
 
 class PromoCode(models.Model):
     code = models.CharField(max_length=50)
-    discount = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(100)])
-    description = models.TextField(default="")
+    discount = models.IntegerField(
+        validators=[MinValueValidator(1), MaxValueValidator(100)]
+    )
+    description = models.TextField()
     status = models.BooleanField(default=True)
 
     def __str__(self):
         return self.code
-
