@@ -3,8 +3,6 @@ from datetime import datetime
 from django.test import TestCase, RequestFactory
 from django.urls import reverse
 from django.contrib.messages import get_messages
-from unittest.mock import patch
-from django.conf import settings
 from ..views import (
     ServiceListView,
     AvailableEstateListView,
@@ -49,15 +47,12 @@ class BaseTestCase(TestCase):
             category=estate_category
         )
 
-class ServiceListViewTests(BaseTestCase):
-    @classmethod
-    def setUpTestData(cls):
-        super().setUpTestData()
-
     def setUp(self):
         self.factory = RequestFactory()
         self.user = User.objects.get(username='client')
         self.client_user = Client.objects.get(user=self.user)
+        self.employee_user = User.objects.get(username="employee")
+        self.employee = Employee.objects.get(user=self.employee_user)
         self.service_category = ServiceCategory.objects.get(name='Category1')
         self.service = Service.objects.get(name='Service1')
         self.estate_category = Service.objects.get(name='EstateService')
@@ -65,6 +60,14 @@ class ServiceListViewTests(BaseTestCase):
 
     def login(self, username='client', password='testpass'):
         self.client.login(username=username, password=password)
+
+class ServiceListViewTests(BaseTestCase):
+    @classmethod
+    def setUpTestData(cls):
+        super().setUpTestData()
+
+    def setUp(self):
+        super().setUp()
 
     def test_get_queryset_filter_price(self):
         request = self.factory.get(reverse('services'), {'min_price': 50, 'max_price': 150})
@@ -86,16 +89,7 @@ class AvailableEstateListViewTests(BaseTestCase):
         super().setUpTestData()
 
     def setUp(self):
-        self.factory = RequestFactory()
-        self.user = User.objects.get(username='client')
-        self.client_user = Client.objects.get(user=self.user)
-        self.service_category = ServiceCategory.objects.get(name='Category1')
-        self.service = Service.objects.get(name='Service1')
-        self.estate_category = Service.objects.get(name='EstateService')
-        self.estate = Estate.objects.get(address='123 Test St')
-
-    def login(self, username='client', password='testpass'):
-        self.client.login(username=username, password=password)
+        super().setUp()
 
     def test_get_queryset_no_filters(self):
         self.login()
@@ -152,16 +146,7 @@ class EstateDetailViewTests(BaseTestCase):
         super().setUpTestData()
 
     def setUp(self):
-        self.factory = RequestFactory()
-        self.user = User.objects.get(username='client')
-        self.client_user = Client.objects.get(user=self.user)
-        self.service_category = ServiceCategory.objects.get(name='Category1')
-        self.service = Service.objects.get(name='Service1')
-        self.estate_category = Service.objects.get(name='EstateService')
-        self.estate = Estate.objects.get(address='123 Test St')
-
-    def login(self, username='client', password='testpass'):
-        self.client.login(username=username, password=password)
+        super().setUp()
 
     def test_get_context_data_unauthenticated(self):
         response = self.client.get(reverse('estate_detail', kwargs={'pk': self.estate.id}))
@@ -183,16 +168,7 @@ class CreatePurchaseRequestViewTests(BaseTestCase):
         super().setUpTestData()
 
     def setUp(self):
-        self.factory = RequestFactory()
-        self.user = User.objects.get(username='client')
-        self.client_user = Client.objects.get(user=self.user)
-        self.service_category = ServiceCategory.objects.get(name='Category1')
-        self.service = Service.objects.get(name='Service1')
-        self.estate_category = Service.objects.get(name='EstateService')
-        self.estate = Estate.objects.get(address='123 Test St')
-
-    def login(self, username='client', password='testpass'):
-        self.client.login(username=username, password=password)
+        super().setUp()
 
     def test_form_valid(self):
         self.login()
@@ -226,18 +202,7 @@ class ClientDashboardViewTests(BaseTestCase):
         super().setUpTestData()
 
     def setUp(self):
-        self.factory = RequestFactory()
-        self.user = User.objects.get(username='client')
-        self.client_user = Client.objects.get(user=self.user)
-        self.employee_user = User.objects.get(username="employee")
-        self.employee = Employee.objects.get(user=self.employee_user)
-        self.service_category = ServiceCategory.objects.get(name='Category1')
-        self.service = Service.objects.get(name='Service1')
-        self.estate_category = Service.objects.get(name='EstateService')
-        self.estate = Estate.objects.get(address='123 Test St')
-
-    def login(self, username='client', password='testpass'):
-        self.client.login(username=username, password=password)
+        super().setUp()
 
     def test_get_context_data(self):
         self.login()
@@ -293,18 +258,7 @@ class EmployeeDashboardViewTests(BaseTestCase):
         super().setUpTestData()
 
     def setUp(self):
-        self.factory = RequestFactory()
-        self.user = User.objects.get(username='client')
-        self.client_user = Client.objects.get(user=self.user)
-        self.employee_user = User.objects.get(username="employee")
-        self.employee = Employee.objects.get(user=self.employee_user)
-        self.service_category = ServiceCategory.objects.get(name='Category1')
-        self.service = Service.objects.get(name='Service1')
-        self.estate_category = Service.objects.get(name='EstateService')
-        self.estate = Estate.objects.get(address='123 Test St')
-
-    def login(self, username='client', password='testpass'):
-        self.client.login(username=username, password=password)
+        super().setUp()
 
     def test_get_context_data(self):
         self.client.login(username='employee', password='testpass')
