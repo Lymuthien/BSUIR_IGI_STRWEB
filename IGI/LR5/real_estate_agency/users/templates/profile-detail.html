@@ -5,9 +5,9 @@
 {% block content %}
 <h1>Профиль пользователя: {{ profile.user.username }}</h1>
 
-<div class="card mb-4">
-    <div class="card-body">
-        <h5 class="card-title">Информация о пользователе</h5>
+<div>
+    <div>
+        <h3>Информация о пользователе</h3>
         {% if is_client %}
             <p>Клиент</p>
         {% elif is_employee %}
@@ -22,28 +22,26 @@
     </div>
 </div>
 
-<div class="card mb-4">
-    <div class="card-body">
-        <h5 class="card-title">Время и дата</h5>
+<div>
+    <div>
+        <h3>Время и дата</h3>
         <p><strong>Текущая дата ({{ user_timezone }}):</strong> {{ local_date }} ({{ utc_date }} UTC)</p>
         <p><strong>Дата регистрации ({{ user_timezone }}):</strong> {{ local_created }} ({{ utc_created }} UTC)</p>
     </div>
 </div>
 
-<div class="card mb-4">
-    <div class="card-header">
-        <h4>Календарь</h4>
-    </div>
-    <div class="card-body">
+<div>
+    <div>
+        <h3>Календарь</h3>
         <pre>{{ calendar }}</pre>
     </div>
 </div>
 
-<div class="card mb-4">
-    <div class="card-body">
-        <h5 class="card-title">Отзывы</h5>
+<div>
+    <div>
+        <h3>Отзывы</h3>
         {% if reviews %}
-        <table class="table">
+        <table>
             <thead>
                 <tr>
                     <th>Текст</th>
@@ -64,7 +62,7 @@
             </tbody>
         </table>
         {% else %}
-        <p class="text-muted">Нет отзывов.</p>
+        <p>Нет отзывов.</p>
         {% endif %}
     </div>
 </div>

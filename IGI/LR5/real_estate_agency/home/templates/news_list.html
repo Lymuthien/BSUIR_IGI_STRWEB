@@ -3,30 +3,18 @@
 {% block title %}Новости{% endblock %}
 
 {% block content %}
-<h1 class="mb-4">Новости</h1>
-<div class="row">
+<h1>Новости</h1>
+<div>
     {% for news in news_list %}
-        <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                {% if news.image %}
-                    <img src="{{ news.image.url }}" class="card-img-top">
-                {% endif %}
-                <div class="card-body">
-                    <h5 class="card-title">{{ news.title }}</h5>
-                    <p class="card-text">{{ news.summary }}</p>
-                    <a href="" class="btn btn-primary">Читать далее</a>
-                </div>
-                <div class="card-footer text-muted">
-                    {{ news.created|date:"d.m.Y" }}
-                </div>
-            </div>
-        </div>
+        {% if news.image %}
+            <img src="{{ news.image.url }}">
+        {% endif %}
+        <h3>{{ news.title }}</h3>
+        <p>{{ news.summary }}</p>
+        <a href="">Читать далее</a>
+        {{ news.created|date:"d.m.Y" }}
     {% empty %}
-        <div class="col-12">
-            <div class="alert alert-info">
-                Новостей пока нет
-            </div>
-        </div>
+        Новостей пока нет
     {% endfor %}
 </div>
 {% endblock %}
