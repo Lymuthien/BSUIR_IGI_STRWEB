@@ -1,13 +1,16 @@
 from datetime import date
+from django.utils.translation import gettext_lazy as _
 
 from django.core.validators import BaseValidator
 
 
 class RestrictedAgeValidator(BaseValidator):
-    message = "Ensure that date is older than %(limit_value)s."
+    message = _("Ensure that date is older than %(limit_value)s")
     code = "restricted_age"
 
     def compare(self, birth_date, limit_value):
+        if not isinstance(birth_date, date):
+            raise TypeError("Birth_date must be a date")
         today = date.today()
         age = (
             today.year
