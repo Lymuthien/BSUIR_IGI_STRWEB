@@ -28,7 +28,7 @@ class ReviewForm(forms.ModelForm):
         if len(text) < 10:
             logger.error("Review text too short: less than 10 characters")
             raise forms.ValidationError(
-                "Текст отзыва должен содержать не менее 10 символов."
+                "Review text too short: less than 10 characters."
             )
         logger.info("Review text validation passed")
         return text
