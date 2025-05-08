@@ -1,9 +1,12 @@
 import logging
+from datetime import date
 
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
+from django.core.validators import MaxValueValidator
 
-from .models import User, restrict_age, Client
+from .models import User, Client
+from .utils import RestrictedAgeValidator
 
 logger = logging.getLogger(__name__)
 
@@ -15,7 +18,7 @@ class ClientSignUpForm(UserCreationForm):
         help_text="Format: +375(29)XXX-XX-XX",
     )
     birth_date = forms.DateField(
-        validators=[restrict_age],
+        validators=[RestrictedAgeValidator(18), MaxValueValidator(date.today())],
         widget=forms.DateInput(attrs={"type": "date"}),
         help_text="User must be at least 18 y.o.",
     )
