@@ -1,7 +1,6 @@
 from django import forms
 from django.test import TestCase
 from ..forms import PurchaseRequestForm
-from ..models import PurchaseRequest
 
 
 class PurchaseRequestFormTest(TestCase):

@@ -115,7 +115,7 @@ LOGOUT_REDIRECT_URL = "/"
 
 # LOGGING
 
-LOG_LEVEL = 'DEBUG'
+LOG_LEVEL = 'INFO'
 
 LOGGING = {
     'version': 1,
@@ -143,7 +143,7 @@ LOGGING = {
     },
     'loggers': {
         '': {
-            'handlers': ['console', 'file'],
+            'handlers': ['file'],
             'level': LOG_LEVEL,
             'propagate': True,
         },

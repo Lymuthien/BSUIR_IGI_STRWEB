@@ -1,5 +1,3 @@
-from unittest.mock import MagicMock
-
 from django.core.validators import MinValueValidator
 from django.test import TestCase
 from decimal import Decimal

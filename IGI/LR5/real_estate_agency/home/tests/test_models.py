@@ -1,10 +1,8 @@
 from django.apps import apps
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.test import TestCase
-from django.core.exceptions import ValidationError
 from django.conf import settings
 from datetime import datetime, date
-from phonenumbers import NumberParseException
 from ..models import (
     AboutCompany,
     News,
