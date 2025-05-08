@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 import os
 from pathlib import Path
+from .config import Config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-qe@_g03=04m2m-c9za&7r90k9&1^_jm)vtkj(^e5ll)3va33tf"
+SECRET_KEY = Config.DJANGO_SECRET_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -114,7 +115,7 @@ LOGOUT_REDIRECT_URL = "/"
 
 # LOGGING
 
-LOG_LEVEL = 'INFO'
+LOG_LEVEL = 'DEBUG'
 
 LOGGING = {
     'version': 1,
@@ -173,3 +174,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Mapbox
+
+MAPBOX_ACCESS_TOKEN = Config.MAPBOX_ACCESS_TOKEN
+MAPBOX_GEOCODING_API = 'https://api.mapbox.com/geocoding/v5/mapbox.places/{}.json'
+MAPBOX_STATIC_MAP_API = 'https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/pin-s+0d6efd({lng},{lat})/{lng},{lat},15,0/600x400?access_token={token}'
+MAPBOX_LANGUAGE = 'ru'
+MAPBOX_DEFAULT_IMAGE = MEDIA_URL + 'map_placeholder.jpg'

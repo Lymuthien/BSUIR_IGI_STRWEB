@@ -16,7 +16,7 @@ class AboutCompany(models.Model):
 class News(models.Model):
     title = models.CharField(max_length=100)
     summary = models.TextField()
-    image = models.ImageField(upload_to='media/', blank=True)
+    image = models.ImageField(upload_to='news/', blank=True)
     created = models.DateTimeField(auto_now_add=True)
 
     class Meta:

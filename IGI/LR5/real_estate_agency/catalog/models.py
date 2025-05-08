@@ -2,7 +2,6 @@ from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import Count
 from django.urls import reverse
-from real_estate_agency import settings
 from users.models import Employee, Client
 
 
@@ -28,7 +27,7 @@ class Estate(models.Model):
     description = models.TextField(
         max_length=2000, help_text="Enter the estate description"
     )
-    image = models.ImageField(blank=True, null=True, upload_to="media/")
+    image = models.ImageField(blank=True, null=True, upload_to="estates/")
     address = models.CharField(max_length=200)
 
     def get_image_url(self):

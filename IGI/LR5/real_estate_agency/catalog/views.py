@@ -7,13 +7,12 @@ from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.generic import ListView, DetailView, CreateView, TemplateView
+from django.conf import settings
 from users.models import Client, Employee
-from real_estate_agency.settings import MEDIA_URL
 
 from .forms import PurchaseRequestForm
 from .models import ServiceCategory, Service, Estate, Sale, PurchaseRequest
-from .utils.statistic_calculator import StatisticsCalculator
-from .utils.plotter import Plotter
+from .utils import Plotter, StatisticsCalculator, MapboxClient
 
 logger = logging.getLogger(__name__)
 
@@ -140,8 +139,16 @@ class EstateDetailView(LoginRequiredMixin, DetailView):
             )
         else:
             context["request_exists"] = False
-            logger.debug(
+            logger.warning(
                 "User not authenticated or no client, request_exists set to False"
+            )
+
+        if self.request.user.is_authenticated:
+            context["map_image_url"] = MapboxClient.get_map_image_url(
+                self.object.address
+            )
+            logger.debug(
+                f"Map image URL for estate {self.object.id}: {context['map_image_url']}"
             )
 
         logger.info("EstateDetailView context prepared")
@@ -330,11 +337,11 @@ class StatisticsView(LoginRequiredMixin, TemplateView):
         )
 
         image_paths = {
-            "services_by_sold_count": f"{MEDIA_URL}services_by_sold_count.jpg",
-            "services_by_service_profit": f"{MEDIA_URL}services_by_service_profit.jpg",
-            "employee_service_stats": f"{MEDIA_URL}employee_service_stats.jpg",
-            "employee_total_stats": f"{MEDIA_URL}employee_total_stats.jpg",
-            "services_by_full_costs": f"{MEDIA_URL}services_by_full_costs.jpg",
+            "services_by_sold_count": f"{settings.MEDIA_URL}services_by_sold_count.jpg",
+            "services_by_service_profit": f"{settings.MEDIA_URL}services_by_service_profit.jpg",
+            "employee_service_stats": f"{settings.MEDIA_URL}employee_service_stats.jpg",
+            "employee_total_stats": f"{settings.MEDIA_URL}employee_total_stats.jpg",
+            "services_by_full_costs": f"{settings.MEDIA_URL}services_by_full_costs.jpg",
         }
 
         Plotter.plt_bars(
