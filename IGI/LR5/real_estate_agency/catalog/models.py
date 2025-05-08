@@ -75,10 +75,10 @@ class Service(models.Model):
 class Sale(models.Model):
     client = models.ForeignKey(Client, on_delete=models.SET_NULL, null=True)
     employee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True)
-    date_of_contract = models.DateField(auto_created=True)
-    date_of_sale = models.DateField(auto_created=True)
+    date_of_contract = models.DateField(auto_now_add=True)
+    date_of_sale = models.DateField(auto_now_add=True)
     estate = models.OneToOneField(Estate, on_delete=models.CASCADE)
-    cost = models.DecimalField(max_digits=10, decimal_places=2)
+    cost = models.DecimalField(max_digits=10, decimal_places=2, auto_created=True)
 
     def save(self, *args, **kwargs):
         service_cost = 0
@@ -129,7 +129,6 @@ class PurchaseRequest(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        help_text="Employee for the purchase",
     )
     message = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)

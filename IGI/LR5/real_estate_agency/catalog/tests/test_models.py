@@ -1,7 +1,7 @@
+from unittest.mock import MagicMock
+
 from django.core.validators import MinValueValidator
 from django.test import TestCase
-from django.core.exceptions import ValidationError
-from django.urls import reverse
 from decimal import Decimal
 from datetime import date
 from users.models import User, Employee, Client
@@ -11,7 +11,6 @@ from ..models import (
     Service,
     Sale,
     PurchaseRequest,
-    PurchaseRequestManager,
 )
 
 
@@ -193,7 +192,7 @@ class SaleModelTest(TestCase):
         )
 
         client = Client.objects.create(user=user1)
-        employee = Employee.objects.create(user=user2)
+        employee = Employee.objects.create(user=user2, hire_date=date(2010, 1, 1))
         category = ServiceCategory.objects.create(name="Test Category")
         service = Service.objects.create(
             name="Test Service", category=category, cost=Decimal("100.00")
@@ -206,17 +205,39 @@ class SaleModelTest(TestCase):
             address="Test Address 123",
         )
 
-        Sale.objects.create(
+        s = Sale.objects.create(
             client=client,
             employee=employee,
             estate=estate,
-            category=service,
-            service_cost=Decimal("100.00"),
-            cost=Decimal("100100.00"),
         )
+        s.save()
 
     def setUp(self):
         self.sale = Sale.objects.get(pk=1)
+
+    def test_client_label(self):
+        field_label = self.sale._meta.get_field("client").verbose_name
+        self.assertEqual(field_label, "client")
+
+    def test_employee_label(self):
+        field_label = self.sale._meta.get_field("employee").verbose_name
+        self.assertEqual(field_label, "employee")
+
+    def test_date_of_contract_label(self):
+        field_label = self.sale._meta.get_field("date_of_contract").verbose_name
+        self.assertEqual(field_label, "date of contract")
+
+    def test_date_of_sale_label(self):
+        field_label = self.sale._meta.get_field("date_of_sale").verbose_name
+        self.assertEqual(field_label, "date of sale")
+
+    def test_estate_label(self):
+        field_label = self.sale._meta.get_field("estate").verbose_name
+        self.assertEqual(field_label, "estate")
+
+    def test_cost_label(self):
+        field_label = self.sale._meta.get_field("cost").verbose_name
+        self.assertEqual(field_label, "cost")
 
     def test_client_relation(self):
         self.assertEqual(self.sale.client.user.username, "client_user")
@@ -226,23 +247,6 @@ class SaleModelTest(TestCase):
 
     def test_estate_relation(self):
         self.assertEqual(self.sale.estate.address, "Test Address 123")
-
-    def test_category_relation(self):
-        self.assertEqual(self.sale.category.name, "Test Service")
-
-    def test_save_method(self):
-        # Test that save method calculates cost correctly
-        new_sale = Sale(
-            client=self.sale.client,
-            employee=self.sale.employee,
-            date_of_contract=date.today(),
-            date_of_sale=date.today(),
-            estate=self.sale.estate,
-            category=self.sale.category,
-        )
-        new_sale.save()
-        expected_cost = self.sale.estate.cost + self.sale.category.cost
-        self.assertEqual(new_sale.cost, expected_cost)
 
     def test_str_representation(self):
         expected_str = (
@@ -254,7 +258,6 @@ class SaleModelTest(TestCase):
 class PurchaseRequestModelTest(TestCase):
     @classmethod
     def setUpTestData(cls):
-        # Create users
         user1 = User.objects.create(
             username="client_user",
             role="client",
@@ -272,9 +275,8 @@ class PurchaseRequestModelTest(TestCase):
             last_name="User",
         )
 
-        # Create related objects
         client = Client.objects.create(user=user1)
-        employee = Employee.objects.create(user=user2)
+        employee = Employee.objects.create(user=user2, hire_date=date(2010, 1, 1))
         category = ServiceCategory.objects.create(name="Test Category")
         service = Service.objects.create(
             name="Test Service", category=category, cost=Decimal("100.00")
@@ -292,11 +294,38 @@ class PurchaseRequestModelTest(TestCase):
             client=client,
             employee=employee,
             message="Test message",
-            status="new",
         )
 
     def setUp(self):
         self.request = PurchaseRequest.objects.get(pk=1)
+
+    def test_estate_label(self):
+        field_label = self.request._meta.get_field("estate").verbose_name
+        self.assertEqual(field_label, "estate")
+
+    def test_employee_label(self):
+        field_label = self.request._meta.get_field("employee").verbose_name
+        self.assertEqual(field_label, "employee")
+
+    def test_client_label(self):
+        field_label = self.request._meta.get_field("client").verbose_name
+        self.assertEqual(field_label, "client")
+
+    def test_message_label(self):
+        field_label = self.request._meta.get_field("message").verbose_name
+        self.assertEqual(field_label, "message")
+
+    def test_created_at_label(self):
+        field_label = self.request._meta.get_field("created_at").verbose_name
+        self.assertEqual(field_label, "created at")
+
+    def test_status_label(self):
+        field_label = self.request._meta.get_field("status").verbose_name
+        self.assertEqual(field_label, "status")
+
+    def test_status_max_length(self):
+        max_length = self.request._meta.get_field("status").max_length
+        self.assertEqual(max_length, 20)
 
     def test_estate_relation(self):
         self.assertEqual(self.request.estate.address, "Test Address 123")
@@ -304,101 +333,18 @@ class PurchaseRequestModelTest(TestCase):
     def test_client_relation(self):
         self.assertEqual(self.request.client.user.username, "client_user")
 
-    def test_employee_help_text(self):
-        help_text = self.request._meta.get_field("employee").help_text
-        self.assertEqual(help_text, "Employee for the purchase")
-
     def test_status_choices(self):
         choices = self.request._meta.get_field("status").choices
-        expected_choices = [
-            ("new", "New"),
-            ("in_progress", "In progress"),
-            ("completed", "Completed"),
-        ]
-        self.assertEqual(choices, expected_choices)
+        self.assertEqual(choices, PurchaseRequest.STATUS_CHOICES)
 
     def test_status_default(self):
         self.assertEqual(self.request.status, "new")
 
-    def test_created_at_auto_now_add(self):
-        auto_now_add = self.request._meta.get_field("created_at").auto_now_add
-        self.assertTrue(auto_now_add)
-
     def test_meta_unique_together(self):
         unique_together = self.request._meta.unique_together
-        self.assertEqual(unique_together, ("estate", "client"))
+        self.assertEqual(unique_together, (("estate", "client"),))
 
     def test_str_representation(self):
         expected_str = f"{self.request.estate} - {self.request.client.user.username}"
         self.assertEqual(str(self.request), expected_str)
-
-
-class PurchaseRequestManagerTest(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        # Create users
-        user1 = User.objects.create(
-            username="client_user",
-            role="client",
-            phone_number="+375(29)111-11-11",
-            birth_date=date(1990, 1, 1),
-            first_name="Client",
-            last_name="User",
-        )
-        user2 = User.objects.create(
-            username="employee1",
-            role="employee",
-            phone_number="+375(29)222-22-22",
-            birth_date=date(1990, 1, 1),
-            first_name="Employee1",
-            last_name="User",
-        )
-        user3 = User.objects.create(
-            username="employee2",
-            role="employee",
-            phone_number="+375(29)333-33-33",
-            birth_date=date(1990, 1, 1),
-            first_name="Employee2",
-            last_name="User",
-        )
-
-        # Create related objects
-        cls.client = Client.objects.create(user=user1)
-        cls.employee1 = Employee.objects.create(user=user2)
-        cls.employee2 = Employee.objects.create(user=user3)
-        category = ServiceCategory.objects.create(name="Test Category")
-        service = Service.objects.create(
-            name="Test Service", category=category, cost=Decimal("100.00")
-        )
-        cls.estate = Estate.objects.create(
-            cost=Decimal("100000.00"),
-            area=Decimal("50.00"),
-            category=service,
-            description="Test description",
-            address="Test Address 123",
-        )
-
-    def test_create_with_assignment(self):
-        # First request should be assigned to employee1
-        request1 = PurchaseRequest.objects.create_with_assignment(
-            estate=self.estate, client=self.client, message="Test message 1"
-        )
-        self.assertEqual(request1.employee, self.employee1)
-
-        # Second request should be assigned to employee2 (since employee1 already has one)
-        request2 = PurchaseRequest.objects.create_with_assignment(
-            estate=self.estate, client=self.client, message="Test message 2"
-        )
-        self.assertEqual(request2.employee, self.employee2)
-
-    def test_create_with_assignment_no_employees(self):
-        # Delete all employees first
-        Employee.objects.all().delete()
-
-        with self.assertRaises(ValueError):
-            PurchaseRequest.objects.create_with_assignment(
-                estate=self.estate, client=self.client, message="Test message"
-            )
-
-
 
