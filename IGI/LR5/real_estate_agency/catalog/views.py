@@ -158,24 +158,27 @@ class CreatePurchaseRequestView(LoginRequiredMixin, CreateView):
             f"User {self.request.user.username} submitting PurchaseRequest for estate_id={self.kwargs['pk']}"
         )
 
-        form.instance.client = Client.objects.filter(user=self.request.user)[0]
-        form.instance.estate_id = self.kwargs["pk"]
+        if self.request.user.is_authenticated and hasattr(self.request.user, "client"):
+            form.instance.client = self.request.user.client
+            form.instance.estate_id = self.kwargs["pk"]
 
-        if PurchaseRequest.objects.filter(
-            client=self.request.user.client, estate_id=self.kwargs["pk"]
-        ).exists():
-            logger.error(
-                f"Duplicate PurchaseRequest for estate {form.instance.estate} and client {form.instance.client}"
-            )
+            if PurchaseRequest.objects.filter(
+                client=self.request.user.client, estate_id=self.kwargs["pk"]
+            ).exists():
+                logger.error(
+                    f"Duplicate PurchaseRequest for estate {form.instance.estate_id} and client {form.instance.client}"
+                )
+            else:
+                PurchaseRequest.objects.create_with_assignment(
+                    client=self.request.user.client,
+                    estate_id=self.kwargs["pk"],
+                    message=form.cleaned_data["message"],
+                )
+                logger.info(
+                    f"PurchaseRequest created by {self.request.user.username}: estate={form.instance.estate}"
+                )
         else:
-            PurchaseRequest.objects.create_with_assignment(
-                client=self.request.user.client,
-                estate_id=self.kwargs["pk"],
-                message=form.cleaned_data["message"],
-            )
-            logger.info(
-                f"PurchaseRequest created by {self.request.user.username}: estate={form.instance.estate}, client={form.instance.client}"
-            )
+            logger.error(f"User not authenticated or no client")
 
         return redirect(self.get_success_url())
 
@@ -192,22 +195,23 @@ class ClientDashboardView(LoginRequiredMixin, TemplateView):
             f"Preparing context for ClientDashboardView, user={self.request.user.username}"
         )
         context = super().get_context_data(**kwargs)
-        if not hasattr(self.request.user, "client"):
+
+        if hasattr(self.request.user, "client"):
+            context["requests"] = PurchaseRequest.objects.filter(
+                client=self.request.user.client
+            ).select_related("estate", "employee")
+
+            context["sales"] = Sale.objects.filter(
+                client=self.request.user.client
+            ).select_related("estate", "employee", "category")
+
+            logger.info(
+                f"ClientDashboardView context prepared for user {self.request.user.username}"
+            )
+        else:
             logger.warning(f"User {self.request.user.username} has no client assigned")
             messages.error(self.request, "You have not client assigned.")
-            return context
 
-        context["requests"] = PurchaseRequest.objects.filter(
-            client=self.request.user.client
-        ).select_related("estate", "employee")
-
-        context["sales"] = Sale.objects.filter(
-            client=self.request.user.client
-        ).select_related("estate", "employee", "category")
-
-        logger.info(
-            f"ClientDashboardView context prepared for user {self.request.user.username}"
-        )
         return context
 
     def post(self, request, *args, **kwargs):
@@ -273,27 +277,28 @@ class EmployeeDashboardView(LoginRequiredMixin, TemplateView):
             f"Preparing context for EmployeeDashboardView, user={self.request.user.username}"
         )
         context = super().get_context_data(**kwargs)
-        if not hasattr(self.request.user, "employee"):
+
+        if hasattr(self.request.user, "employee"):
+            context["clients"] = Client.objects.filter(
+                purchaserequest__employee=self.request.user.employee,
+                purchaserequest__status__in=["new", "in_progress"],
+            ).distinct()
+
+            context["requests"] = PurchaseRequest.objects.filter(
+                employee=self.request.user.employee, status__in=["new", "in_progress"]
+            ).select_related("estate", "client")
+
+            context["sales"] = Sale.objects.filter(
+                employee=self.request.user.employee
+            ).select_related("estate", "client", "category")
+
+            logger.info(
+                f"EmployeeDashboardView context prepared for user {self.request.user.username}"
+            )
+        else:
             logger.warning(f"User {self.request.user.username} is not an employee")
             messages.error(self.request, "You must be employee.")
-            return context
 
-        context["clients"] = Client.objects.filter(
-            purchaserequest__employee=self.request.user.employee,
-            purchaserequest__status__in=["new", "in_progress"],
-        ).distinct()
-
-        context["requests"] = PurchaseRequest.objects.filter(
-            employee=self.request.user.employee, status__in=["new", "in_progress"]
-        ).select_related("estate", "client")
-
-        context["sales"] = Sale.objects.filter(
-            employee=self.request.user.employee
-        ).select_related("estate", "client", "category")
-
-        logger.info(
-            f"EmployeeDashboardView context prepared for user {self.request.user.username}"
-        )
         return context
 
 
@@ -334,27 +339,27 @@ class StatisticsView(LoginRequiredMixin, TemplateView):
 
         Plotter.plt_bars(
             counts,
-            path=image_paths['services_by_sold_count'][1:],
+            path=image_paths["services_by_sold_count"][1:],
             categories=(str(s)[:12] for s in services_by_sold_count),
         )
         Plotter.plt_bars(
             service_profits,
-            path=image_paths['services_by_service_profit'][1:],
+            path=image_paths["services_by_service_profit"][1:],
             categories=(str(s)[:12] for s in services_by_sold_count),
         )
         Plotter.plt_bars(
             employee_service_costs,
-            path=image_paths['employee_service_stats'][1:],
+            path=image_paths["employee_service_stats"][1:],
             categories=(e.user.username for e in employee_service_stats),
         )
         Plotter.plt_bars(
             total_costs,
-            path=image_paths['employee_total_stats'][1:],
+            path=image_paths["employee_total_stats"][1:],
             categories=(e.user.username for e in employee_total_stats),
         )
         Plotter.plt_bars(
             full_costs,
-            path=image_paths['services_by_full_costs'][1:],
+            path=image_paths["services_by_full_costs"][1:],
             categories=(str(s)[:12] for s in services_by_full_costs),
         )
 
