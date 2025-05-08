@@ -78,14 +78,14 @@ class Sale(models.Model):
     date_of_contract = models.DateField(auto_created=True)
     date_of_sale = models.DateField(auto_created=True)
     estate = models.OneToOneField(Estate, on_delete=models.CASCADE)
-    service_cost = models.DecimalField(max_digits=10, decimal_places=2)
     cost = models.DecimalField(max_digits=10, decimal_places=2)
 
     def save(self, *args, **kwargs):
-        if self.service_cost is None and self.estate.category:
-            self.service_cost = self.estate.category.cost
+        service_cost = 0
+        if self.estate.category:
+            service_cost = self.estate.category.cost
 
-        self.cost = self.service_cost + self.estate.cost
+        self.cost = service_cost + self.estate.cost
 
         super().save(*args, **kwargs)
 

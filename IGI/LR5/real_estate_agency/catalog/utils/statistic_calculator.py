@@ -2,7 +2,7 @@ import logging
 from datetime import timedelta
 
 import pandas as pd
-from django.db.models import Count, Sum
+from django.db.models import Count, Sum, F
 from django.utils import timezone
 from users.models import Client, Employee
 
@@ -112,7 +112,7 @@ class StatisticsCalculator(object):
         time_ago = timezone.now() - timedelta(days=days_ago)
         employee_service_stats = (
             Employee.objects.filter(sale__date_of_sale__gte=time_ago)
-            .annotate(total_service_cost=Sum("sale__service_cost"))
+            .annotate(total_service_cost=Sum("sale__estate__category__cost"))
             .order_by("-total_service_cost")
         )
         costs = employee_service_stats.values_list("total_service_cost", flat=True)
@@ -127,7 +127,8 @@ class StatisticsCalculator(object):
         time_ago = timezone.now() - timedelta(days=days_ago)
         employee_total_stats = (
             Employee.objects.filter(sale__date_of_sale__gte=time_ago)
-            .annotate(total_cost=Sum("sale__cost"))
+            .annotate(
+                total_cost=Sum("sale__cost"))
             .order_by("-total_cost")
         )
         costs = employee_total_stats.values_list("total_cost", flat=True)

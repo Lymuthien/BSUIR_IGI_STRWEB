@@ -64,7 +64,6 @@ class SaleAdmin(admin.ModelAdmin):
                     "estate",
                     "date_of_sale",
                     "date_of_contract",
-                    "category",
                 )
             },
         ),
