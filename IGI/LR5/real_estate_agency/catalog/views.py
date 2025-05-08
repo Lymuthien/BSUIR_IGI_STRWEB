@@ -243,16 +243,7 @@ class ClientDashboardView(LoginRequiredMixin, TemplateView):
                 Sale.objects.create(
                     client=purchase_request.client,
                     employee=purchase_request.employee,
-                    date_of_contract=timezone.now().date(),
-                    date_of_sale=timezone.now().date(),
                     estate=purchase_request.estate,
-                    category=purchase_request.estate.category,
-                    service_cost=(
-                        purchase_request.estate.category.cost
-                        if purchase_request.estate.category
-                        else 0
-                    ),
-                    cost=purchase_request.estate.cost,
                 )
 
                 purchase_request.status = "completed"
