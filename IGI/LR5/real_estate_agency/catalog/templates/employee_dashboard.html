@@ -42,7 +42,6 @@
                             <th>Клиент</th>
                             <th>Статус</th>
                             <th>Дата создания</th>
-                            <th>Действия</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -52,14 +51,6 @@
                                 <td>{{ request.client.user.get_full_name }}</td>
                                 <td>{{ request.get_status_display }}</td>
                                 <td>{{ request.created_at|date:"d.m.Y" }}</td>
-                                <td>
-                                    {% if request.status == 'new' %}
-                                        <form method="post" action="{% url 'update_request_status' request.pk %}">
-                                            {% csrf_token %}
-                                            <button type="submit" class="btn btn-warning btn-sm">Взять в работу</button>
-                                        </form>
-                                    {% endif %}
-                                </td>
                             </tr>
                         {% endfor %}
                     </tbody>
