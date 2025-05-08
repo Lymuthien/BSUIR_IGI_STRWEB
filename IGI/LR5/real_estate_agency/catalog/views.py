@@ -210,7 +210,7 @@ class ClientDashboardView(LoginRequiredMixin, TemplateView):
 
             context["sales"] = Sale.objects.filter(
                 client=self.request.user.client
-            ).select_related("estate", "employee", "category")
+            ).select_related("estate", "employee")
 
             logger.info(
                 f"ClientDashboardView context prepared for user {self.request.user.username}"
@@ -297,7 +297,7 @@ class EmployeeDashboardView(LoginRequiredMixin, TemplateView):
 
             context["sales"] = Sale.objects.filter(
                 employee=self.request.user.employee
-            ).select_related("estate", "client", "category")
+            ).select_related("estate", "client")
 
             logger.info(
                 f"EmployeeDashboardView context prepared for user {self.request.user.username}"
