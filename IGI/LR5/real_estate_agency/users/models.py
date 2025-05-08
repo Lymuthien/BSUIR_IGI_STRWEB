@@ -1,27 +1,12 @@
 from datetime import date
 
 from django.contrib.auth.models import AbstractUser
-from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator, MaxValueValidator
 from django.db import models
 import logging
 from .utils import RestrictedAgeValidator
 
 logger = logging.getLogger(__name__)
-
-
-def restrict_age(birth_date):
-    today = date.today()
-    age = (
-        today.year
-        - birth_date.year
-        - ((today.month, today.day) < (birth_date.month, birth_date.day))
-    )
-    logger.debug(f"Validating age for birth_date {birth_date}: calculated age {age}")
-    if age < 18:
-        logger.error(f"Age validation failed: User is under 18 (age {age})")
-        raise ValidationError("Пользователь должен достигнуть 18 лет.")
-    logger.info(f"Age validation passed for birth_date {birth_date}")
 
 
 class Profile(models.Model):
@@ -74,7 +59,7 @@ class Client(models.Model):
 
 class Employee(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    hire_date = models.DateField(null=True, blank=True)
+    hire_date = models.DateField()
     clients = models.ManyToManyField(Client, blank=True)
 
     def __str__(self):
