@@ -25,7 +25,7 @@ class StatisticsCalculator(object):
         }
         logger.debug(f"full_cost_stats: {full_cost_stats}")
 
-        service_df = pd.Series([float(s.service_cost) for s in sales if s.service_cost])
+        service_df = pd.Series([float(s.estate.category.cost) for s in sales])
         service_cost_stats = {
             "mean_cost": service_df.mean() or 0,
             "median_cost": service_df.median() or 0,
@@ -83,7 +83,9 @@ class StatisticsCalculator(object):
             .annotate(total_service_cost=Sum("estate__category__cost"))
             .order_by("-total_service_cost")
         )
-        service_profits = services_by_service_profit.values_list("total_service_cost", flat=True)
+        service_profits = services_by_service_profit.values_list(
+            "total_service_cost", flat=True
+        )
 
         logger.debug(f"services_by_service_profit: {services_by_service_profit}")
 
