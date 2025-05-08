@@ -2,6 +2,7 @@ from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models import Count
 from django.urls import reverse
+from django.conf import settings
 from users.models import Employee, Client
 
 
@@ -33,7 +34,7 @@ class Estate(models.Model):
     def get_image_url(self):
         if self.image and hasattr(self.image, "url"):
             return self.image.url
-        return "/media/image_placeholder.jpg"
+        return settings.MEDIA_URL + "image_placeholder.jpg"
 
     class Meta:
         ordering = ("-id",)
@@ -56,9 +57,7 @@ class Service(models.Model):
     name = models.CharField(max_length=200, help_text="Enter the estate category name")
     category = models.ForeignKey(
         ServiceCategory,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
+        on_delete=models.CASCADE,
         related_name="services",
     )
     cost = models.DecimalField(
@@ -76,16 +75,16 @@ class Service(models.Model):
 class Sale(models.Model):
     client = models.ForeignKey(Client, on_delete=models.SET_NULL, null=True)
     employee = models.ForeignKey(Employee, on_delete=models.SET_NULL, null=True)
-    date_of_contract = models.DateField()
-    date_of_sale = models.DateField()
+    date_of_contract = models.DateField(auto_created=True)
+    date_of_sale = models.DateField(auto_created=True)
     estate = models.OneToOneField(Estate, on_delete=models.CASCADE)
     category = models.ForeignKey(Service, on_delete=models.SET_NULL, null=True)
     service_cost = models.DecimalField(max_digits=10, decimal_places=2)
     cost = models.DecimalField(max_digits=10, decimal_places=2)
 
     def save(self, *args, **kwargs):
-        if self.service_cost is None and self.category:
-            self.service_cost = self.category.cost
+        if self.service_cost is None and self.estate.category:
+            self.service_cost = self.estate.category.cost
 
         self.cost = self.service_cost + self.estate.cost
 
