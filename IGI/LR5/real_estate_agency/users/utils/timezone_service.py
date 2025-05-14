@@ -16,7 +16,12 @@ class TimezoneService:
 
     @staticmethod
     def get_timezone(request):
-        ip = request.META.get('REMOTE_ADDR')
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            ip = x_forwarded_for.split(',')[0].strip()
+            logger.info(f"x_forwarded_for: {x_forwarded_for}")
+        else:
+            ip = request.META.get('REMOTE_ADDR')
         logger.info(f"ip:{ip}")
 
         return TimezoneService.get_timezone_from_ip(ip)
