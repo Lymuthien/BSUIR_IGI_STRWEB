@@ -1,5 +1,8 @@
 import pytz
 import requests
+import logging
+
+logger = logging.getLogger(__name__)
 
 class TimezoneService:
     @staticmethod
@@ -14,4 +17,6 @@ class TimezoneService:
     @staticmethod
     def get_timezone(request):
         ip = request.META.get('REMOTE_ADDR')
+        logger.info(f"ip:{ip}")
+
         return TimezoneService.get_timezone_from_ip(ip)
