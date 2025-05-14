@@ -5,7 +5,7 @@ class TimezoneService:
     @staticmethod
     def get_timezone_from_ip(ip):
         try:
-            response = requests.get(f"http://ip-api.com/json/{ip}", timeout=3)
+            response = requests.get(f"http://ip-api.com/json/{ip}", timeout=10)
             tz = response.json().get('timezone')
             return pytz.timezone(tz) if tz else pytz.timezone('UTC')
         except:
