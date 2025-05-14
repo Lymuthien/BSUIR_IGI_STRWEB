@@ -115,6 +115,12 @@ LOGOUT_REDIRECT_URL = "/"
 
 # LOGGING
 
+LOG_DIR = os.path.join(BASE_DIR, 'logs')
+LOG_FILE = os.path.join(LOG_DIR, 'django.log')
+
+if not os.path.exists(LOG_DIR):
+    os.makedirs(LOG_DIR)
+
 LOG_LEVEL = 'INFO'
 
 LOGGING = {
@@ -135,7 +141,7 @@ LOGGING = {
         'file': {
             'level': LOG_LEVEL,
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(BASE_DIR, 'logs', 'django.log'),
+            'filename': LOG_FILE,
             'maxBytes': 1024*1024*5,
             'backupCount': 5,
             'formatter': 'verbose',
