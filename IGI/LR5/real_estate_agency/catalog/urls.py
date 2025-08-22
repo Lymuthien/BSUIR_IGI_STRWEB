@@ -1,4 +1,4 @@
-from django.urls import re_path
+from django.urls import re_path, path
 from . import views
 
 
@@ -10,4 +10,7 @@ urlpatterns = [
     re_path(r'^client-dashboard/$', views.ClientDashboardView.as_view(), name='client_dashboard'),
     re_path(r'^employee-dashboard/$', views.EmployeeDashboardView.as_view(), name='employee_dashboard'),
     re_path(r'^statistics/$', views.StatisticsView.as_view(), name='statistics'),
+    path('estate/create/', views.EstateCreateView.as_view(), name='estate_create'),
+    path('estate/<int:pk>/update/', views.EstateUpdateView.as_view(), name='estate_update'),
+    path('estate/<int:pk>/delete/', views.EstateDeleteView.as_view(), name='estate_delete'),
 ]

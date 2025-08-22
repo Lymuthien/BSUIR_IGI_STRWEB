@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}{% if object %}Редактирование{% else %}Создание{% endif %} объекта недвижимости{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-header">
+                    <h4>{% if object %}Редактирование{% else %}Создание{% endif %} объекта недвижимости</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        {% if form.errors %}
+                        <div class="alert alert-danger">
+                            <ul>
+                                {% for field, errors in form.errors.items %}
+                                    {% for error in errors %}
+                                        <li>{{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="mb-3">
+                            <label for="id_address" class="form-label">Адрес *</label>
+                            {{ form.address }}
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="id_cost" class="form-label">Цена *</label>
+                                    {{ form.cost }}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="id_area" class="form-label">Площадь *</label>
+                                    {{ form.area }}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="id_category" class="form-label">Категория услуги</label>
+                            {{ form.category }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="id_description" class="form-label">Описание</label>
+                            {{ form.description }}
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="id_image" class="form-label">Изображение</label>
+                            {{ form.image }}
+                            {% if object and object.image %}
+                            <div class="mt-2">
+                                <img src="{{ object.get_image_url }}" alt="Текущее изображение" class="img-thumbnail" style="max-height: 200px;">
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                {% if object %}Сохранить{% else %}Создать{% endif %}
+                            </button>
+                            <a href="{% if object %}{% url 'estate_detail' object.pk %}{% else %}{% url 'estates' %}{% endif %}"
+                               class="btn btn-secondary">
+                                Отмена
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    input, select, textarea {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+    
+    textarea {
+        min-height: 120px;
+    }
+</style>
+{% endblock %}

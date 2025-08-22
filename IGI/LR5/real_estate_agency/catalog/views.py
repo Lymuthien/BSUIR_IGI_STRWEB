@@ -1,12 +1,12 @@
 import logging
 
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.db.models import Q
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.utils import timezone
-from django.views.generic import ListView, DetailView, CreateView, TemplateView
+from django.views.generic import ListView, DetailView, CreateView, TemplateView, UpdateView, DeleteView
 from django.conf import settings
 from users.models import Client, Employee
 
@@ -154,6 +154,42 @@ class EstateDetailView(LoginRequiredMixin, DetailView):
         logger.info("EstateDetailView context prepared")
         return context
 
+
+class EstateCreateView(PermissionRequiredMixin, CreateView):
+    model = Estate
+    template_name = 'estate_form.html'
+    fields = ['cost', 'area', 'category', 'description', 'image', 'address']
+    permission_required = 'estates.add_estate'
+    success_url = reverse_lazy('estates')
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Successfully created estate')
+        return super().form_valid(form)
+
+
+class EstateUpdateView(PermissionRequiredMixin, UpdateView):
+    model = Estate
+    template_name = 'estate_form.html'
+    fields = ['cost', 'area', 'category', 'description', 'image', 'address']
+    permission_required = 'estates.change_estate'
+
+    def get_success_url(self):
+        return reverse_lazy('estate_detail', kwargs={'pk': self.object.pk})
+
+    def form_valid(self, form):
+        messages.success(self.request, 'Successfully updated estate')
+        return super().form_valid(form)
+
+
+class EstateDeleteView(PermissionRequiredMixin, DeleteView):
+    model = Estate
+    template_name = 'estate_confirm_delete.html'
+    permission_required = 'estates.delete_estate'
+    success_url = reverse_lazy('estates')
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, 'Successfully deleted estate')
+        return super().delete(request, *args, **kwargs)
 
 class CreatePurchaseRequestView(LoginRequiredMixin, CreateView):
     model = PurchaseRequest

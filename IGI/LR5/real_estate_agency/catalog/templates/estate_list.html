@@ -96,6 +96,14 @@
         </div>
     </div>
 
+    {% if user.is_staff or user.is_superuser %}
+    <div class="mb-3">
+        <a href="{% url 'estate_create' %}" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> Добавить объект
+        </a>
+    </div>
+    {% endif %}
+
     <div class="row">
         {% for estate in estate_list %}
         <div class="col-md-4 mb-4">
