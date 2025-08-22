@@ -40,6 +40,15 @@
                                     <li><hr class="dropdown-divider"></li>
                                     <li><a href="{% url 'statistics' %}" class="dropdown-item">Статистика</a></li>
                                     <li><hr class="dropdown-divider"></li>
+                                    <li><a href="{% url 'admin_clients' %}" class="dropdown-item">
+                                        <i class="bi bi-people"></i> Управление клиентами
+                                    </a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a href="{% url 'admin_employees' %}" class="dropdown-item">
+                                        <i class="bi bi-briefcase"></i> Управление сотрудниками
+                                    </a></li>
+                                    <li><hr class="dropdown-divider"></li>
+
                                 {% elif user.client %}
                                     <li><a href="{% url 'client_dashboard' %}" class="dropdown-item">Мои покупки</a></li>
                                     <li><hr class="dropdown-divider"></li>
