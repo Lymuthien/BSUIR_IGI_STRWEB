@@ -3,16 +3,16 @@
 {% block title %}Управление клиентами{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+<div>
+    <div>
         <h1>Управление клиентами</h1>
-        <span class="badge bg-primary">{{ clients.count }} клиентов</span>
+        <span>{{ clients.count }} клиентов</span>
     </div>
 
-    <div class="card">
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-striped">
+    <div>
+        <div>
+            <div>
+                <table>
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -35,25 +35,22 @@
                             <td>{{ client.user.phone_number }}</td>
                             <td>
                                 {% if client.user.is_active %}
-                                    <span class="badge bg-success">Активен</span>
+                                    <span>Активен</span>
                                 {% else %}
-                                    <span class="badge bg-danger">Заблокирован</span>
+                                    <span>Заблокирован</span>
                                 {% endif %}
                             </td>
                             <td>{{ client.user.date_joined|date:"d.m.Y H:i" }}</td>
                             <td>
-                                <div class="btn-group">
-                                    <a href="{% url 'admin_client_edit' client.user.id %}" 
-                                       class="btn btn-sm btn-outline-primary">
-                                        <i class="bi bi-pencil"></i>
-                                    </a>
+                                <div>
+                                    <a href="{% url 'admin_client_edit' client.user.id %}">Редактировать</a>
                                     <form action="{% url 'admin_toggle_client_status' client.id %}" method="post" class="d-inline">
                                         {% csrf_token %}
-                                        <button type="submit" class="btn btn-sm btn-outline-{% if client.user.is_active %}warning{% else %}success{% endif %}">
+                                        <button type="submit">
                                             {% if client.user.is_active %}
-                                                <i class="bi bi-lock"></i>
+                                                Заблокировать
                                             {% else %}
-                                                <i class="bi bi-unlock"></i>
+                                                Разблокировать
                                             {% endif %}
                                         </button>
                                     </form>

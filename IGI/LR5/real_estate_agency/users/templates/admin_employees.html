@@ -3,20 +3,20 @@
 {% block title %}Управление сотрудниками{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+<div>
+    <div>
         <h1>Управление сотрудниками</h1>
         <div>
-            <a href="{% url 'admin_employee_create' %}" class="btn btn-success">
-                <i class="bi bi-plus-circle"></i> Добавить сотрудника
+            <a href="{% url 'admin_employee_create' %}">
+                Добавить сотрудника
             </a>
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-striped">
+    <div>
+        <div>
+            <div>
+                <table>
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -40,20 +40,18 @@
                             <td>{{ employee.hire_date|date:"d.m.Y" }}</td>
                             <td>
                                 {% if employee.user.is_active %}
-                                    <span class="badge bg-success">Активен</span>
+                                    <span>Активен</span>
                                 {% else %}
-                                    <span class="badge bg-danger">Неактивен</span>
+                                    <span>Неактивен</span>
                                 {% endif %}
                             </td>
                             <td>
-                                <div class="btn-group">
-                                    <a href="{% url 'admin_employee_edit' employee.user.id %}" 
-                                       class="btn btn-sm btn-outline-primary">
-                                        <i class="bi bi-pencil"></i>
+                                <div>
+                                    <a href="{% url 'admin_employee_edit' employee.user.id %}">
+                                        Редактировать
                                     </a>
-                                    <a href="{% url 'admin_employee_delete' employee.user.id %}" 
-                                       class="btn btn-sm btn-outline-danger">
-                                        <i class="bi bi-trash"></i>
+                                    <a href="{% url 'admin_employee_delete' employee.user.id %}">
+                                        Удалить
                                     </a>
                                 </div>
                             </td>

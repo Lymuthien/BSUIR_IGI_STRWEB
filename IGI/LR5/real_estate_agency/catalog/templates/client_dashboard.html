@@ -2,23 +2,16 @@
 
 {% block content %}
 {% if user.is_authenticated and user.client %}
-<div class="container mt-4">
-    <h1>Мои заявки</h1>
-    
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        {% endfor %}
-    {% endif %}
+<div>
+    <div>
+        <h1>Мои заявки</h1>
 
-    <div class="card mb-4">
-        <div class="card-body">
-            <h5 class="card-title">Заявки</h5>
-            {% if requests %}
-                <table class="table">
+        <div>
+            <div>
+                Заявки
+            </div>
+            <div>
+                <table>
                     <thead>
                         <tr>
                             <th>Недвижимость</th>
@@ -29,45 +22,35 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for request in requests %}
-                            <tr>
-                                <td>{{ request.estate.address }}</td>
-                                <td>{{ request.get_status_display }}</td>
-                                <td>{{ request.employee.user.get_full_name|default:"Не назначен" }}</td>
-                                <td>{{ request.created_at|date:"d.m.Y" }}</td>
-                                <td>
-                                    {% if request.status == 'new' or request.status == 'in_progress' %}
-                                        <form method="post" style="display:inline;">
-                                            {% csrf_token %}
-                                            <input type="hidden" name="request_id" value="{{ request.pk }}">
-                                            <input type="hidden" name="action" value="buy">
-                                            <button type="submit" class="btn btn-success btn-sm">Купить</button>
-                                        </form>
-                                        <form method="post" style="display:inline;">
-                                            {% csrf_token %}
-                                            <input type="hidden" name="request_id" value="{{ request.pk }}">
-                                            <input type="hidden" name="action" value="cancel">
-                                            <button type="submit" class="btn btn-danger btn-sm">Отменить</button>
-                                        </form>
-                                    {% else %}
-                                        <span class="text-muted">Действия недоступны</span>
-                                    {% endif %}
-                                </td>
-                            </tr>
-                        {% endfor %}
+                        <tr>
+                            <td>Адрес недвижимости</td>
+                            <td>Статус заявки</td>
+                            <td>ФИО риэлтора</td>
+                            <td>Дата</td>
+                            <td>
+                                <form>
+                                    <input type="hidden" name="request_id" value="1">
+                                    <input type="hidden" name="action" value="buy">
+                                    <button type="submit">Купить</button>
+                                </form>
+                                <form>
+                                    <input type="hidden" name="request_id" value="1">
+                                    <input type="hidden" name="action" value="cancel">
+                                    <button type="submit">Отменить</button>
+                                </form>
+                                <span>Действия недоступны</span>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
-            {% else %}
                 <p>У вас нет активных заявок.</p>
-            {% endif %}
+            </div>
         </div>
-    </div>
 
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Мои покупки</h5>
-            {% if sales %}
-                <table class="table">
+        <div>
+            <div>
+                <h5>Мои покупки</h5>
+                <table>
                     <thead>
                         <tr>
                             <th>Недвижимость</th>
@@ -78,26 +61,22 @@
                         </tr>
                     </thead>
                     <tbody>
-                        {% for sale in sales %}
-                            <tr>
-                                <td>{{ sale.estate.address }}</td>
-                                <td>{{ sale.date_of_sale|date:"d.m.Y" }}</td>
-                                <td>{{ sale.cost }} $</td>
-                                <td>{{ sale.estate.category.cost }} $</td>
-                                <td>{{ sale.employee.user.get_full_name|default:"Не указан" }}</td>
-                            </tr>
-                        {% endfor %}
+                        <tr>
+                            <td>Адрес недвижимости</td>
+                            <td>Дата покупки</td>
+                            <td>Стоимость $</td>
+                            <td>Стоимость услуг $</td>
+                            <td>ФИО риэлтора</td>
+                        </tr>
                     </tbody>
                 </table>
-            {% else %}
                 <p>У вас нет покупок.</p>
-            {% endif %}
+            </div>
         </div>
     </div>
-</div>
-{% else %}
-<div class="alert alert-info mt-2">
-    Пожалуйста, <a href="{% url 'login' %}">войдите</a> или <a href="{% url 'signup' %}">зарегистрируйтесь</a> как клиент.
+    <div>
+        Пожалуйста, <a href="/login/">войдите</a> или <a href="/signup/">зарегистрируйтесь</a> как клиент.
+    </div>
 </div>
 {% endif %}
 {% endblock %}

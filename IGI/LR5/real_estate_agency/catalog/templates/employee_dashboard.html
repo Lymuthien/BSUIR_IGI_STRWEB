@@ -2,25 +2,25 @@
 
 {% block content %}
 {% if user.is_authenticated and user.employee %}
-<div class="container mt-4">
+<div>
     <h1>Панель сотрудника</h1>
-    
+
     {% if messages %}
         {% for message in messages %}
-            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            <div>
                 {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <button type="button" aria-label="Close"></button>
             </div>
         {% endfor %}
     {% endif %}
 
-    <div class="card mb-4">
-        <div class="card-body">
-            <h5 class="card-title">Мои клиенты</h5>
+    <div>
+        <div>
+            <h5>Мои клиенты</h5>
             {% if clients %}
-                <ul class="list-group">
+                <ul>
                     {% for client in clients %}
-                        <li class="list-group-item">
+                        <li>
                             {{ client.user.get_full_name }} ({{ client.user.email }})
                         </li>
                     {% endfor %}
@@ -31,11 +31,11 @@
         </div>
     </div>
 
-    <div class="card mb-4">
-        <div class="card-body">
-            <h5 class="card-title">Активные заявки</h5>
+    <div>
+        <div>
+            <h5>Активные заявки</h5>
             {% if requests %}
-                <table class="table">
+                <table>
                     <thead>
                         <tr>
                             <th>Недвижимость</th>
@@ -61,11 +61,11 @@
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">Мои продажи</h5>
+    <div>
+        <div>
+            <h5>Мои продажи</h5>
             {% if sales %}
-                <table class="table">
+                <table>
                     <thead>
                         <tr>
                             <th>Недвижимость</th>
@@ -94,7 +94,7 @@
     </div>
 </div>
 {% else %}
-<div class="alert alert-info mt-2">
+<div>
     Пожалуйста, <a href="{% url 'login' %}">войдите</a> или <a href="{% url 'signup' %}">зарегистрируйтесь</a> как сотрудник.
 </div>
 {% endif %}
