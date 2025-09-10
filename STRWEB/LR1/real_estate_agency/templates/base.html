@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Гарант недвижимость{% endblock %}</title>
+</head>
+<body>
+    <header>
+        <div>
+            <div>
+                <h1>Гарант недвижимость</h1>
+                <nav>
+                    <ul>
+                        <li><a href="{% url 'home' %}">Главная</a></li>
+                        <li><a href="{% url 'about' %}">О компании</a></li>
+                        <li><a href="{% url 'news' %}">Новости</a></li>
+                        <li><a href="{% url 'faq' %}">Словарь терминов</a></li>
+                        <li><a href="{% url 'contacts' %}">Контакты</a></li>
+                        <li><a href="{% url 'vacancies' %}">Вакансии</a></li>
+                        <li><a href="{% url 'reviews' %}">Отзывы</a></li>
+                        <li><a href="{% url 'promo-codes' %}">Промокоды</a></li>
+                        <li><a href="{% url 'services' %}">Услуги</a></li>
+                        <li><a href="{% url 'estates' %}">Каталог</a></li>
+                    </ul>
+                </nav>
+                <div>
+                    {% if user.is_authenticated %}
+                        <div>
+                            <button type="button">
+                                {% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}
+                            </button>
+                            <ul>
+                                <li><a href="{% url 'profile' user.profile.id %}">Профиль</a></li>
+                                <li>
+                                    {% if user.is_superuser %}
+                                        <li><a href="{% url 'admin:index' %}">Панель управления</a></li>
+                                        <li><a href="{% url 'statistics' %}">Статистика</a></li>
+                                        <li><a href="{% url 'admin_clients' %}">Управление клиентами</a></li>
+                                        <li><a href="{% url 'admin_employees' %}">Управление сотрудниками</a></li>
+                                    {% elif user.client %}
+                                        <li><a href="{% url 'client_dashboard' %}">Мои покупки</a></li>
+                                    {% elif user.employee %}
+                                        <li><a href="{% url 'employee_dashboard' %}">Мои клиенты</a></li>
+                                    {% endif %}
+                                </li>
+                                <li>
+                                    <form action="{% url 'logout' %}" method="post" class="d-inline">
+                                        {% csrf_token %}
+                                        <button type="submit">Выйти</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
+                    {% else %}
+                        <a href="{% url 'login' %}">Вход</a>
+                        <a href="{% url 'signup' %}">Регистрация</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    {% block pagination %}
+        {% if is_paginated %}
+            <nav>
+                <ul>
+                    {% if page_obj.has_previous %}
+                        <li>
+                            <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">«</a>
+                        </li>
+                    {% else %}
+                        <li disabled>«</li>
+                    {% endif %}
+
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                            <li class="active"><span>{{ num }}</span></li>
+                        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                            <li><a href="{{ request.path }}?page={{ num }}">{{ num }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                        <li>
+                            <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">»</a>
+                        </li>
+                    {% else %}
+                        <li disabled>»</li>
+                    {% endif %}
+                </ul>
+                <div>
+                    Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
+                </div>
+            </nav>
+        {% endif %}
+    {% endblock %}
+
+    <footer>
+        <div>
+            <div>
+                <a href="{% url 'policy' %}">Политика конфиденциальности</a>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Промокоды и акции{% endblock %}
+
+{% block content %}
+<div>
+    <div>
+        <ul>
+            <li>
+                <button id="active-tab" data-bs-toggle="tab" data-bs-target="#active" type="button" role="tab" aria-controls="active" aria-selected="true">
+                    Активные промокоды
+                </button>
+            </li>
+            <li>
+                <button id="archive-tab" data-bs-toggle="tab" data-bs-target="#archive" type="button" role="tab" aria-controls="archive" aria-selected="false">
+                    Архивные промокоды
+                </button>
+            </li>
+        </ul>
+
+        <div>
+            <div id="active" role="tabpanel" aria-labelledby="active-tab">
+                <div>
+                    {% for promo in active_promos %}
+                        <div>
+                            <div>
+                                <div>
+                                    {{ promo.code }}
+                                    <span>
+                                        Скидка {{ promo.discount }}%
+                                    </span>
+                                </div>
+                                <div>
+                                    <p>{{ promo.description }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div>
+                            <div>
+                                В данный момент нет активных промокодов
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div id="archive" role="tabpanel" aria-labelledby="archive-tab">
+                <div>
+                    {% for promo in archived_promos %}
+                        <div>
+                            <div>
+                                <div>
+                                    {{ promo.code }}
+                                    <span>
+                                        Скидка {{ promo.discount }}%
+                                    </span>
+                                </div>
+                                <div>
+                                    <p>{{ promo.description }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div>
+                            <div>
+                                Нет архивных промокодов
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

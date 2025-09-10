@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Вакансии{% endblock %}
+
+{% block content %}
+<h1>Вакансии в нашей компании</h1>
+
+<div>
+    {% for vacancy in vacancy_list %}
+        <div>
+            <div>
+                <div>
+                    <h5>{{ vacancy.position }}</h5>
+                </div>
+                <div>
+                    <h6>
+                        Зарплата: {{ vacancy.salary }}
+                    </h6>
+                    <div>
+                        {{ vacancy.description|linebreaks }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div>
+            <div>
+                В данный момент открытых вакансий нет
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

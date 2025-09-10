@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Словарь терминов{% endblock %}
+
+{% block content %}
+<h1>Часто задаваемые вопросы</h1>
+<div>
+    {% for faq in faq_list %}
+        <div>
+            <h2>
+                <button type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}" aria-expanded="false" aria-controls="collapse{{ forloop.counter }}">
+                    {{ faq.question }}
+                </button>
+            </h2>
+            <div id="collapse{{ forloop.counter }}" class="collapse" aria-labelledby="heading{{ forloop.counter }}" data-bs-parent="#faqAccordion">
+                <div>
+                    {{ faq.answer }}
+                    <div>
+                        Добавлено: {{ faq.added_date|date:"d.m.Y" }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div>
+            <div>
+                Вопросов пока нет
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

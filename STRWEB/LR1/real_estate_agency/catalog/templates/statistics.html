@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Статистика продаж{% endblock %}
+
+{% block content %}
+<div>
+    <h1>Статистика продаж</h1>
+
+    {% if user.is_authenticated and user.is_superuser %}
+        <div>
+            <div>
+                <div>
+                    <div>
+                        <i class="bi bi-currency-dollar"></i>Сумма продаж
+                    </div>
+                    <div>
+                        <h5>Общая стоимость</h5>
+                        <ul>
+                            <li>
+                              <strong>Среднее:</strong> {{ cost_stats.mean_cost|floatformat:2 }} $
+                            </li>
+                            <li>
+                              <strong>Медиана:</strong> {{ cost_stats.median_cost|floatformat:2 }} $
+                            </li>
+                            <li>
+                              <strong>Мода:</strong> {{ cost_stats.mode_cost|floatformat:2 }} $
+                            </li>
+                        </ul>
+                        <h5>Сервисные сборы</h5>
+                        <ul>
+                            <li>
+                              <strong>Среднее:</strong> {{ service_stats.mean_cost|floatformat:2 }} $
+                            </li>
+                            <li>
+                              <strong>Медиана:</strong> {{ service_stats.median_cost|floatformat:2 }} $
+                            </li>
+                            <li>
+                              <strong>Мода:</strong> {{ service_stats.mode_cost|floatformat:2 }} $
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div>
+                    <div>
+                        <i class="bi bi-person"></i>Возраст клиентов
+                    </div>
+                    <div>
+                        <ul>
+                            <li>
+                              <strong>Средний возраст:</strong> {{ client_stats.mean_age|floatformat:1 }}
+                            </li>
+                            <li>
+                              <strong>Медиана возраста:</strong> {{ client_stats.median_age|floatformat:1 }}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div>
+                    <div>
+                        <i class="bi bi-house"></i>Популярный тип недвижимости
+                    </div>
+                    <img src="{{ chart_images.services_by_sold_count }}">
+                    <div>
+                        <ul>
+                            <li>
+                              <strong>Категория:</strong> {{ popular_category|default:"Нет данных" }}
+                            </li>
+                            <li>
+                              <strong>Продажи:</strong> {{ popular_category.count }}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div>
+                    <div>
+                        <i class="bi bi-cash-stack"></i>Сервисная прибыль
+                    </div>
+                    <img src="{{ chart_images.services_by_service_profit }}">
+                    <div>
+                        <ul>
+                            <li>
+                              <strong>Категория:</strong> {{ profitable_service|default:"Нет данных" }}
+                            </li>
+                            <li>
+                              <strong>Сумма:</strong> {{ profitable_service.total_service_cost|floatformat:2 }} $
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div>
+                    <div>
+                        <i class="bi bi-person-workspace"></i>Сотрудники: Стоимость услуг (последний месяц)
+                    </div>
+                    <img src="{{ chart_images.employee_service_stats }}">
+                    <div>
+                        {% for emp in employee_service_stats %}
+                            <p>
+                              <strong>{{ emp.user.get_full_name }}:</strong>
+                              {{ emp.total_service_cost|floatformat:2|default:"Нет данных" }} $
+                            </p>
+                        {% empty %}
+                            <p>Нет данных за последний месяц</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div>
+                    <div>
+                        <i class="bi bi-wallet2"></i>Сотрудники: Общая стоимость (последний месяц)
+                    </div>
+                    <img src="{{ chart_images.employee_total_stats }}">
+                    <div>
+                        {% for emp in employee_total_stats %}
+                            <p>
+                              <strong>{{ emp.user.get_full_name }}:</strong>
+                              {{ emp.total_cost|floatformat:2|default:"Нет данных" }} $
+                            </p>
+                        {% empty %}
+                            <p>Нет данных за последний месяц</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div>
+                    <div>
+                        <i class="bi bi-trophy"></i>Наибольшая общая стоимость
+                    </div>
+                    <img src="{{ chart_images.services_by_full_costs }}">
+                    <div>
+                        <ul>
+                            <li>
+                              <strong>Категория:</strong> {{ highest_cost_service|default:"Нет данных" }}
+                            </li>
+                            <li>
+                              <strong>Сумма:</strong> {{ highest_cost_service.total_value|floatformat:2 }} $
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div>
+            <i class="bi bi-lock-fill me-2"></i>Доступ к статистике ограничен.
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
