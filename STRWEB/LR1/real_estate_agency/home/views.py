@@ -7,11 +7,12 @@ from django.views.generic import (
     ListView,
     CreateView,
     UpdateView,
-    DeleteView,
+    DeleteView, DetailView,
 )
 
 from .forms import ReviewForm
-from .models import AboutCompany, FAQ, Vacancy, Contact, PromoCode, Review, News, Policy
+from .models import AboutCompany, FAQ, Vacancy, Contact, PromoCode, Review, News, Policy, Partner
+from catalog.models import ServiceCategory
 
 logger = logging.getLogger(__name__)
 
@@ -23,13 +24,18 @@ class HomeView(ListView):
     def get_queryset(self):
         logger.debug("Fetching latest news")
         news = News.objects.first()
+        partner_companies = Partner.objects.all()
+        categories = ServiceCategory.objects.all()
         if not news:
             logger.warning("No news found")
-        return news
+        return news, partner_companies, categories
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["last_news"] = self.get_queryset()
+        news, partner_companies, categories = self.get_queryset()
+        context["last_news"] = news
+        context["partner_companies"] = partner_companies
+        context["categories"] = categories
         logger.debug("Prepared context for HomeView")
         return context
 
@@ -55,6 +61,10 @@ class NewsListView(ListView):
     def get_queryset(self):
         return super().get_queryset().order_by("-created")
 
+class NewsView(DetailView):
+    model = News
+    template_name = "news_detail.html"
+    context_object_name = "news"
 
 class FAQListView(ListView):
     model = FAQ

@@ -14,7 +14,7 @@
                 <div>
                     <h5>{{ news.title }}</h5>
                     <p>{{ news.summary }}</p>
-                    <a href="">Читать далее</a>
+                    <a href="{% url 'news_detail' news.pk %}">Читать далее</a>
                 </div>
                 <div>
                     {{ news.created|date:"d.m.Y" }}

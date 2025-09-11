@@ -1,17 +1,28 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Гарант недвижимость{% endblock %}</title>
+    <meta name="description" content="Агентство недвижимости «Гарант» — продажа, аренда и сопровождение сделок. Акции, вакансии, отзывы, контакты.">
+    <meta name="keywords" content="недвижимость, аренда, продажа, ипотека, агентство">
+    <meta name="author" content="Гарант недвижимость">
+    <meta property="og:image" content="{% static 'img/logo.png' %}">
+    <link rel="icon" type="image/png" href="{% static 'img/logo.png' %}">
 </head>
 <body>
-    <header>
-        <div>
-            <div>
-                <h1>Гарант недвижимость</h1>
-                <nav>
-                    <ul>
+    <header style="background-color: #b8dca0;">
+        <div style="display:flex; align-items:center; justify-content:space-between;">
+
+            <div style="display:flex; align-items:center; gap:10px;">
+                <img src="{% static 'img/Гарант.png' %}" alt="Логотип Гарант" id="logo" style="max-height:64px;" />
+                <h1 style="margin:0; font-size:20px;">Гарант недвижимость</h1>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:20px;">
+                <nav id="main-nav" role="navigation">
+                    <ul style="list-style:none; display:flex; margin:0; padding:0; gap:15px;">
                         <li><a href="{% url 'home' %}">Главная</a></li>
                         <li><a href="{% url 'about' %}">О компании</a></li>
                         <li><a href="{% url 'news' %}">Новости</a></li>
@@ -24,42 +35,43 @@
                         <li><a href="{% url 'estates' %}">Каталог</a></li>
                     </ul>
                 </nav>
-                <div>
+
+                <div id="user-area">
                     {% if user.is_authenticated %}
-                        <div>
-                            <button type="button">
+                        <details style="position:relative;">
+                            <summary style="cursor:pointer; list-style:none; padding:5px 10px; border:1px solid #ccc; border-radius:4px;">
                                 {% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}
-                            </button>
-                            <ul>
+                            </summary>
+                            <ul style="position:absolute; right:0; margin:0; padding:10px; border:1px solid #ccc; background:#fff; list-style:none;">
                                 <li><a href="{% url 'profile' user.profile.id %}">Профиль</a></li>
+                                {% if user.is_superuser %}
+                                    <li><a href="{% url 'admin:index' %}">Панель управления</a></li>
+                                    <li><a href="{% url 'statistics' %}">Статистика</a></li>
+                                    <li><a href="{% url 'admin_clients' %}">Управление клиентами</a></li>
+                                    <li><a href="{% url 'admin_employees' %}">Управление сотрудниками</a></li>
+                                {% elif user.client %}
+                                    <li><a href="{% url 'client_dashboard' %}">Мои покупки</a></li>
+                                {% elif user.employee %}
+                                    <li><a href="{% url 'employee_dashboard' %}">Мои клиенты</a></li>
+                                {% endif %}
                                 <li>
-                                    {% if user.is_superuser %}
-                                        <li><a href="{% url 'admin:index' %}">Панель управления</a></li>
-                                        <li><a href="{% url 'statistics' %}">Статистика</a></li>
-                                        <li><a href="{% url 'admin_clients' %}">Управление клиентами</a></li>
-                                        <li><a href="{% url 'admin_employees' %}">Управление сотрудниками</a></li>
-                                    {% elif user.client %}
-                                        <li><a href="{% url 'client_dashboard' %}">Мои покупки</a></li>
-                                    {% elif user.employee %}
-                                        <li><a href="{% url 'employee_dashboard' %}">Мои клиенты</a></li>
-                                    {% endif %}
-                                </li>
-                                <li>
-                                    <form action="{% url 'logout' %}" method="post" class="d-inline">
+                                    <form action="{% url 'logout' %}" method="post">
                                         {% csrf_token %}
-                                        <button type="submit">Выйти</button>
+                                        <button type="submit" style="background:none; border:none; cursor:pointer; padding:0;">Выйти</button>
                                     </form>
                                 </li>
                             </ul>
-                        </div>
+                        </details>
                     {% else %}
-                        <a href="{% url 'login' %}">Вход</a>
+                        <a href="{% url 'login' %}">Вход</a> |
                         <a href="{% url 'signup' %}">Регистрация</a>
                     {% endif %}
                 </div>
+
             </div>
         </div>
     </header>
+
 
     <main>
         {% block content %}{% endblock %}
@@ -101,11 +113,7 @@
     {% endblock %}
 
     <footer>
-        <div>
-            <div>
-                <a href="{% url 'policy' %}">Политика конфиденциальности</a>
-            </div>
-        </div>
+        <a href="{% url 'policy' %}">Политика конфиденциальности</a>
     </footer>
 
 </body>

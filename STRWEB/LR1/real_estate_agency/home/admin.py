@@ -8,7 +8,8 @@ from .models import (
     Contact,
     Vacancy,
     PromoCode,
-    Policy
+    Policy,
+    Partner,
 )
 
 admin.site.register(AboutCompany)
@@ -19,3 +20,4 @@ admin.site.register(Contact)
 admin.site.register(Vacancy)
 admin.site.register(PromoCode)
 admin.site.register(Policy)
+admin.site.register(Partner)

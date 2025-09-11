@@ -15,4 +15,5 @@ urlpatterns = [
     re_path(r'^reviews/add/$', views.AddReviewView.as_view(), name='add_review'),
     re_path(r'^reviews/edit/(?P<pk>\d+)$', views.UpdateReviewView.as_view(), name='edit_review'),
     re_path(r'^reviews/delete/(?P<pk>\d+)$', views.DeleteReviewView.as_view(), name='delete_review'),
+    re_path(r'^news_detail/(?P<pk>\d+)$', views.NewsView.as_view(), name='news_detail'),
 ]

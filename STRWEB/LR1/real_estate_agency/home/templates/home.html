@@ -2,27 +2,80 @@
 
 {% block title %}Главная{% endblock %}
 
+{% block head %}
+    <!-- 🔹 Мета и микро-данные для поисковиков -->
+    <meta name="description" content="Компания Гарант недвижимости: услуги, последние новости, партнеры и акции">
+    <meta name="keywords" content="услуги, компания, новости, промокоды, акции">
+{% endblock %}
+
 {% block content %}
-<div>
-    <div>
-        <h1>Последняя новость</h1>
-        <div>
-            {% if last_news %}
-                <div>
-                    {{ last_news.created|date:"d.m.Y" }}
-                </div>
-                <div>
-                    <h5>{{ last_news.title }}</h5>
-                    <p>{{ last_news.summary }}</p>
-                    <p>{{ last_news.create }}</p>
-                    <a href="">Читать далее</a>
-                </div>
-            {% else %}
-                <div>
-                    <p>Новостей пока нет</p>
-                </div>
-            {% endif %}
-        </div>
-    </div>
-</div>
+<main>
+    <header>
+        <h1>Добро пожаловать в компанию <abbr title="Гарант недвижимости">ГН</abbr></h1>
+        <section aria-label="Рекламный баннер">
+            <figure>
+                <!-- <img src="" alt="Реклама баннер 1" style="max-width:100%">
+                <figcaption>Наши лучшие предложения</figcaption>
+            </figure>
+            <figure>
+                <img src="" alt="Реклама баннер 2" style="max-width:100%">
+                <figcaption>Скидки до 50%</figcaption> -->
+            </figure>
+        </section>
+    </header>
+
+    <article>
+        <h2>Последняя новость</h2>
+        {% if last_news %}
+            <time datetime="{{ last_news.created|date:'Y-m-d' }}">
+                {{ last_news.created|date:"d.m.Y" }}
+            </time>
+            <h3>{{ last_news.title }}</h3>
+            <p>{{ last_news.summary }}</p>
+            <a href="">Читать далее</a>
+            <p></p>
+            <img src="{{ last_news.image.url }}">
+        {% else %}
+            <p>Новостей пока нет</p>
+        {% endif %}
+    </article>
+
+    <hr>
+    <h2>Наши партнеры</h2>
+    <table style="width:100%; text-align:center;">
+        <thead>
+            <tr>
+                <th id="logo">Логотип</th>
+                <th id="name">Название компании</th>
+                <th id="link">Сайт</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for partner in partner_companies %}
+                <tr>
+                    <td headers="logo">
+                        <img src="{{ partner.logo.url }}" alt="{{ partner.name }}" style="max-height:50px;">
+                    </td>
+                    <td headers="name">
+                        <strong>{{ partner.name }}</strong>
+                    </td>
+                    <td headers="link">
+                        <a href="{{ partner.link }}" target="_blank">{{ partner.link }}</a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="3"><em>Партнёры пока не добавлены</em></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <hr>
+    <h2>Наши услуги</h2>
+    {% for category in categories %}
+        <p>{{ category.name }}</p>
+    {% endfor %}
+
+</main>
 {% endblock %}

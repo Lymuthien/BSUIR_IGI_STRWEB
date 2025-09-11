@@ -21,8 +21,8 @@
             <form method="post" action="{% url 'add_review' %}">
                 {% csrf_token %}
                 <div>
-                    <label>Оценка</label>
-                    <select name="rating" required>
+                    <label for="id_rating">Оценка</label>
+                    <select id="id_rating" name="rating" required>
                         <option value="" disabled selected>Выберите оценку</option>
                         {% for value, text in form.rating.field.choices %}
                             <option value="{{ value }}">{{ text }}</option>

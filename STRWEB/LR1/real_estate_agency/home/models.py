@@ -5,16 +5,26 @@ from django.db import models
 
 class AboutCompany(models.Model):
     text = models.TextField(help_text="Enter the company text")
+    video = models.URLField(help_text="Enter the video url", null=True, blank=True)
+    logo = models.ImageField(null=True, blank=True)
+    years_history = models.TextField(help_text="Enter the years history text", null=True, blank=True)
+    props = models.TextField(help_text="Enter the props text", null=True, blank=True)
+    certificate = models.ImageField(null=True, blank=True)
 
     def __str__(self):
         return f"{self.text[:40]}..."
 
+class Partner(models.Model):
+    name = models.TextField(help_text="Enter the name text", null=True, blank=True)
+    logo = models.ImageField(null=True)
+    link = models.URLField(help_text="Enter the link url", null=True, blank=True)
 
 class News(models.Model):
     title = models.CharField(max_length=100)
     summary = models.TextField()
     image = models.ImageField(upload_to="news/", blank=True)
     created = models.DateTimeField(auto_now_add=True)
+    text = models.TextField(help_text="Enter the news text", blank=True, null=True)
 
     class Meta:
         verbose_name = "News"
@@ -55,7 +65,7 @@ class Contact(models.Model):
 
 
 class Policy(models.Model):
-    pass
+    text = models.TextField(help_text="Enter the policy text", null=True, blank=True)
 
 
 class Vacancy(models.Model):

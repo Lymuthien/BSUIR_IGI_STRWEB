@@ -4,4 +4,9 @@
 
 {% block content %}
 <h1>Политика конфиденциальности</h1>
+    {% for policy in policy_list %}
+        <h5>{{ policy.text|linebreaks }}</h5>
+    {% empty %}
+        В данный момент открытых вакансий нет
+    {% endfor %}
 {% endblock %}

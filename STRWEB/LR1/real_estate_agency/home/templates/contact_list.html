@@ -4,31 +4,53 @@
 
 {% block content %}
 <div>
-    <h1>Наша команда</h1>
-    <div>
-        {% for contact in contact_list %}
-            <div>
-                <div>
-                    <img src="{{ contact.photo.url }}" alt="{{ contact.name }}">
-                    <div>
-                        <h5>{{ contact.name }}</h5>
-                        <h6>{{ contact.position }}</h6>
-                        <p>{{ contact.description }}</p>
-                        <ul>
-                            <li>{{ contact.phone }}</li>
-                            <li>{{ contact.email }}</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        {% empty %}
-            <div>
-                <div>
-                    В данный момент нет сотрудников
-                </div>
-            </div>
-        {% endfor %}
-    </div>
+    <h1>Наша <strong>команда</strong></h1>
+
+    {% if contact_list %}
+        <section>
+            <table border="1" style="border-collapse:collapse; width:100%; text-align:left;">
+                <thead>
+                    <tr>
+                        <th id="photo">Фото</th>
+                        <th id="info" colspan="2">Информация о сотруднике</th>
+                        <th id="contacts">Контакты</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for contact in contact_list %}
+                        <tr>
+                            <td headers="photo" rowspan="2" style="width:120px; text-align:center;">
+                                <figure>
+                                    <img src="{{ contact.photo.url }}" alt="{{ contact.name }}" style="max-width:100px; height:auto;">
+                                    <figcaption><small>{{ contact.name }}</small></figcaption>
+                                </figure>
+                            </td>
+
+                            <td headers="info" colspan="2">
+                                <strong>{{ contact.name }}</strong><br>
+                                <em>{{ contact.position }}</em>
+                            </td>
+
+                            <td headers="contacts" rowspan="2">
+                                <ul style="margin:0; padding-left:18px;">
+                                    <li><b>Телефон:</b> {{ contact.phone }}</li>
+                                    <li><b>Email:</b> <u>{{ contact.email }}</u></li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+
+                            <td headers="info" colspan="2">
+                                <p>{{ contact.description }}</p>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    {% else %}
+        <p><s>В данный момент нет сотрудников</s></p>
+    {% endif %}
 </div>
 
 {% endblock %}
