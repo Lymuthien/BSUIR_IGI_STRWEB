@@ -12,12 +12,48 @@
         <div>
             <form method="get">
                 <div>
-                    <div>
-                        <input type="text" name="search" placeholder="Поиск по адресу, описанию или категории..." value="{{ search_query }}">
-                        <button type="submit">
-                            <i class="bi bi-search"></i>
-                        </button>
-                    </div>
+                    <input type="text"
+                           name="search"
+                           placeholder="Поиск по адресу, описанию или категории..."
+                           value="{{ search_query }}"
+                           list="search-suggestions"
+                           autocomplete="off">
+                    <datalist id="search-suggestions">
+                        <option value="квартира">
+                        <option value="аренда">
+                        <option value="продажа">
+                        <option value="дом">
+                        <option value="студия">
+                        <option value="апартаменты">
+                        <option value="офис">
+                        <option value="коммерческая">
+                        <option value="новостройка">
+                        <option value="вторичка">
+                        <option value="ежедневная аренда">
+                        <option value="посуточно">
+                        <option value="долгосрочная аренда">
+                        <option value="квартира с мебелью">
+                        <option value="евроремонт">
+                        <option value="с видом на море">
+                        <option value="в центре города">
+                        <option value="спальный район">
+                        <option value="с парковкой">
+                        <option value="с ремонтом">
+                        <option value="бизнес-класс">
+                        <option value="элитное жилье">
+                        <option value="1 комнатная">
+                        <option value="2 комнатная">
+                        <option value="3 комнатная">
+                        <option value="4 комнатная">
+                        <option value="пентхаус">
+                        <option value="таунхаус">
+                        <option value="коттедж">
+                        <option value="участок">
+                        <option value="гараж">
+                    </datalist>
+                    <button type="submit">
+                        <i class="bi bi-search"></i>
+                    </button>
                 </div>
 
                 <div>

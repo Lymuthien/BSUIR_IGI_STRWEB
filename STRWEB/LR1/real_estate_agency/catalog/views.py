@@ -229,7 +229,6 @@ class CreatePurchaseRequestView(LoginRequiredMixin, CreateView):
         logger.debug(f"Redirecting to estate_detail for estate_id={self.kwargs['pk']}")
         return reverse_lazy("estate_detail", kwargs={"pk": self.kwargs["pk"]})
 
-
 class ClientDashboardView(LoginRequiredMixin, TemplateView):
     template_name = "client_dashboard.html"
 
@@ -276,7 +275,7 @@ class ClientDashboardView(LoginRequiredMixin, TemplateView):
         if action == "buy":
             if purchase_request.status in ["new", "in_progress"]:
                 logger.debug(f"Creating Sale for PurchaseRequest id={request_id}")
-                Sale.objects.create(
+                sale = Sale.objects.create(
                     client=purchase_request.client,
                     employee=purchase_request.employee,
                     estate=purchase_request.estate,
@@ -287,6 +286,8 @@ class ClientDashboardView(LoginRequiredMixin, TemplateView):
                 logger.info(
                     f"Sale created and PurchaseRequest id={request_id} marked as completed"
                 )
+
+                return redirect("payment", sale_id=sale.id)
             else:
                 logger.warning(f"PurchaseRequest id={request_id} already completed")
                 messages.error(request, "This purchase is already completed.")
@@ -302,6 +303,16 @@ class ClientDashboardView(LoginRequiredMixin, TemplateView):
 
         return redirect("client_dashboard")
 
+class PaymentView(LoginRequiredMixin, TemplateView):
+    template_name = "payment.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        sale_id = kwargs.get("sale_id")
+        sale = get_object_or_404(Sale, id=sale_id, client=self.request.user.client)
+        context["sale"] = sale
+        context["cost"] = sale.cost
+        return context
 
 class EmployeeDashboardView(LoginRequiredMixin, TemplateView):
     template_name = "employee_dashboard.html"

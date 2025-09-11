@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Главная{% endblock %}
 
@@ -12,17 +13,24 @@
 <main>
     <header>
         <h1>Добро пожаловать в компанию <abbr title="Гарант недвижимости">ГН</abbr></h1>
-        <section aria-label="Рекламный баннер">
-            <figure>
-                <!-- <img src="" alt="Реклама баннер 1" style="max-width:100%">
-                <figcaption>Наши лучшие предложения</figcaption>
-            </figure>
-            <figure>
-                <img src="" alt="Реклама баннер 2" style="max-width:100%">
-                <figcaption>Скидки до 50%</figcaption> -->
-            </figure>
-        </section>
     </header>
+
+    <section>
+      <h3>Наши акции</h3>
+      <div class="banner-slider" style="display: flex; gap: 20px; overflow-x: auto; padding: 10px 0;">
+        <figure >
+            <img src="{% static 'img/banner1.jpg' %}" alt="Баннер 1" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px;">
+            <figcaption style="text-align: center; margin-top: 10px; font-weight: bold;">Скидки на аренду квартир</figcaption>
+        </figure>
+        <figure>
+            <img src="{% static 'img/banner2.jpg' %}" alt="Баннер 2" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px;">
+            <figcaption style="text-align: center; margin-top: 10px; font-weight: bold;">Ипотека под выгодный процент</figcaption>
+        </figure>
+        <figure>
+            <img src="{% static 'img/banner3.jpg' %}" alt="Баннер 3" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px;">
+            <figcaption style="text-align: center; margin-top: 10px; font-weight: bold;">Новостройки без комиссии</figcaption>
+        </figure>
+    </div>
 
     <article>
         <h2>Последняя новость</h2>
@@ -76,6 +84,27 @@
     {% for category in categories %}
         <p>{{ category.name }}</p>
     {% endfor %}
+
+    <section>
+        <h3>Мудрые слова</h3>
+        <blockquote>
+          <q>Недвижимость — это не стены, а люди, которые в них живут.</q>
+        </blockquote>
+        <p>
+            Дом стоит <br>
+            На холме высоком <br>
+            Ветры гуляют<wbr> в окнах <br>
+            И свет горит в нём ночью
+        </p>
+    </section>
+
+    <section>
+        <h3>Пример кода</h3>
+        <pre><code>
+        def hello():
+            print("Гарант недвижимость!")
+        </code></pre>
+    </section>
 
 </main>
 {% endblock %}

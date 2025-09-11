@@ -1,18 +1,18 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}О компании{% endblock %}
 
 {% block head %}
-  <!-- Мета-данные -->
   <meta name="description" content="О нашей компании: история, миссия, сертификаты и реквизиты.">
   <meta name="keywords" content="компания, история, реквизиты, сертификаты">
 {% endblock %}
 
 {% block content %}
 <main>
-  <header>
-    <h1>О компании</h1>
-  </header>
+    <header>
+        <h1>О компании</h1>
+    </header>
 
   <article aria-labelledby="about-title">
     <h2 id="about-title">Краткая информация</h2>
@@ -45,10 +45,15 @@
 
       <h3>Сертификат</h3>
       {% if about_info.certificate %}
-        <figure>
-          <img src="{{ about_info.certificate.url }}" alt="Сертификат компании" style="max-width:400px;">
-          <figcaption>Официальный сертификат</figcaption>
-        </figure>
+         <figure>
+           <img src="{{ about_info.certificate.url }}" alt="Сертификат компании" style="max-width:400px;">
+           <figcaption>Официальный сертификат</figcaption>
+         </figure>
+         <p>
+            <a href="{{ about_info.certificate.url }}" download class="btn-download">
+              Скачать сертификат
+            </a>
+         </p>
       {% endif %}
     </section>
   </article>

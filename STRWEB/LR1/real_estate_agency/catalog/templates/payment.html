@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Оплата</h2>
+    <p>Вы купили объект: {{ sale.estate }}</p>
+    <p>Сумма оплаты: <strong>{{ cost }} ₽</strong></p>
+    <p>Пока нет интеграции с платежными системами</p>
+</div>
+{% endblock %}

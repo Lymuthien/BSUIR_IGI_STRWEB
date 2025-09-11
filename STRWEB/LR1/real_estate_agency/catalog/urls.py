@@ -13,4 +13,5 @@ urlpatterns = [
     path('estate/create/', views.EstateCreateView.as_view(), name='estate_create'),
     path('estate/<int:pk>/update/', views.EstateUpdateView.as_view(), name='estate_update'),
     path('estate/<int:pk>/delete/', views.EstateDeleteView.as_view(), name='estate_delete'),
+    path("payment/<int:sale_id>/", views.PaymentView.as_view(), name="payment"),
 ]
