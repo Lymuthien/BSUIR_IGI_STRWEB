@@ -9,17 +9,17 @@
 {% endblock %}
 
 {% block content %}
-<main>
+<main itemscope itemtype="https://schema.org/AboutPage">
     <header>
-        <h1>О компании</h1>
+        <h1 itemprop="name">О компании</h1>
     </header>
 
-  <article aria-labelledby="about-title">
+  <article aria-labelledby="about-title" itemprop="description">
     <h2 id="about-title">Краткая информация</h2>
     <p><dfn title="Mission statement">Миссия</dfn>: {{ about_info.text|linebreaks }}</p>
 
     {% if about_info.logo %}
-      <figure>
+      <figure itemprop="logo" itemscope itemtype="https://schema.org/ImageObject">
         <img src="{{ about_info.logo.url }}" alt="Логотип компании" style="max-width:300px;">
         <figcaption>Логотип компании</figcaption>
       </figure>
@@ -28,15 +28,16 @@
     {% if about_info.video %}
       <section aria-label="Видео о компании">
         <h3>Видео</h3>
-        <div>
-          <iframe src="{{ about_info.video }}" title="Видео о компании" width="560" height="315" loading="lazy" referrerpolicy="no-referrer"></iframe>
+        <div itemprop="video" itemscope itemtype="https://schema.org/VideoObject">
+            <iframe src="{{ about_info.video }}" title="Видео о компании" width="560" height="315" loading="lazy" referrerpolicy="no-referrer"></iframe>
+            <meta itemprop="description" content="Видео о компании {{ about_info.text|truncatewords:20 }}">
         </div>
       </section>
     {% endif %}
 
     <section>
         <h3>История компании</h3>
-        <p>{{ about_info.text|linebreaks }}</p>
+        <p itemprop="description">{{ about_info.text|linebreaks }}</p>
     </section>
 
     <section>
@@ -45,7 +46,7 @@
 
       <h3>Сертификат</h3>
       {% if about_info.certificate %}
-         <figure>
+         <figure itemprop="hasCertification">
            <img src="{{ about_info.certificate.url }}" alt="Сертификат компании" style="max-width:400px;">
            <figcaption>Официальный сертификат</figcaption>
          </figure>
@@ -55,6 +56,13 @@
             </a>
          </p>
       {% endif %}
+    </section>
+
+    <section>
+        <audio controls>
+            <source src="{% static 'media/carica.mp3' %}" type="audio/wav">
+            <em>Ваш браузер не поддерживает аудио.</em>
+        </audio>
     </section>
   </article>
 
