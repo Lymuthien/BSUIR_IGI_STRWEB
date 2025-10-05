@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Главная{% endblock %}
+
+{% block head %}
+    <!-- 🔹 Мета и микро-данные для поисковиков -->
+    <meta name="description" content="Компания Гарант недвижимости: услуги, последние новости, партнеры и акции">
+    <meta name="keywords" content="услуги, компания, новости, промокоды, акции">
+{% endblock %}
+
+{% block content %}
+<main>
+    <header>
+        <h1>Добро пожаловать в компанию <abbr title="Гарант недвижимости">ГН</abbr></h1>
+    </header>
+
+    <section>
+      <h3>Наши акции</h3>
+      <div class="banner-slider" style="display: flex; gap: 20px; overflow-x: auto; padding: 10px 0;">
+        <figure >
+            <img src="{% static 'img/banner1.jpg' %}" alt="Баннер 1" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px;">
+            <figcaption style="text-align: center; margin-top: 10px; font-weight: bold;">Скидки на аренду квартир</figcaption>
+        </figure>
+        <figure>
+            <img src="{% static 'img/banner2.jpg' %}" alt="Баннер 2" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px;">
+            <figcaption style="text-align: center; margin-top: 10px; font-weight: bold;">Ипотека под выгодный процент</figcaption>
+        </figure>
+        <figure>
+            <img src="{% static 'img/banner3.jpg' %}" alt="Баннер 3" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px;">
+            <figcaption style="text-align: center; margin-top: 10px; font-weight: bold;">Новостройки без комиссии</figcaption>
+        </figure>
+    </div>
+
+    <article>
+        <h2>Последняя новость</h2>
+        {% if last_news %}
+            <time datetime="{{ last_news.created|date:'Y-m-d' }}">
+                {{ last_news.created|date:"d.m.Y" }}
+            </time>
+            <h3>{{ last_news.title }}</h3>
+            <p>{{ last_news.summary }}</p>
+            <a href="">Читать далее</a>
+            <p></p>
+            <img src="{{ last_news.image.url }}">
+        {% else %}
+            <p>Новостей пока нет</p>
+        {% endif %}
+    </article>
+
+    <hr>
+    <h2>Наши партнеры</h2>
+    <table style="width:100%; text-align:center;">
+        <thead>
+            <tr>
+                <th id="logo">Логотип</th>
+                <th id="name">Название компании</th>
+                <th id="link">Сайт</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for partner in partner_companies %}
+                <tr>
+                    <td headers="logo">
+                        <img src="{{ partner.logo.url }}" alt="{{ partner.name }}" style="max-height:50px;">
+                    </td>
+                    <td headers="name">
+                        <strong>{{ partner.name }}</strong>
+                    </td>
+                    <td headers="link">
+                        <a href="{{ partner.link }}" target="_blank">{{ partner.link }}</a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="3"><em>Партнёры пока не добавлены</em></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <hr>
+    <h2>Наши услуги</h2>
+    {% for category in categories %}
+        <p>{{ category.name }}</p>
+    {% endfor %}
+
+    <section>
+        <h3>Мудрые слова</h3>
+        <blockquote>
+          <q>Недвижимость — это не стены, а люди, которые в них живут.</q>
+        </blockquote>
+        <q>Это цитата</q>
+        <p>
+            Дом стоит <br>
+            На холме высоком <br>
+            Ветры гуляют<wbr> в окнах <br>
+            И свет горит в нём ночью
+        </p>
+    </section>
+
+    <section>
+        <h3>Пример кода</h3>
+        <pre><code>
+        def hello():
+            print("Гарант недвижимость!")
+        </code></pre>
+    </section>
+
+</main>
+{% endblock %}

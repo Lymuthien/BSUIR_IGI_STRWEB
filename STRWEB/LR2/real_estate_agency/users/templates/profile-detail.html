@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Профиль пользователя{% endblock %}
+
+{% block content %}
+<div>
+    <h1>Профиль пользователя: {{ profile.user.username }}</h1>
+
+    <div>
+        <div>
+            <h5>Информация о пользователе</h5>
+            {% if is_client %}
+                <p>Клиент</p>
+            {% elif is_employee %}
+                <p>Сотрудник</p>
+            {% endif %}
+            <p>Имя пользователя: {{ profile.user.username }}</p>
+            <p>Имя: {{ profile.user.first_name }}</p>
+            <p>Фамилия: {{ profile.user.last_name }}</p>
+            <p>Email: {{ profile.user.email }}</p>
+            <p>Телефон: {{ profile.user.phone_number }}</p>
+            <p>Дата рождения: {{ profile.user.birth_date|date:"d/m/Y" }}</p>
+        </div>
+    </div>
+
+    <div>
+        <div>
+            <h5>Время и дата</h5>
+            <p>Текущая дата ({{ user_timezone }}): {{ local_date }} ({{ utc_date }} UTC)</p>
+            <p>Дата регистрации ({{ user_timezone }}): {{ local_created }} ({{ utc_created }} UTC)</p>
+        </div>
+    </div>
+
+    <div>
+        <div>
+            <h4>Календарь</h4>
+        </div>
+        <div>
+            <pre>{{ calendar }}</pre>
+        </div>
+    </div>
+
+    <div>
+        <div>
+            <h5>Отзывы</h5>
+            {% if reviews %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Текст</th>
+                        <th>Оценка</th>
+                        <th>Создано (Таймзона пользователя)</th>
+                        <th>Обновлено (Таймзона пользователя)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in reviews %}
+                    <tr>
+                        <td>{{ item.review.text|truncatewords:5 }}</td>
+                        <td>{{ item.review.rating }}★</td>
+                        <td>{{ item.created_local }} ({{ item.created_utc }} UTC)</td>
+                        <td>{{ item.updated_local }} ({{ item.updated_utc }} UTC)</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p>Нет отзывов.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

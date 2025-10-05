@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Вакансии{% endblock %}
+
+{% block content %}
+<h1><strong>Вакансии</strong> в нашей компании</h1>
+
+<div>
+    {% if vacancy_list %}
+        <section>
+            <table border="1" style="border-collapse:collapse; width:100%;">
+                <thead>
+                    <tr>
+                        <th id="pos">Должность</th>
+                        <th id="sal">Зарплата</th>
+                        <th id="desc">Описание</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for vacancy in vacancy_list %}
+                        <tr>
+                            <td headers="pos"><u>{{ vacancy.position }}</u></td>
+                            <td headers="sal"><b>{{ vacancy.salary }}</b></td>
+                            <td headers="desc">
+                                <small>{{ vacancy.description|linebreaks }}</small>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    {% else %}
+        <p><s>В данный момент открытых вакансий нет</s></p>
+    {% endif %}
+</div>
+{% endblock %}

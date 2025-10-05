@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Категории услуг{% endblock %}
+
+{% block content %}
+<div>
+    <h1>Каталог услуг</h1>
+
+    <div>
+        <div>
+            <form method="get">
+                <div>
+                    <select name="service_category">
+                        <option value="">Все категории услуг</option>
+                        {% for sc in service_categories %}
+                        <option value="{{ sc.id }}"
+                            {% if request.GET.service_category == sc.id|stringformat:"s" %}selected{% endif %}>
+                            {{ sc.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div>
+                    <input type="number" name="min_price"
+                           placeholder="Цена от" value="{{ request.GET.min_price }}">
+                </div>
+
+                <div>
+                    <input type="number" name="max_price"
+                           placeholder="Цена до" value="{{ request.GET.max_price }}">
+                </div>
+
+                <div>
+                    <button type="submit">Применить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div>
+        <div>
+            <div>
+                {% for category in service_list %}
+                <div>
+                    <div>
+                        <div>
+                            <div>
+                                <h5>{{ category.name }}</h5>
+                                {% if category.category %}
+                                <h6>{{ category.category.name }}</h6>
+                                {% endif %}
+                            </div>
+                            <span>{{ category.cost }} $</span>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div>Услуги не найдены</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+
+{% block title %}{% if form.instance.pk %}Редактирование сотрудника{% else %}Создание сотрудника{% endif %}{% endblock %}
+
+{% block content %}
+<div>
+    <div>
+        <div>
+            <h4>
+                {% if form.instance.pk %}
+                    Редактирование сотрудника: {{ form.instance.username }}
+                {% else %}
+                    Создание сотрудника
+                {% endif %}
+            </h4>
+        </div>
+        <div>
+            <form method="post" novalidate>
+                {% csrf_token %}
+
+                {% if form.errors %}
+                <div>
+                    <h6>Ошибки в форме:</h6>
+                    <ul>
+                        {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                                <li>{{ field }}: {{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+                <div>
+                    <div>
+                        <div>
+                            <label for="{{ form.username.id_for_label }}">Имя пользователя *</label>
+                            {{ form.username }}
+                            {% if form.username.help_text %}
+                                <div>{{ form.username.help_text }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div>
+                        <div>
+                            <label for="{{ form.birth_date.id_for_label }}">Дата рождения</label>
+                            {{ form.birth_date }}
+                            {% if form.birth_date.help_text %}
+                                <div>{{ form.birth_date.help_text }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div>
+                        <div>
+                            <label for="{{ form.first_name.id_for_label }}">Имя</label>
+                            {{ form.first_name }}
+                            {% if form.first_name.help_text %}
+                                <div>{{ form.first_name.help_text }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div>
+                        <div>
+                            <label for="{{ form.last_name.id_for_label }}">Фамилия</label>
+                            {{ form.last_name }}
+                            {% if form.last_name.help_text %}
+                                <div>{{ form.last_name.help_text }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <div>
+                        <div>
+                            <label for="{{ form.email.id_for_label }}">Email</label>
+                            {{ form.email }}
+                            {% if form.email.help_text %}
+                                <div>{{ form.email.help_text }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div>
+                        <div>
+                            <label for="{{ form.phone_number.id_for_label }}">Телефон</label>
+                            {{ form.phone_number }}
+                            {% if form.phone_number.help_text %}
+                                <div>{{ form.phone_number.help_text }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                {% if form.instance.pk %}
+                <div>
+                    <div>
+                        {{ form.is_active }}
+                        <label for="{{ form.is_active.id_for_label }}">
+                            Активный аккаунт
+                        </label>
+                        {% if form.is_active.help_text %}
+                            <div>{{ form.is_active.help_text }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <div>
+                    <button type="submit">
+                        {% if form.instance.pk %}Сохранить{% else %}Создать{% endif %}
+                    </button>
+                    <a href="{% url 'admin_employees' %}">
+                        Назад к списку
+                    </a>
+                </div>
+            </form>
+
+            {% if form.instance.pk and form.instance.employee %}
+            <hr>
+            <div>
+                <h6>Информация о сотруднике:</h6>
+                <ul>
+                    <li><strong>Дата приема:</strong> {{ form.instance.employee.hire_date|date:"d.m.Y" }}</li>
+                    <li><strong>Количество клиентов:</strong> {{ form.instance.employee.clients.count }}</li>
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

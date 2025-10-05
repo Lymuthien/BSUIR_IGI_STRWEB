@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Промокоды и акции{% endblock %}
+
+{% block content %}
+<div>
+    <div>
+        <ul>
+            <li>
+                <a href="#active">Активные промокоды</a>
+            </li>
+            <li>
+                <a href="#archive">Архивные промокоды</a>
+            </li>
+        </ul>
+
+        <div id="active">
+            <h2>Активные промокоды</h2>
+            <div>
+                {% for promo in active_promos %}
+                    <div>
+                        <p>{{ promo.code }}</p>
+                        <p>Скидка {{ promo.discount }}%</p>
+                        <p>{{ promo.description }}</p>
+                        <hr>
+                    </div>
+                {% empty %}
+                    В данный момент нет активных промокодов
+                {% endfor %}
+            </div>
+        </div>
+
+        <div id="archive">
+            <h2>Архивные промокоды</h2>
+            <div>
+                {% for promo in archived_promos %}
+                    <p>{{ promo.code }}</p>
+                    <p>Скидка {{ promo.discount }}%</p>
+                    <p>{{ promo.description }}</p>
+                    <hr>
+                {% empty %}
+                    Нет архивных промокодов
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

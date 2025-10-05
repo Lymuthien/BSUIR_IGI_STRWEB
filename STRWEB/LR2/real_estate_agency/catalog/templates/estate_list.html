@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+
+{% block title %}Доступная недвижимость{% endblock %}
+
+{% block content %}
+<div>
+    <h1>Доступная недвижимость</h1>
+
+    {% if user.is_authenticated %}
+
+    <div>
+        <div>
+            <form method="get">
+                <div>
+                    <input type="text"
+                           name="search"
+                           placeholder="Поиск по адресу, описанию или категории..."
+                           value="{{ search_query }}"
+                           list="search-suggestions"
+                           autocomplete="off">
+                    <datalist id="search-suggestions">
+                        <option value="квартира">
+                        <option value="аренда">
+                        <option value="продажа">
+                        <option value="дом">
+                        <option value="студия">
+                        <option value="апартаменты">
+                        <option value="офис">
+                        <option value="коммерческая">
+                        <option value="новостройка">
+                        <option value="вторичка">
+                        <option value="ежедневная аренда">
+                        <option value="посуточно">
+                        <option value="долгосрочная аренда">
+                        <option value="квартира с мебелью">
+                        <option value="евроремонт">
+                        <option value="с видом на море">
+                        <option value="в центре города">
+                        <option value="спальный район">
+                        <option value="с парковкой">
+                        <option value="с ремонтом">
+                        <option value="бизнес-класс">
+                        <option value="элитное жилье">
+                        <option value="1 комнатная">
+                        <option value="2 комнатная">
+                        <option value="3 комнатная">
+                        <option value="4 комнатная">
+                        <option value="пентхаус">
+                        <option value="таунхаус">
+                        <option value="коттедж">
+                        <option value="участок">
+                        <option value="гараж">
+                    </datalist>
+                    <button type="submit">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+
+                <div>
+                    <select name="category">
+                        <option value="">Все категории</option>
+                        {% for cat in categories %}
+                        <option value="{{ cat.id }}" {% if request.GET.category == cat.id|stringformat:"s" %}selected{% endif %}>
+                            {{ cat }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div>
+                    <select name="service_category">
+                        <option value="">Все виды категорий</option>
+                        {% for sc in service_categories %}
+                        <option value="{{ sc.id }}" {% if request.GET.service_category == sc.id|stringformat:"s" %}selected{% endif %}>
+                            {{ sc }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div>
+                    <select name="sort">
+                        <option value="">Сортировка</option>
+                        <option value="price_asc" {% if request.GET.sort == 'price_asc' %}selected{% endif %}>
+                            Цена (по возрастанию)
+                        </option>
+                        <option value="price_desc" {% if request.GET.sort == 'price_desc' %}selected{% endif %}>
+                            Цена (по убыванию)
+                        </option>
+                        <option value="area_asc" {% if request.GET.sort == 'area_asc' %}selected{% endif %}>
+                            Площадь (по возрастанию)
+                        </option>
+                        <option value="area_desc" {% if request.GET.sort == 'area_desc' %}selected{% endif %}>
+                            Площадь (по убыванию)
+                        </option>
+                    </select>
+                </div>
+
+                <div>
+                    <input type="number" name="min_price" placeholder="Цена от" value="{{ request.GET.min_price }}">
+                </div>
+                <div>
+                    <input type="number" name="max_price" placeholder="Цена до" value="{{ request.GET.max_price }}">
+                </div>
+
+                <div>
+                    <button type="submit">Применить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if user.is_staff or user.is_superuser %}
+    <div>
+        <a href="{% url 'estate_create' %}">
+            Добавить объект
+        </a>
+    </div>
+    {% endif %}
+
+    <div>
+        {% for estate in estate_list %}
+        <div>
+            <div>
+                <div>
+                    <img src="{{ estate.get_image_url }}" alt="{{ estate.title }}">
+                </div>
+                <div>
+                    <h5>{{ estate.address }}</h5>
+                    <h6>
+                        {% if estate.category %}
+                            {{ estate.category }}
+                        {% endif %}
+                    </h6>
+                    <div>
+                        <p><strong>Цена:</strong> {{ estate.cost }} $</p>
+                        <p>{{ estate.description }}</p>
+                    </div>
+                </div>
+                <div>
+                    <a href="{% url 'estate_detail' estate.pk %}">Подробнее</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div>
+            <div>
+                В данный момент нет доступных объектов недвижимости
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div>
+        Чтобы просмотреть страницу, пожалуйста, <a href="{% url 'login' %}">войдите</a> или <a href="{% url 'signup' %}">зарегистрируйтесь</a>.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
