@@ -3251,3 +3251,8 @@ Traceback (most recent call last):
         "The '%s' attribute has no file associated with it." % self.field.name
     )
 ValueError: The 'image' attribute has no file associated with it.
+2025-10-05 16:36:10,743 INFO timezone_service ip:127.0.0.1
+2025-10-05 16:36:11,442 INFO views Timezone determined for user lymuthien: UTC
+2025-10-05 16:38:10,092 INFO timezone_service ip:127.0.0.1
+2025-10-05 16:38:11,119 INFO views Timezone determined for user lymuthien: UTC
+2025-10-05 16:38:55,736 INFO views ServiceListView queryset prepared

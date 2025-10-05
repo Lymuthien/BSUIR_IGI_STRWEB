@@ -1,0 +1,215 @@
+/* === Reset & base === */
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+:root{
+  --accent:#3a8d5a;
+  --accent-2:#b8dca0;
+  --muted:#6b7280;
+  --bg-gradient: linear-gradient(180deg,#f7fbf6 0%, #eef6ec 100%);
+}
+body{
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+  background: var(--bg-gradient), url('../img/bg-subtle-pattern.jpg');
+  background-blend-mode: overlay;
+  color:#222;
+  line-height:1.45;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+.container{max-width:1100px;margin:0 auto;padding:1rem}
+
+/* Header */
+#site-header{background-color:var(--accent-2);position:sticky;top:0;z-index:1000;border-bottom:1px solid rgba(0,0,0,0.06)}
+.header-row{display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{max-height:64px;display:block}
+.brand-title{margin:0;font-size:1.1rem;font-weight:700;letter-spacing:0.6px}
+
+/* Nav */
+.nav-list{list-style:none;display:flex;margin:0;padding:0;gap:12px;align-items:center}
+.nav-list a{color:#10421a;text-decoration:none;padding:8px 6px;border-radius:6px}
+.nav-list a:link{color:#0b3f18}
+.nav-list a:visited{color:#0b3f18;opacity:0.9}
+.nav-list a:hover{background:rgba(255,255,255,0.35);transform:translateY(-1px)}
+.nav-list a:active{color:#ffffff}
+
+/* User area */
+.user-summary{cursor:pointer;list-style:none;padding:6px 10px;border:1px solid #ccc;border-radius:4px;background:#fff}
+.user-menu{position:absolute;right:0;margin:0;padding:8px;background:#fff;list-style:none;border-radius:6px;box-shadow:0 6px 18px rgba(10,10,10,0.08)}
+.btn-link{background:none;border:none;color:inherit;text-decoration:underline;cursor:pointer}
+
+/* Main layout */
+.site-main{padding:2rem 0}
+.site-footer{background:#f3f6f2;padding:1.2rem 0;margin-top:3rem}
+.site-footer a{color:var(--muted)}
+
+#about-logo { transform: rotate(-6deg) scale(1.02); transition: transform 0.5s; }
+
+/* Buttons */
+.btn{display:inline-block;padding:0.45rem 0.7rem;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:#fff;text-decoration:none}
+.btn:hover{transform:translateY(-2px)}
+.btn-primary{background:var(--accent);color:#fff;border:none}
+.btn-secondary{background:#fff;border:1px solid var(--accent);color:var(--accent)}
+.btn-danger{background:#e74c3c;color:#fff}
+
+button, .btn{cursor:pointer}
+
+/* Preloader (нижняя часть страницы визуально) */
+#preloader{position:fixed;left:0;right:0;bottom:12px;display:flex;justify-content:center;pointer-events:none;z-index:2000}
+#preloader .dots{display:flex;gap:8px}
+#preloader .dot{width:10px;height:10px;border-radius:50%;background:var(--accent);opacity:0.9;display:inline-block;animation:pulse 1.2s infinite ease-in-out}
+#preloader .dot:nth-child(2){animation-delay:0.2s}
+#preloader .dot:nth-child(3){animation-delay:0.4s}
+@keyframes pulse{0%{transform:scale(0.7);opacity:0.4}50%{transform:scale(1.2);opacity:1}100%{transform:scale(0.7);opacity:0.4}}
+
+/* Banners */
+.banner-slider{display:flex;gap:20px;overflow-x:auto;padding:10px 0}
+.banner{min-width:300px}
+.banner img{width:100%;height:200px;object-fit:cover;border-radius:8px}
+
+/* Last news — позиционирование */
+.last-news{position:relative;padding:1rem;background:#fff;border-radius:8px;box-shadow:0 6px 18px rgba(10,10,10,0.04);margin:1rem 0}
+.last-news .news-image-wrap{position:absolute;right:1rem;top:1rem;width:140px}
+.last-news .news-image-wrap img{width:140px;height:90px;object-fit:cover;border-radius:6px}
+.last-news .news-summary{max-width:60%;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;text-overflow:ellipsis}
+
+/* Partners — круглые блоки */
+.partners .partner-grid{display:flex;flex-wrap:wrap;gap:1rem;align-items:flex-start}
+.partner-card{width:160px;text-align:center}
+.partner-circle{width:100px;height:100px;border-radius:50%;overflow:hidden;display:flex;align-items:center;justify-content:center;background:#fff;border:6px solid #fff;box-shadow:0 8px 20px rgba(0,0,0,0.12);margin:0 auto}
+.partner-circle img{max-width:150%;max-height:150%;display:block}
+.partner-name{margin-top:8px;font-weight:700;letter-spacing:1px;text-transform:capitalize}
+.partner-link{display:block;margin-top:6px}
+
+/* Services */
+.service-item{padding:6px 0;font-variant-caps:small-caps}
+
+/* Quotes by language */
+q:lang(ru)::before{content:'«';margin-right:0.2rem}
+q:lang(ru)::after{content:'»'}
+q:lang(en)::before{content:'“'}
+q:lang(en)::after{content:'”'}
+
+/* Article typography */
+.article-text::first-letter{font-size:1.5rem;float:left;color:var(--accent)}
+blockquote{position:relative;padding:1rem 1.2rem;border-left:4px solid var(--accent);background:linear-gradient(90deg, rgba(58,141,90,0.03), transparent)}
+blockquote::before{content:"Мудрая мысль:";display:block;font-weight:600;color:var(--muted);font-size:0.85rem}
+blockquote::after{content:"— Гарант";display:block;text-align:right;font-size:0.8rem;color:var(--muted)}
+
+/* Selection */
+::selection{background:var(--accent);color:#fff}
+
+/* History list markers (unicode) */
+.history-list{padding-left:1rem}
+.history-list li{margin:0.4rem 0}
+.history-list li::marker{content:'\25BA';color:var(--accent)}
+
+/* Certificate styling using border-image */
+.certificate{padding:1rem;margin:1rem 0;display:inline-block;background:linear-gradient(180deg,#fff,#f7fff7);position:relative}
+.certificate img{max-width:100%;display:block}
+.certificate{
+  border:16px solid transparent;
+  -webkit-border-image: url('../img/certificate-border.png') 30 round; /* webkit */
+  -o-border-image: url('../img/certificate-border.png') 30 round; /* opera */
+  border-image: url('../img/certificate-border.png') 30 round;
+  z-index:1;
+}
+
+/* Media box (video/audio) */
+.media-box{padding:0.6rem;border-radius:8px;background:#fff;box-shadow:0 6px 12px rgba(0,0,0,0.04)}
+.audio-box{width:100%;max-width:420px}
+
+/* News list */
+.news-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem}
+.news-item{display:flex;gap:1rem;padding:0.8rem;background:#fff;border-radius:8px;align-items:flex-start}
+.news-thumb img{width:120px;height:80px;object-fit:cover;border-radius:6px}
+.news-summary{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+
+/* Full article multi-column */
+.article-full{column-count:2;column-gap:2rem}
+@media (max-width:900px){.article-full{column-count:1}}
+
+/* FAQ details styling */
+.faq-item summary{cursor:pointer;padding:0.6rem;border-radius:6px;background:#f9fff7;border:1px solid rgba(0,0,0,0.03)}
+.faq-item[open] summary{background:linear-gradient(90deg,#eaf7ee,#ffffff)}
+.faq-answer{padding:0.6rem 1rem}
+.faq-date{font-weight:400;color:var(--muted);font-size:0.9rem;margin-left:8px}
+
+/* Contacts — Flexbox cards */
+.staff-list{display:flex;flex-wrap:wrap;gap:1rem}
+.staff-card{display:flex;gap:1rem;align-items:flex-start;background:#fff;padding:0.8rem;border-radius:8px;box-shadow:0 6px 18px rgba(10,10,10,0.04);width:48%}
+.staff-photo img{max-width:120px;border-radius:8px}
+.staff-info h3{margin:0}
+
+@media (max-width:800px){.staff-card{width:100%}}
+
+/* Vacancies — float and clear */
+.job-card{float:left;width:48%;margin:1%;background:#fff;padding:0.8rem;border-radius:8px;box-shadow:0 3px 12px rgba(0,0,0,0.04)}
+.clearfix::after{content:"";display:block;clear:both}
+
+/* Reviews — fonts set by component type keywords */
+.reviews .review{background:#fff;padding:0.8rem;border-radius:8px;margin:0.6rem 0;font:menu}
+.reviews .user-name{font-weight:700}
+.rating{color:#f5a623}
+
+/* Promo lists */
+.promo-list .promo{padding:0.6rem;border-radius:6px;margin:0.4rem 0}
+.promo.active{background:linear-gradient(90deg,#f3fff5,#fff)}
+.promo.archived{background:#fafafa;color:#999}
+
+/* Tables styling */
+table{width:100%;border-collapse:collapse;border-spacing:0;margin:1rem 0}
+thead th{background:linear-gradient(90deg,#e9f6ea,#fff);padding:0.6rem}
+td,th{padding:0.6rem;border:1px solid rgba(0,0,0,0.06);vertical-align:middle;text-align:left}
+td:empty{background:#fffbea}
+caption{caption-side:top;font-weight:700;padding-bottom:0.5rem}
+tbody tr:nth-child(odd){background:rgba(0,0,0,0.015)}
+
+/* Attribute selectors examples */
+a[href^="http"]::after{content:"\2197";font-size:0.8rem;margin-left:4px}
+img[alt$="Логотип"]{filter:grayscale(0);}
+
+/* Form states */
+input:focus, textarea:focus{outline:3px solid rgba(58,141,90,0.12)}
+input:required{box-shadow:inset 0 0 0 1px rgba(255,0,0,0.06)}
+input:disabled{opacity:0.6}
+input:in-range{border-color:green}
+input:out-of-range{border-color:red}
+input[type="checkbox"]:checked+label::after{content:' ✔'}
+
+/* Cursor styles for interactive elements */
+button, .btn, .partner-card{cursor:pointer}
+
+/* Text transforms, spacing */
+h1,h2,h3{letter-spacing:0.6px;text-transform:uppercase}
+p{margin:0 0 1rem 0;text-indent:1.2rem}
+.small-caps{font-variant-caps:small-caps}
+.word-spacing{word-spacing:0.35rem}
+.letter-spacing{letter-spacing:0.12em}
+
+/* Word breaks and hyphens */
+.poem{word-break:break-word;hyphens:auto}
+
+/* Kerning for partner name */
+.partner-name{letter-spacing:2px}
+
+/* Hero simple animations (clouds, trees, windows) */
+.hero{position:relative;overflow:hidden}
+@keyframes moveClouds{0%{transform:translateX(-20%)}100%{transform:translateX(20%)}}
+.cloud{position:absolute;top:10px;left:-10%;opacity:0.9;animation:moveClouds 30s linear infinite}
+@keyframes sway{0%{transform:translateY(0)}50%{transform:translateY(-4px)}100%{transform:translateY(0)}}
+.tree{animation:sway 6s ease-in-out infinite}
+@keyframes blink{0%,50%{opacity:0.2}55%{opacity:1}60%{opacity:0.2}100%{opacity:0.2}}
+.window{animation:blink 6s infinite}
+
+/* Responsive */
+@media (max-width:900px){
+  .nav-list{display:flex;flex-wrap:wrap}
+  .partner-card{width:48%}
+  .last-news .news-summary{max-width:100%}
+}
+
+@media (max-width:600px){
+  .nav-list{gap:8px;font-size:0.95rem}
+  .banner img{height:140px}
+}
