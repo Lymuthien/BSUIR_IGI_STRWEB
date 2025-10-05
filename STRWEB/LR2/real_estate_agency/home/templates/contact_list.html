@@ -3,54 +3,30 @@
 {% block title %}Контакты{% endblock %}
 
 {% block content %}
-<div>
+<div class="contacts">
     <h1>Наша <strong>команда</strong></h1>
 
     {% if contact_list %}
-        <section>
-            <table border="1" style="border-collapse:collapse; width:100%; text-align:left;">
-                <thead>
-                    <tr>
-                        <th id="photo">Фото</th>
-                        <th id="info" colspan="2">Информация о сотруднике</th>
-                        <th id="contacts">Контакты</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for contact in contact_list %}
-                        <tr>
-                            <td headers="photo" rowspan="2" style="width:120px; text-align:center;">
-                                <figure>
-                                    <img src="{{ contact.photo.url }}" alt="{{ contact.name }}" style="max-width:100px; height:auto;">
-                                    <figcaption><small>{{ contact.name }}</small></figcaption>
-                                </figure>
-                            </td>
-
-                            <td headers="info" colspan="2">
-                                <strong>{{ contact.name }}</strong><br>
-                                <em>{{ contact.position }}</em>
-                            </td>
-
-                            <td headers="contacts" rowspan="2">
-                                <ul style="margin:0; padding-left:18px;">
-                                    <li><b>Телефон:</b> {{ contact.phone }}</li>
-                                    <li><b>Email:</b> <u>{{ contact.email }}</u></li>
-                                </ul>
-                            </td>
-                        </tr>
-                        <tr>
-
-                            <td headers="info" colspan="2">
-                                <p>{{ contact.description }}</p>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+        <section class="staff-list">
+            {% for contact in contact_list %}
+                <article class="staff-card">
+                    <div class="staff-photo">
+                        <img src="{{ contact.photo.url }}" alt="{{ contact.name }}">
+                    </div>
+                    <div class="staff-info">
+                        <h3>{{ contact.name }}</h3>
+                        <p class="position">{{ contact.position }}</p>
+                        <p class="desc">{{ contact.description }}</p>
+                        <ul class="staff-contacts">
+                            <li><b>Телефон:</b> {{ contact.phone }}</li>
+                            <li><b>Email:</b> <a href="mailto:{{ contact.email }}">{{ contact.email }}</a></li>
+                        </ul>
+                    </div>
+                </article>
+            {% endfor %}
         </section>
     {% else %}
         <p><s>В данный момент нет сотрудников</s></p>
     {% endif %}
 </div>
-
 {% endblock %}

@@ -3170,3 +3170,84 @@ ValueError: The 'image' attribute has no file associated with it.
 2025-09-11 19:27:10,460 INFO views EstateDetailView context prepared
 2025-09-11 19:27:13,230 INFO views ClientDashboardView context prepared for user Tanya
 2025-09-11 19:27:14,915 INFO views ClientDashboardView context prepared for user Tanya
+2025-10-05 15:05:21,527 INFO autoreload Watching for file changes with StatReloader
+2025-10-05 15:29:47,418 WARNING log Not Found: /favicon.ico
+2025-10-05 16:00:56,095 ERROR log Internal Server Error: /home/
+Traceback (most recent call last):
+  File "C:\Users\lymuthien\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 890, in _resolve_lookup
+    raise TypeError
+TypeError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\lymuthien\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\exception.py", line 55, in inner
+    response = get_response(request)
+  File "C:\Users\lymuthien\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\core\handlers\base.py", line 220, in _get_response
+    response = response.render()
+  File "C:\Users\lymuthien\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\response.py", line 114, in render
+    self.content = self.rendered_content
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lymuthien\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\response.py", line 92, in rendered_content
+    return template.render(context, self._request)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\lymuthien\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\backends\django.py", line 107, in render
+    return self.template.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\lymuthien\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 171, in render
+    return self._render(context)
+           ~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\lymuthien\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\lymuthien\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\lymuthien\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\lymuthien\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\lymuthien\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\lymuthien\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\lymuthien\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\lymuthien\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+  File "C:\Users\lymuthien\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\lymuthien\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\lymuthien\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\defaulttags.py", line 327, in render
+    return nodelist.render(context)
+           ~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\lymuthien\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1016, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\lymuthien\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 977, in render_annotated
+    return self.render(context)
+           ~~~~~~~~~~~^^^^^^^^^
+  File "C:\Users\lymuthien\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 1075, in render
+    output = self.filter_expression.resolve(context)
+  File "C:\Users\lymuthien\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 722, in resolve
+    obj = self.var.resolve(context)
+  File "C:\Users\lymuthien\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 854, in resolve
+    value = self._resolve_lookup(context)
+  File "C:\Users\lymuthien\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\template\base.py", line 901, in _resolve_lookup
+    current = getattr(current, bit)
+  File "C:\Users\lymuthien\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\fields\files.py", line 69, in url
+    self._require_file()
+    ~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\lymuthien\AppData\Local\Programs\Python\Python313\Lib\site-packages\django\db\models\fields\files.py", line 44, in _require_file
+    raise ValueError(
+        "The '%s' attribute has no file associated with it." % self.field.name
+    )
+ValueError: The 'image' attribute has no file associated with it.

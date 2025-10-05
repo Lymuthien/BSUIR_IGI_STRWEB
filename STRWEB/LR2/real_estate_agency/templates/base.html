@@ -6,23 +6,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Гарант недвижимость{% endblock %}</title>
     <meta name="description" content="Агентство недвижимости «Гарант» — продажа, аренда и сопровождение сделок. Акции, вакансии, отзывы, контакты.">
-    <meta name="keywords" content="недвижимость, аренда, продажа, ипотека, агентство">
     <meta name="author" content="Гарант недвижимость">
     <meta property="og:image" content="{% static 'img/logo.png' %}">
     <link rel="icon" type="image/png" href="{% static 'img/logo.png' %}">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Montserrat:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+
+    {% block head %}{% endblock %}
 </head>
 <body>
-    <header style="background-color: #b8dca0;">
-        <div style="display:flex; align-items:center; justify-content:space-between;">
 
-            <div style="display:flex; align-items:center; gap:10px;">
-                <img src="{% static 'img/Гарант.png' %}" alt="Логотип Гарант" id="logo" style="max-height:64px;" />
-                <h1 style="margin:0; font-size:20px;">Гарант недвижимость</h1>
+    <div id="preloader" aria-hidden="true">
+        <div class="dots">
+            <span class="dot" aria-hidden="true"></span>
+            <span class="dot" aria-hidden="true"></span>
+            <span class="dot" aria-hidden="true"></span>
+        </div>
+    </div>
+
+    <header id="site-header">
+        <div class="container header-row">
+
+            <div class="brand">
+                <img src="{% static 'img/Гарант.png' %}" alt="Логотип Гарант" id="logo" class="logo" />
+                <h1 class="brand-title">Гарант недвижимость</h1>
             </div>
 
-            <div style="display:flex; align-items:center; gap:20px;">
+            <div class="header-right">
                 <nav id="main-nav" role="navigation">
-                    <ul style="list-style:none; display:flex; margin:0; padding:0; gap:15px;">
+                    <ul class="nav-list">
                         <li><a href="{% url 'home' %}">Главная</a></li>
                         <li><a href="{% url 'about' %}">О компании</a></li>
                         <li><a href="{% url 'news' %}">Новости</a></li>
@@ -36,13 +49,13 @@
                     </ul>
                 </nav>
 
-                <div id="user-area">
+                <div id="user-area" class="user-area">
                     {% if user.is_authenticated %}
-                        <details style="position:relative;">
-                            <summary style="cursor:pointer; list-style:none; padding:5px 10px; border:1px solid #ccc; border-radius:4px;">
+                        <details class="user-details">
+                            <summary class="user-summary">
                                 {% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}
                             </summary>
-                            <ul style="position:absolute; right:0; margin:0; padding:10px; border:1px solid #ccc; background:#fff; list-style:none;">
+                            <ul class="user-menu">
                                 <li><a href="{% url 'profile' user.profile.id %}">Профиль</a></li>
                                 {% if user.is_superuser %}
                                     <li><a href="{% url 'admin:index' %}">Панель управления</a></li>
@@ -57,14 +70,15 @@
                                 <li>
                                     <form action="{% url 'logout' %}" method="post">
                                         {% csrf_token %}
-                                        <button type="submit" style="background:none; border:none; cursor:pointer; padding:0;">Выйти</button>
+                                        <button type="submit" class="btn btn-link">Выйти</button>
                                     </form>
                                 </li>
                             </ul>
                         </details>
                     {% else %}
-                        <a href="{% url 'login' %}">Вход</a> |
-                        <a href="{% url 'signup' %}">Регистрация</a>
+                        <a class="btn-link" href="{% url 'login' %}">Вход</a>
+                        <span class="sep">|</span>
+                        <a class="btn-link" href="{% url 'signup' %}">Регистрация</a>
                     {% endif %}
                 </div>
 
@@ -73,20 +87,20 @@
     </header>
 
 
-    <main>
+    <main class="site-main container">
         {% block content %}{% endblock %}
     </main>
 
     {% block pagination %}
         {% if is_paginated %}
-            <nav>
+            <nav class="pagination">
                 <ul>
                     {% if page_obj.has_previous %}
                         <li>
                             <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">«</a>
                         </li>
                     {% else %}
-                        <li disabled>«</li>
+                        <li class="disabled">«</li>
                     {% endif %}
 
                     {% for num in page_obj.paginator.page_range %}
@@ -102,18 +116,21 @@
                             <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">»</a>
                         </li>
                     {% else %}
-                        <li disabled>»</li>
+                        <li class="disabled">»</li>
                     {% endif %}
                 </ul>
-                <div>
+                <div class="page-info">
                     Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
                 </div>
             </nav>
         {% endif %}
     {% endblock %}
 
-    <footer>
-        <a href="{% url 'policy' %}">Политика конфиденциальности</a>
+    <footer class="site-footer">
+        <div class="container">
+            <a href="{% url 'policy' %}">Политика конфиденциальности</a>
+            <p>&copy; Гарант недвижимость</p>
+        </div>
     </footer>
 
 </body>

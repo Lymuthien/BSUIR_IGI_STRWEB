@@ -4,9 +4,7 @@
 {% block title %}Главная{% endblock %}
 
 {% block head %}
-    <!-- 🔹 Мета и микро-данные для поисковиков -->
     <meta name="description" content="Компания Гарант недвижимости: услуги, последние новости, партнеры и акции">
-    <meta name="keywords" content="услуги, компания, новости, промокоды, акции">
 {% endblock %}
 
 {% block content %}
@@ -15,34 +13,34 @@
         <h1>Добро пожаловать в компанию <abbr title="Гарант недвижимости">ГН</abbr></h1>
     </header>
 
-    <section>
+    <section class="promos">
       <h3>Наши акции</h3>
-      <div class="banner-slider" style="display: flex; gap: 20px; overflow-x: auto; padding: 10px 0;">
-        <figure >
-            <img src="{% static 'img/banner1.jpg' %}" alt="Баннер 1" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px;">
-            <figcaption style="text-align: center; margin-top: 10px; font-weight: bold;">Скидки на аренду квартир</figcaption>
+      <div class="banner-slider">
+        <figure class="banner">
+            <img src="{% static 'img/banner1.jpg' %}" alt="Баннер 1">
+            <figcaption>Скидки на аренду квартир</figcaption>
         </figure>
-        <figure>
-            <img src="{% static 'img/banner2.jpg' %}" alt="Баннер 2" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px;">
-            <figcaption style="text-align: center; margin-top: 10px; font-weight: bold;">Ипотека под выгодный процент</figcaption>
+        <figure class="banner">
+            <img src="{% static 'img/banner2.jpg' %}" alt="Баннер 2">
+            <figcaption>Ипотека под выгодный процент</figcaption>
         </figure>
-        <figure>
-            <img src="{% static 'img/banner3.jpg' %}" alt="Баннер 3" style="width: 100%; height: 200px; object-fit: cover; border-radius: 8px;">
-            <figcaption style="text-align: center; margin-top: 10px; font-weight: bold;">Новостройки без комиссии</figcaption>
+        <figure class="banner">
+            <img src="{% static 'img/banner3.jpg' %}" alt="Баннер 3">
+            <figcaption>Новостройки без комиссии</figcaption>
         </figure>
-    </div>
+      </div>
+    </section>
 
-    <article>
+    <article class="last-news">
         <h2>Последняя новость</h2>
         {% if last_news %}
-            <time datetime="{{ last_news.created|date:'Y-m-d' }}">
-                {{ last_news.created|date:"d.m.Y" }}
-            </time>
-            <h3>{{ last_news.title }}</h3>
-            <p>{{ last_news.summary }}</p>
-            <a href="">Читать далее</a>
-            <p></p>
-            <img src="{{ last_news.image.url }}">
+            <time datetime="{{ last_news.created|date:'Y-m-d' }}">{{ last_news.created|date:"d.m.Y" }}</time>
+            <h3 class="news-title">{{ last_news.title }}</h3>
+            <p class="news-summary">{{ last_news.summary }}</p>
+            <a class="btn btn-primary" href="">Читать далее</a>
+            <div class="news-image-wrap">
+                <img src="{{ last_news.image.url }}" alt="{{ last_news.title }}">
+            </div>
         {% else %}
             <p>Новостей пока нет</p>
         {% endif %}
@@ -50,61 +48,42 @@
 
     <hr>
     <h2>Наши партнеры</h2>
-    <table style="width:100%; text-align:center;">
-        <thead>
-            <tr>
-                <th id="logo">Логотип</th>
-                <th id="name">Название компании</th>
-                <th id="link">Сайт</th>
-            </tr>
-        </thead>
-        <tbody>
+    <section class="partners">
+        <div class="partner-grid">
             {% for partner in partner_companies %}
-                <tr>
-                    <td headers="logo">
-                        <img src="{{ partner.logo.url }}" alt="{{ partner.name }}" style="max-height:50px;">
-                    </td>
-                    <td headers="name">
-                        <strong>{{ partner.name }}</strong>
-                    </td>
-                    <td headers="link">
-                        <a href="{{ partner.link }}" target="_blank">{{ partner.link }}</a>
-                    </td>
-                </tr>
+                <div class="partner-card">
+                    <div class="partner-circle">
+                        <img src="{{ partner.logo.url }}" alt="{{ partner.name }} Логотип">
+                    </div>
+                    <div class="partner-name">{{ partner.name }}</div>
+                    <a class="partner-link" href="{{ partner.link }}" target="_blank">Перейти</a>
+                </div>
             {% empty %}
-                <tr>
-                    <td colspan="3"><em>Партнёры пока не добавлены</em></td>
-                </tr>
+                <p><em>Партнёры пока не добавлены</em></p>
             {% endfor %}
-        </tbody>
-    </table>
+        </div>
+    </section>
 
     <hr>
     <h2>Наши услуги</h2>
-    {% for category in categories %}
-        <p>{{ category.name }}</p>
-    {% endfor %}
+    <section class="services">
+        {% for category in categories %}
+            <p class="service-item">{{ category.name }}</p>
+        {% endfor %}
+    </section>
 
-    <section>
+    <section class="poetry">
         <h3>Мудрые слова</h3>
         <blockquote>
-          <q>Недвижимость — это не стены, а люди, которые в них живут.</q>
+          <q lang="ru">Недвижимость — это не стены, а люди, которые в них живут.</q>
         </blockquote>
-        <q>Это цитата</q>
-        <p>
+        <q lang="en">This is a quote in English</q>
+        <p class="poem">
             Дом стоит <br>
             На холме высоком <br>
             Ветры гуляют<wbr> в окнах <br>
             И свет горит в нём ночью
         </p>
-    </section>
-
-    <section>
-        <h3>Пример кода</h3>
-        <pre><code>
-        def hello():
-            print("Гарант недвижимость!")
-        </code></pre>
     </section>
 
 </main>

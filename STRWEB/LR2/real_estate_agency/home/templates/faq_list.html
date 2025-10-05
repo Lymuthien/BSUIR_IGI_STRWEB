@@ -5,13 +5,12 @@
 {% block content %}
 <h1>Словарь терминов и часто задаваемых вопросов</h1>
 
-<div>
+<div class="faq-list">
     {% for faq in faq_list %}
-        <details>
-            <summary><strong>{{ faq.question }}</strong></summary>
-            <div>
+        <details class="faq-item">
+            <summary><strong>{{ faq.question }}</strong> <small class="faq-date">{{ faq.added_date|date:"d.m.Y" }}</small></summary>
+            <div class="faq-answer">
                 <p>{{ faq.answer }}</p>
-                <p><small>Добавлено: {{ faq.added_date|date:"d.m.Y" }}</small></p>
             </div>
         </details>
     {% empty %}

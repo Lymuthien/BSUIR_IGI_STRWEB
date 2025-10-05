@@ -4,29 +4,23 @@
 
 {% block content %}
 <h1>Новости</h1>
-<div>
+<div class="news-list">
     {% for news in news_list %}
-        <div>
-            <div>
+        <article class="news-item">
+            <div class="news-thumb">
                 {% if news.image %}
-                    <img src="{{ news.image.url }}">
+                    <img src="{{ news.image.url }}" alt="{{ news.title }}">
                 {% endif %}
-                <div>
-                    <h5>{{ news.title }}</h5>
-                    <p>{{ news.summary }}</p>
-                    <a href="{% url 'news_detail' news.pk %}">Читать далее</a>
-                </div>
-                <div>
-                    {{ news.created|date:"d.m.Y" }}
-                </div>
             </div>
-        </div>
+            <div class="news-body">
+                <h5 class="news-head">{{ news.title }}</h5>
+                <p class="news-summary">{{ news.summary }}</p>
+                <a class="btn btn-secondary" href="{% url 'news_detail' news.pk %}">Читать далее</a>
+            </div>
+            <time class="news-date">{{ news.created|date:"d.m.Y" }}</time>
+        </article>
     {% empty %}
-        <div>
-            <div>
-                Новостей пока нет
-            </div>
-        </div>
+        <p>Новостей пока нет</p>
     {% endfor %}
 </div>
 {% endblock %}
