@@ -3,10 +3,20 @@
 {% block title %}Политика конфиденциальности{% endblock %}
 
 {% block content %}
-<h1>Политика конфиденциальности</h1>
+<div >
+    <h1>Политика конфиденциальности</h1>
+
     {% for policy in policy_list %}
-        <h5>{{ policy.text|linebreaks }}</h5>
+    <div class="policy-section">
+        <div class="policy-content">
+            {{ policy.text|linebreaks }}
+        </div>
+    </div>
     {% empty %}
-        В данный момент открытых вакансий нет
+    <div class="policy-section">
+        <h3>Политика конфиденциальности</h3>
+        <p>Информация о политике конфиденциальности будет добавлена в ближайшее время.</p>
+    </div>
     {% endfor %}
+</div>
 {% endblock %}

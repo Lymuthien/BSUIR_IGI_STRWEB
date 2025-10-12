@@ -5,6 +5,183 @@
 
 {% block head %}
     <meta name="description" content="Компания Гарант недвижимости: услуги, последние новости, партнеры и акции">
+    <style>
+
+    .hero-house-animation {
+        position: relative;
+        width: 100%;
+        height: 400px;
+        max-width: 600px;
+        margin: 0 auto;
+        background: linear-gradient(180deg, #87CEEB 0%, #E0F7FA 100%);
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .ground {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 100px;
+        background: linear-gradient(180deg, #8BC34A 0%, #689F38 100%);
+        z-index: 2;
+    }
+
+    .cloud {
+        position: absolute;
+        width: 80px;
+        height: 40px;
+        background: white;
+        border-radius: 40px;
+        box-shadow: 0 0 20px rgba(255,255,255,0.8);
+        animation: moveClouds 40s linear infinite;
+        z-index: 1;
+    }
+
+    .cloud::before, .cloud::after {
+        content: '';
+        position: absolute;
+        background: white;
+        border-radius: 50%;
+    }
+    .cloud::before {width: 30px;height: 30px;top: -15px;left: 10px;}
+    .cloud::after {width: 40px;height: 40px;top: -20px;right: 10px;}
+
+    @keyframes moveClouds {
+        0% { transform: translateX(-120%); }
+        100% { transform: translateX(1000%); }
+    }
+
+    .tree {
+        position: absolute;
+        width: 20px;
+        height: 80px;
+        background: #8B4513;
+        border-radius: 4px;
+        z-index: 2;
+    }
+
+    .tree::before {
+        content: '';
+        position: absolute;
+        width: 60px;
+        height: 60px;
+        background: #228B22;
+        border-radius: 50%;
+        top: -40px;
+        left: -20px;
+        box-shadow: 0 0 10px rgba(34,139,34,0.5);
+    }
+
+    .house {
+        position: absolute;
+        bottom: 50px;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 3;
+    }
+
+    .roof {
+        position: absolute;
+        width: 0;
+        height: 0;
+        border-left: 120px solid transparent;
+        border-right: 120px solid transparent;
+        border-bottom: 80px solid #8B4513;
+        top: -80px;
+        left: -20px;
+        z-index: 4;
+    }
+
+    .house-body {
+        position: relative;
+        width: 200px;
+        height: 150px;
+        background: #DEB887;
+        border-radius: 8px 8px 0 0;
+        box-shadow: 0 0 20px rgba(0,0,0,0.2);
+    }
+
+    .window {
+        position: absolute;
+        width: 40px;
+        height: 40px;
+        background: #FFD700;
+        border-radius: 6px;
+        box-shadow:
+            inset 0 0 10px rgba(255,215,0,0.5),
+            0 0 15px rgba(255,215,0,0.8);
+        opacity: 0;
+        animation: windowBlink 12s infinite;
+        z-index: 5;
+    }
+
+    .window-1 { animation-delay: 1s; }
+    .window-2 { animation-delay: 3s; }
+    .window-3 { animation-delay: 5s; }
+    .window-4 { animation-delay: 7s; }
+
+    @keyframes windowBlink {
+        0%, 70% { opacity: 0; transform: scale(0.8); }
+        75%, 85% { opacity: 1; transform: scale(1.1); }
+        90%, 100% { opacity: 0.3; transform: scale(1); }
+    }
+
+    .door {
+        position: absolute;
+        width: 50px;
+        height: 80px;
+        background: #654321;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        border-radius: 6px 6px 0 0;
+        animation: openDoor 15s infinite;
+        transform-origin: left bottom;
+        z-index: 6;
+    }
+
+    .door::before {
+        content: '';
+        position: absolute;
+        width: 8px;
+        height: 8px;
+        background: #FFD700;
+        border-radius: 50%;
+        top: 40px;
+        right: 8px;
+    }
+
+    @keyframes openDoor {
+        0%, 75% { transform: translateX(-50%) rotateY(0); }
+        80%, 85% { transform: translateX(-50%) rotateY(-60deg); }
+        90%, 100% { transform: translateX(-50%) rotateY(0); }
+    }
+
+    .slogan {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #2c3e50;
+        text-align: center;
+        opacity: 0;
+        animation: showSlogan 15s infinite;
+        animation-delay: 8s;
+        text-shadow: 2px 2px 4px rgba(255,255,255,0.8);
+        z-index: 7;
+    }
+
+    @keyframes showSlogan {
+        0%, 80% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+        85%, 95% { opacity: 1; transform: translateX(-50%) translateY(0); }
+        100% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+    }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -37,7 +214,7 @@
             <time datetime="{{ last_news.created|date:'Y-m-d' }}">{{ last_news.created|date:"d.m.Y" }}</time>
             <h3 class="news-title">{{ last_news.title }}</h3>
             <p class="news-summary">{{ last_news.summary }}</p>
-            <a class="btn btn-primary" href="">Читать далее</a>
+            <a class="btn btn-primary" href="{% url 'news_detail' last_news.pk %}">Читать далее</a>
             <div class="news-image-wrap">
                 <img src="{{ last_news.image.url }}" alt="{{ last_news.title }}">
             </div>
@@ -86,5 +263,32 @@
         </p>
     </section>
 
+    <section style="margin: 3rem 0; padding: 2rem 0; background: linear-gradient(180deg, #e3f2fd 0%, #c3dcc6 100%); border-radius: 12px;">
+        <div class="hero-house-animation">
+            <div class="ground"></div>
+            <div class="cloud cloud-1" style="top: 5%; animation-delay: 0s;"></div>
+            <div class="cloud cloud-2" style="top: 15%; animation-delay: 3s;"></div>
+            <div class="cloud cloud-3" style="top: 8%; animation-delay: 6s;"></div>
+
+            <div class="tree tree-1" style="left: 10%; bottom: 20%;"></div>
+            <div class="tree tree-2" style="left: 25%; bottom: 15%;"></div>
+            <div class="tree tree-3" style="right: 25%; bottom: 18%;"></div>
+            <div class="tree tree-4" style="right: 10%; bottom: 22%;"></div>
+
+            <div class="house">
+                <div class="roof"></div>
+                <div class="house-body">
+                    <div class="window window-1" style="top: 20%; left: 15%;"></div>
+                    <div class="window window-2" style="top: 20%; right: 15%;"></div>
+                    <div class="window window-3" style="top: 45%; left: 15%;"></div>
+                    <div class="window window-4" style="top: 45%; right: 15%;"></div>
+
+                    <div class="door"></div>
+                </div>
+            </div>
+
+            <div class="slogan">Ваш дом мечты начинается здесь!</div>
+        </div>
+    </section>
 </main>
 {% endblock %}

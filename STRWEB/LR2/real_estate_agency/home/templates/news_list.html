@@ -16,8 +16,8 @@
                 <h5 class="news-head">{{ news.title }}</h5>
                 <p class="news-summary">{{ news.summary }}</p>
                 <a class="btn btn-secondary" href="{% url 'news_detail' news.pk %}">Читать далее</a>
+                <time class="news-date">{{ news.created|date:"d.m.Y" }}</time>
             </div>
-            <time class="news-date">{{ news.created|date:"d.m.Y" }}</time>
         </article>
     {% empty %}
         <p>Новостей пока нет</p>

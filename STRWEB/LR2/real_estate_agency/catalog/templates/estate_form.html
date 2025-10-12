@@ -4,75 +4,48 @@
 
 {% block content %}
 <div>
-    <div>
+    <h4>Редактирование объекта недвижимости</h4>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {% if form.errors %}
+            <ul>
+                {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <label>Адрес</label>
+        {{ form.address }}
+
+        <label for="cost">Цена</label>
+        <input type="number" id="cost" name="cost" value="{{ form.cost.value|default:'' }}" required min="0" step="0.01">
+
+
+        <label>Площадь *</label>
+        {{ form.area }}
+
+        <label>Категория услуги</label>
+        {{ form.category }}
+
+        <label>Описание</label>
+        {{ form.description }}
+
+        <label>Изображение</label>
+        {{ form.image }}
+        {% if object and object.image %}
+            <div>
+                <img src="{{ object.get_image_url }}" alt="Текущее изображение">
+            </div>
+        {% endif %}
+
         <div>
-            <div>
-                <h4>Редактирование объекта недвижимости</h4>
-            </div>
-            <div>
-                <form method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-
-                    {% if form.errors %}
-                    <div>
-                        <ul>
-                            {% for field, errors in form.errors.items %}
-                                {% for error in errors %}
-                                    <li>{{ error }}</li>
-                                {% endfor %}
-                            {% endfor %}
-                        </ul>
-                    </div>
-                    {% endif %}
-
-                    <div>
-                        <label>Адрес *</label>
-                        {{ form.address }}
-                    </div>
-
-                    <div>
-                        <div>
-                            <div>
-                                <label>Цена *</label>
-                                {{ form.cost }}
-                            </div>
-                        </div>
-                        <div>
-                            <div>
-                                <label>Площадь *</label>
-                                {{ form.area }}
-                            </div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <label>Категория услуги</label>
-                        {{ form.category }}
-                    </div>
-
-                    <div>
-                        <label>Описание</label>
-                        {{ form.description }}
-                    </div>
-
-                    <div>
-                        <label>Изображение</label>
-                        {{ form.image }}
-                        {% if object and object.image %}
-                        <div>
-                            <img src="{{ object.get_image_url }}" alt="Текущее изображение">
-                        </div>
-                        {% endif %}
-                    </div>
-
-                    <div>
-                        <button type="submit">Сохранить</button>
-                        <a href="{% if object %}{% url 'estate_detail' object.pk %}{% else %}{% url 'estates' %}{% endif %}">Отмена</a>
-                    </div>
-                </form>
-            </div>
+            <button type="submit">Сохранить</button>
+            <a href="{% if object %}{% url 'estate_detail' object.pk %}{% else %}{% url 'estates' %}{% endif %}">Отмена</a>
         </div>
-    </div>
+    </form>
 </div>
-
 {% endblock %}

@@ -3256,3 +3256,132 @@ ValueError: The 'image' attribute has no file associated with it.
 2025-10-05 16:38:10,092 INFO timezone_service ip:127.0.0.1
 2025-10-05 16:38:11,119 INFO views Timezone determined for user lymuthien: UTC
 2025-10-05 16:38:55,736 INFO views ServiceListView queryset prepared
+2025-10-05 17:48:07,637 INFO timezone_service ip:127.0.0.1
+2025-10-05 17:48:07,968 INFO views Timezone determined for user lymuthien: UTC
+2025-10-05 18:01:36,720 INFO views ServiceListView queryset prepared
+2025-10-05 18:01:37,314 INFO views AvailableEstateListView queryset prepared
+2025-10-05 18:49:34,071 INFO views ClientDashboardView context prepared for user Tanya
+2025-10-05 18:51:01,586 INFO views ClientDashboardView context prepared for user Tanya
+2025-10-05 18:51:30,517 INFO views AvailableEstateListView queryset prepared
+2025-10-05 18:51:36,719 ERROR mapbox_client Error while requesting Mapbox API for address Гольшанская ул, 32, Минск: 401 Client Error: Unauthorized for url: https://api.mapbox.com/geocoding/v5/mapbox.places/%D0%93%D0%BE%D0%BB%D1%8C%D1%88%D0%B0%D0%BD%D1%81%D0%BA%D0%B0%D1%8F%20%D1%83%D0%BB%2C%2032%2C%20%D0%9C%D0%B8%D0%BD%D1%81%D0%BA.json?types=address&language=ru&limit=1
+2025-10-05 18:51:36,722 INFO views EstateDetailView context prepared
+2025-10-05 18:51:42,413 ERROR mapbox_client Error while requesting Mapbox API for address Герасименко ул, 1А, Минск: 401 Client Error: Unauthorized for url: https://api.mapbox.com/geocoding/v5/mapbox.places/%D0%93%D0%B5%D1%80%D0%B0%D1%81%D0%B8%D0%BC%D0%B5%D0%BD%D0%BA%D0%BE%20%D1%83%D0%BB%2C%201%D0%90%2C%20%D0%9C%D0%B8%D0%BD%D1%81%D0%BA.json?types=address&language=ru&limit=1
+2025-10-05 18:51:42,415 INFO views EstateDetailView context prepared
+2025-10-05 18:51:44,261 INFO views PurchaseRequest created by Tanya: estate=Герасименко ул, 1А, Минск: 130000.00
+2025-10-05 18:51:46,084 ERROR mapbox_client Error while requesting Mapbox API for address Герасименко ул, 1А, Минск: 401 Client Error: Unauthorized for url: https://api.mapbox.com/geocoding/v5/mapbox.places/%D0%93%D0%B5%D1%80%D0%B0%D1%81%D0%B8%D0%BC%D0%B5%D0%BD%D0%BA%D0%BE%20%D1%83%D0%BB%2C%201%D0%90%2C%20%D0%9C%D0%B8%D0%BD%D1%81%D0%BA.json?types=address&language=ru&limit=1
+2025-10-05 18:51:46,085 INFO views EstateDetailView context prepared
+2025-10-05 18:51:50,933 INFO views ClientDashboardView context prepared for user Tanya
+2025-10-05 18:52:31,154 INFO views ClientDashboardView context prepared for user Tanya
+2025-10-05 18:52:32,375 INFO views ClientDashboardView context prepared for user Tanya
+2025-10-05 18:52:40,684 INFO views ClientDashboardView context prepared for user Tanya
+2025-10-05 18:52:41,531 INFO views ClientDashboardView context prepared for user Tanya
+2025-10-05 18:53:03,557 INFO views ClientDashboardView context prepared for user Tanya
+2025-10-05 18:53:29,837 INFO views ClientDashboardView context prepared for user Tanya
+2025-10-05 18:53:40,150 INFO views ClientDashboardView context prepared for user Tanya
+2025-10-05 18:53:48,131 INFO views ClientDashboardView context prepared for user Tanya
+2025-10-05 18:53:49,222 INFO views ClientDashboardView context prepared for user Tanya
+2025-10-05 18:53:51,582 INFO views ClientDashboardView context prepared for user Tanya
+2025-10-05 18:54:45,526 INFO views ClientDashboardView context prepared for user Tanya
+2025-10-05 18:54:55,659 INFO views ClientDashboardView context prepared for user Tanya
+2025-10-05 18:54:59,747 INFO views ClientDashboardView context prepared for user Tanya
+2025-10-05 18:55:20,060 INFO views ClientDashboardView context prepared for user Tanya
+2025-10-05 18:55:27,018 INFO views ClientDashboardView context prepared for user Tanya
+2025-10-05 18:55:49,170 INFO views ClientDashboardView context prepared for user Tanya
+2025-10-05 18:55:51,432 INFO views ClientDashboardView context prepared for user Tanya
+2025-10-05 18:56:06,021 INFO views Sale created and PurchaseRequest id=18 marked as completed
+2025-10-05 18:56:11,050 INFO views ClientDashboardView context prepared for user Tanya
+2025-10-05 18:56:49,909 INFO views ClientDashboardView context prepared for user Tanya
+2025-10-05 18:56:56,934 INFO views ClientDashboardView context prepared for user Tanya
+2025-10-05 18:56:58,161 INFO views ClientDashboardView context prepared for user Tanya
+2025-10-05 18:57:06,579 INFO views ClientDashboardView context prepared for user Tanya
+2025-10-05 18:57:44,969 INFO views ClientDashboardView context prepared for user Tanya
+2025-10-05 18:57:53,908 INFO views ClientDashboardView context prepared for user Tanya
+2025-10-05 19:03:40,786 INFO views ServiceListView queryset prepared
+2025-10-05 19:06:55,556 INFO views ServiceListView queryset prepared
+2025-10-05 19:07:34,329 INFO views ServiceListView queryset prepared
+2025-10-05 19:07:49,154 INFO views ServiceListView queryset prepared
+2025-10-05 19:07:56,769 INFO views ServiceListView queryset prepared
+2025-10-05 19:07:58,424 INFO views ServiceListView queryset prepared
+2025-10-05 19:08:36,823 INFO views ServiceListView queryset prepared
+2025-10-05 19:10:25,016 INFO views ServiceListView queryset prepared
+2025-10-05 19:10:26,817 INFO views ServiceListView queryset prepared
+2025-10-05 19:10:32,437 INFO views ServiceListView queryset prepared
+2025-10-05 19:10:35,158 INFO views ServiceListView queryset prepared
+2025-10-05 19:13:58,867 INFO views ServiceListView queryset prepared
+2025-10-05 19:37:21,812 INFO views ServiceListView queryset prepared
+2025-10-05 19:37:27,859 INFO views ServiceListView queryset prepared
+2025-10-05 19:37:30,561 INFO views AvailableEstateListView queryset prepared
+2025-10-05 19:37:39,571 INFO views AvailableEstateListView queryset prepared
+2025-10-05 19:37:41,781 INFO views AvailableEstateListView queryset prepared
+2025-10-05 19:41:58,133 INFO views AvailableEstateListView queryset prepared
+2025-10-05 19:42:01,896 INFO views AvailableEstateListView queryset prepared
+2025-10-05 19:42:22,895 INFO views AvailableEstateListView queryset prepared
+2025-10-05 19:42:25,038 INFO views AvailableEstateListView queryset prepared
+2025-10-05 19:42:25,711 INFO views AvailableEstateListView queryset prepared
+2025-10-05 19:42:26,741 INFO views AvailableEstateListView queryset prepared
+2025-10-05 19:42:40,881 INFO views AvailableEstateListView queryset prepared
+2025-10-05 19:42:51,543 INFO views AvailableEstateListView queryset prepared
+2025-10-05 19:43:00,533 INFO views AvailableEstateListView queryset prepared
+2025-10-05 19:43:23,689 INFO views AvailableEstateListView queryset prepared
+2025-10-05 19:46:58,569 INFO views AvailableEstateListView queryset prepared
+2025-10-05 19:47:00,006 INFO views ServiceListView queryset prepared
+2025-10-05 19:47:59,102 INFO views AvailableEstateListView queryset prepared
+2025-10-05 19:48:00,071 INFO views ServiceListView queryset prepared
+2025-10-05 19:57:14,923 INFO views AvailableEstateListView queryset prepared
+2025-10-05 20:01:20,847 INFO views AvailableEstateListView queryset prepared
+2025-10-05 20:09:26,167 INFO views AvailableEstateListView queryset prepared
+2025-10-05 20:11:00,110 INFO views AvailableEstateListView queryset prepared
+2025-10-05 20:11:59,769 INFO views AvailableEstateListView queryset prepared
+2025-10-05 20:12:03,417 INFO views AvailableEstateListView queryset prepared
+2025-10-05 20:12:20,601 INFO views AvailableEstateListView queryset prepared
+2025-10-05 20:12:57,130 INFO views AvailableEstateListView queryset prepared
+2025-10-05 20:13:06,681 INFO views AvailableEstateListView queryset prepared
+2025-10-05 20:13:09,919 INFO views AvailableEstateListView queryset prepared
+2025-10-05 20:13:13,838 INFO views AvailableEstateListView queryset prepared
+2025-10-05 20:23:05,964 INFO views AvailableEstateListView queryset prepared
+2025-10-05 20:23:17,554 INFO views AvailableEstateListView queryset prepared
+2025-10-05 20:23:19,497 INFO views AvailableEstateListView queryset prepared
+2025-10-05 20:23:29,963 INFO views AvailableEstateListView queryset prepared
+2025-10-05 20:23:33,065 INFO views AvailableEstateListView queryset prepared
+2025-10-05 20:23:46,219 INFO views AvailableEstateListView queryset prepared
+2025-10-05 20:23:50,368 INFO views AvailableEstateListView queryset prepared
+2025-10-05 20:23:57,409 INFO views AvailableEstateListView queryset prepared
+2025-10-05 20:24:20,138 INFO views AvailableEstateListView queryset prepared
+2025-10-05 20:24:29,589 INFO views AvailableEstateListView queryset prepared
+2025-10-05 20:24:38,280 INFO views AvailableEstateListView queryset prepared
+2025-10-05 20:24:42,629 INFO views AvailableEstateListView queryset prepared
+2025-10-05 20:25:07,716 INFO views AvailableEstateListView queryset prepared
+2025-10-05 20:25:14,770 INFO views AvailableEstateListView queryset prepared
+2025-10-05 20:25:53,729 INFO views AvailableEstateListView queryset prepared
+2025-10-05 20:26:42,355 INFO views AvailableEstateListView queryset prepared
+2025-10-05 20:26:43,616 INFO views AvailableEstateListView queryset prepared
+2025-10-05 20:26:59,012 INFO views AvailableEstateListView queryset prepared
+2025-10-05 20:26:59,781 INFO views AvailableEstateListView queryset prepared
+2025-10-05 20:27:18,306 INFO views AvailableEstateListView queryset prepared
+2025-10-05 20:27:39,794 INFO views AvailableEstateListView queryset prepared
+2025-10-05 20:27:46,335 INFO views AvailableEstateListView queryset prepared
+2025-10-05 20:27:47,142 INFO views AvailableEstateListView queryset prepared
+2025-10-05 20:28:18,286 INFO views AvailableEstateListView queryset prepared
+2025-10-05 20:28:32,450 INFO views AvailableEstateListView queryset prepared
+2025-10-05 20:28:32,912 INFO views AvailableEstateListView queryset prepared
+2025-10-05 20:28:34,088 INFO views AvailableEstateListView queryset prepared
+2025-10-05 20:40:20,196 INFO views AvailableEstateListView queryset prepared
+2025-10-05 20:43:28,908 INFO views ServiceListView queryset prepared
+2025-10-05 20:43:29,360 INFO views AvailableEstateListView queryset prepared
+2025-10-05 20:45:55,533 INFO views AvailableEstateListView queryset prepared
+2025-10-05 21:00:44,754 INFO views AvailableEstateListView queryset prepared
+2025-10-05 21:01:56,264 INFO views ServiceListView queryset prepared
+2025-10-05 21:02:12,609 INFO views ServiceListView queryset prepared
+2025-10-05 21:02:19,515 INFO views ServiceListView queryset prepared
+2025-10-05 21:03:21,749 INFO views ServiceListView queryset prepared
+2025-10-05 21:03:24,919 INFO views ServiceListView queryset prepared
+2025-10-05 21:03:25,609 INFO views ServiceListView queryset prepared
+2025-10-05 21:03:25,932 INFO views ServiceListView queryset prepared
+2025-10-05 21:03:26,424 INFO views ServiceListView queryset prepared
+2025-10-09 12:24:55,206 INFO autoreload Watching for file changes with StatReloader
+2025-10-09 12:26:05,847 INFO views ServiceListView queryset prepared
+2025-10-09 12:26:09,039 INFO views AvailableEstateListView queryset prepared
+2025-10-09 12:26:11,957 INFO views AvailableEstateListView queryset prepared
+2025-10-09 12:26:14,496 INFO views AvailableEstateListView queryset prepared
+2025-10-09 12:27:38,725 INFO autoreload Watching for file changes with StatReloader
+2025-10-09 17:00:20,612 INFO autoreload Watching for file changes with StatReloader

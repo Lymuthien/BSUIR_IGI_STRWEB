@@ -4,27 +4,19 @@
 
 {% block content %}
 <div>
-    <div>
+    <h4>Удаление объекта недвижимости</h4>
+    <p>Вы уверены, что хотите удалить объект недвижимости по адресу:</p>
+    <h5>{{ object.address }}</h5>
+
+    <p>Цена: {{ object.cost }} $</p>
+    <p>Площадь: {{ object.area }} м²</p>
+
+    <form method="post">
+        <input type="hidden" name="csrfmiddlewaretoken" value="токен">
         <div>
-            <div>
-                <h4>Удаление объекта недвижимости</h4>
-            </div>
-            <div>
-                <p>Вы уверены, что хотите удалить объект недвижимости по адресу:</p>
-                <h5>{{ object.address }}</h5>
-
-                <p>Цена: {{ object.cost }} $</p>
-                <p>Площадь: {{ object.area }} м²</p>
-
-                <form method="post">
-                    <input type="hidden" name="csrfmiddlewaretoken" value="токен">
-                    <div>
-                        <button type="submit">Удалить</button>
-                        <a href="{% url 'estate_detail' object.pk %}">Отмена</a>
-                    </div>
-                </form>
-            </div>
+            <button type="submit">Удалить</button>
+            <a href="{% url 'estate_detail' object.pk %}">Отмена</a>
         </div>
-    </div>
+    </form>
 </div>
 {% endblock %}
