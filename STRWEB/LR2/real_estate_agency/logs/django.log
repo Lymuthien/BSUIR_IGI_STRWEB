@@ -3397,3 +3397,9 @@ ValueError: The 'image' attribute has no file associated with it.
 2025-10-12 21:41:00,540 INFO views AvailableEstateListView queryset prepared
 2025-10-12 21:41:00,834 INFO views ServiceListView queryset prepared
 2025-10-12 21:41:01,464 INFO views AvailableEstateListView queryset prepared
+2025-10-12 22:13:43,120 INFO views ServiceListView queryset prepared
+2025-10-12 22:13:44,110 INFO views AvailableEstateListView queryset prepared
+2025-10-12 22:13:57,152 INFO views AvailableEstateListView queryset prepared
+2025-10-12 22:13:58,034 INFO views AvailableEstateListView queryset prepared
+2025-10-12 22:13:58,730 INFO views AvailableEstateListView queryset prepared
+2025-10-12 22:16:22,064 INFO views AvailableEstateListView queryset prepared

@@ -61,17 +61,32 @@
             <h3 class="a b">Реквизиты</h3>
             <div class="requisites">{{ about_info.props|default:"Реквизиты не указаны"|linebreaks }}</div>
 
-            <h3>Сертификат</h3>
             {% if about_info.certificate %}
-                 <figure class="certificate" itemprop="hasCertification">
-                    <img src="{{ about_info.certificate.url }}" alt="Сертификат компании" />
-                    <figcaption>Официальный сертификат</figcaption>
-                 </figure>
-                 <p>
-                    <a href="{{ about_info.certificate.url }}" download class="btn btn-download">
-                        Скачать сертификат
-                    </a>
-                 </p>
+                 <div class="company-section">
+                    <h3>Сертификат</h3>
+                    <div class="certificate">
+                        <div class="certificate-content">
+                            <h4>СЕРТИФИКАТ</h4>
+                            <p>Настоящим удостоверяется, что</p>
+                            <h2>Гарант недвижимость</h2>
+                            <p>получает награду</p>
+                            <h3>"Лучшее риэлторское агентство 2025"</h3>
+                            <p>
+                                Дата выдачи:
+                                <span>01 октября 2025 года</span>
+                            </p>
+                            <p>
+                            Номер сертификата:
+                            <span>11589</span>
+                            </p>
+                            <div class="certificate-signature">
+                                <p>Генеральный директор</p>
+                                <img src="{% static 'img/signature.png' %}" alt="Подпись генерального директора" />
+                            </div>
+                        </div>
+                        <div class="certificate-border"></div>
+                    </div>
+                 </div>
             {% endif %}
         </section>
 
