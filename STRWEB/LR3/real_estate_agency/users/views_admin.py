@@ -5,6 +5,7 @@ from django.views.generic import ListView, UpdateView, CreateView, DeleteView
 from django.shortcuts import redirect, get_object_or_404
 from django.contrib import messages
 from .models import Client, Employee, User
+from home.models import Contact
 
 
 class SuperUserRequiredMixin(UserPassesTestMixin):
@@ -23,13 +24,10 @@ class AdminClientListView(LoginRequiredMixin, SuperUserRequiredMixin, ListView):
 
 
 class AdminEmployeeListView(LoginRequiredMixin, SuperUserRequiredMixin, ListView):
-    model = Employee
+    model = Contact
     template_name = 'admin_employees.html'
     context_object_name = 'employees'
-    paginate_by = 20
-
-    def get_queryset(self):
-        return Employee.objects.select_related('user').order_by('-hire_date')
+    paginate_by = 3
 
 
 class AdminClientUpdateView(LoginRequiredMixin, SuperUserRequiredMixin, UpdateView):

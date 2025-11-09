@@ -7,9 +7,7 @@
     <div>
         <h1>Управление сотрудниками</h1>
         <div>
-            <a href="{% url 'admin_employee_create' %}">
                 Добавить сотрудника
-            </a>
         </div>
     </div>
 
@@ -20,41 +18,24 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Имя пользователя</th>
                             <th>ФИО</th>
+                            <th>Должность</th>
                             <th>Email</th>
                             <th>Телефон</th>
-                            <th>Дата приема</th>
-                            <th>Статус</th>
-                            <th>Действия</th>
+                            <th>Описание</th>
+                            <th>Фото</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for employee in employees %}
                         <tr>
                             <td>{{ employee.id }}</td>
-                            <td>{{ employee.user.username }}</td>
-                            <td>{{ employee.user.first_name }} {{ employee.user.last_name }}</td>
-                            <td>{{ employee.user.email }}</td>
-                            <td>{{ employee.user.phone_number }}</td>
-                            <td>{{ employee.hire_date|date:"d.m.Y" }}</td>
-                            <td>
-                                {% if employee.user.is_active %}
-                                    <span>Активен</span>
-                                {% else %}
-                                    <span>Неактивен</span>
-                                {% endif %}
-                            </td>
-                            <td>
-                                <div>
-                                    <a href="{% url 'admin_employee_edit' employee.user.id %}">
-                                        Редактировать
-                                    </a>
-                                    <a href="{% url 'admin_employee_delete' employee.user.id %}">
-                                        Удалить
-                                    </a>
-                                </div>
-                            </td>
+                            <td>{{ employee.name }}</td>
+                            <td>{{ employee.position }}</td>
+                            <td>{{ employee.email }}</td>
+                            <td>{{ employee.phone }}</td>
+                            <td>{{ employee.description }}</td>
+                            <td><img src="{{ employee.photo.url }}" style="max-width: 50%; height: auto;"></td>
                         </tr>
                         {% empty %}
                         <tr>
