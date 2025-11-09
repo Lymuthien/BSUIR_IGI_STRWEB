@@ -11,12 +11,17 @@
      --accent-2:#b8dca0;
      --muted:#6b7280;
      --bg-gradient: linear-gradient(180deg,#f7fbf6 0%, #eef6ec 100%);
+     --body-color: #453939;
+     --a-color:#0b3f18;
+     --a-visited-color:#505e55;
+     --a-hover-bg:rgba(255,255,255,0.35);
+     --a-active-color:#ffffff;
 }
 /* Element selector */
  body {
      font-family: 'Inter', Roboto, 'Helvetica Neue', sans-serif;
      background: url('../img/bg-subtle-pattern.jpg') center/cover no-repeat fixed;
-     color: #222;
+     color: var(--body-color);
      line-height: 1.45;
      -webkit-font-smoothing: antialiased;
      -moz-osx-font-smoothing: grayscale;
@@ -69,12 +74,6 @@
      transform:rotate(-6deg) scale(1.05);
      box-shadow:0 18px 40px rgba(0,0,0,0.18)
 }
- .brand-title{
-     margin:0;
-     font-family:'Montserrat', 'Inter', sans-serif;
-     font-weight:700;
-     letter-spacing:0.08em
-}
  .header-right {
      display: flex;
      align-items: center;
@@ -92,24 +91,24 @@
      align-items:center
 }
  .nav-list a{
-     color:#0b3f18;
+     color:var(--a-color);
      text-decoration:none;
      padding:8px 6px;
      border-radius:6px;
 }
  .nav-list a:link{
-     color:#0b3f18
+     color:var(--a-color)
 }
  .nav-list a:visited{
-     color: #505e55;
+     color: var(--a-visited-color);
      opacity:0.95
 }
  .nav-list a:hover{
-     background:rgba(255,255,255,0.35);
+     background:var(--a-hover-bg);
      transform:translateY(-1px)
 }
  .nav-list a:active{
-     color:#ffffff
+     color:var(--a-active-color)
 }
  .nav-list a:focus{
      outline:3px solid rgba(58,141,90,0.18);
