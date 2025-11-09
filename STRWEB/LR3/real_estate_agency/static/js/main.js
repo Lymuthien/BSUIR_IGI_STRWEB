@@ -20,31 +20,49 @@ document.addEventListener('DOMContentLoaded', () => {
             this.build();
             if (this.options.auto) this.startAuto();
         }
+        createNavs() {
+            if (this.navsElement) {
+                this.navsElement.remove();
+            }
+
+            const navs = document.createElement('div');
+            navs.className = 'navs';
+            const prev = document.createElement('button');
+            prev.textContent = '<';
+            prev.addEventListener('click', () => this.prev());
+            const next = document.createElement('button');
+            next.textContent = '>';
+            next.addEventListener('click', () => this.next());
+            navs.appendChild(prev);
+            navs.appendChild(next);
+            this.root.appendChild(navs);
+            this.navsElement = navs;
+        }
+
+        createPags() {
+            if (this.pagsElement) {
+                this.pagsElement.remove();
+            }
+
+            const pags = document.createElement('div');
+            pags.className = 'pags';
+            this.slides.forEach((s, i) => {
+                const b = document.createElement('button');
+                b.addEventListener('click', () => this.go(i));
+                pags.appendChild(b);
+            });
+            this.root.appendChild(pags);
+            this.pagsElement = pags;
+            this.pags = pags.querySelectorAll('button');
+        }
+
         build() {
             if (this.options.navs) {
-                const navs = document.createElement('div');
-                navs.className = 'navs';
-                const prev = document.createElement('button');
-                prev.textContent = '<';
-                prev.addEventListener('click', () => this.prev());
-                const next = document.createElement('button');
-                next.textContent = '>';
-                next.addEventListener('click', () => this.next());
-                navs.appendChild(prev);
-                navs.appendChild(next);
-                this.root.appendChild(navs);
+                this.createNavs()
             }
 
             if (this.options.pags) {
-                const pags = document.createElement('div');
-                pags.className = 'pags';
-                this.slides.forEach((s, i) => {
-                    const b = document.createElement('button');
-                    b.addEventListener('click', () => this.go(i));
-                    pags.appendChild(b);
-                });
-                this.root.appendChild(pags);
-                this.pags = pags.querySelectorAll('button');
+                this.createPags()
             }
 
             this.update();
@@ -62,9 +80,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.pags.forEach((b, i) => {
                     b.classList.toggle('active', i === this.index);
                 });
+
             const counter = this.root.querySelector('.counter');
             if (counter)
                 counter.textContent = `${this.index+1}/${this.slides.length}`;
+
             const caption = this.root.querySelector('.caption');
             if (caption)
                 caption.textContent = this.slides[this.index].dataset.caption || '';
@@ -125,6 +145,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 this.startAuto();
             }
         }
+
+        setNavs(value) {
+            this.options.navs = value;
+            if (value) {
+                this.createNavs();
+            } else if (this.navsElement) {
+                this.navsElement.remove();
+                this.navsElement = null;
+            }
+        }
+
+        setPags(value) {
+            this.options.pags = value;
+            if (value) {
+                this.createPags();
+            } else if (this.pagsElement) {
+                this.pagsElement.remove();
+                this.pagsElement = null;
+                this.pags = null;
+            }
+            this.update();
+        }
     }
 
     // initialize sliders found
@@ -141,18 +183,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const adminDelay = document.getElementById('sliderDelay');
         if (adminDelay) {
-            const sliderLoop = document.getElementById('sliderLoop');
-            const sliderAuto = document.getElementById('sliderAuto');
             adminDelay.addEventListener('change', (e) => {
                 const delay = Number(e.target.value) || 5;
                 s.setDelay(delay);
             });
+        }
+
+        const sliderLoop = document.getElementById('sliderLoop');
+        if (sliderLoop) {
             sliderLoop.addEventListener('change', (e) => {
                 s.setLoop(e.target.checked);
             });
+        }
 
+        const sliderAuto = document.getElementById('sliderAuto');
+        if (sliderAuto) {
             sliderAuto.addEventListener('change', (e) => {
                 s.setAuto(e.target.checked);
+            });
+        }
+
+        const sliderNavs = document.getElementById('sliderNavs');
+        if (sliderNavs) {
+            sliderNavs.addEventListener('change', (e) => {
+                s.setNavs(e.target.checked);
+            });
+        }
+        const sliderPags = document.getElementById('sliderPags');
+        if (sliderPags) {
+            sliderPags.addEventListener('change', (e) => {
+                s.setPags(e.target.checked);
             });
         }
     });
