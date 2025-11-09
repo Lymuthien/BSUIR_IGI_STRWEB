@@ -1,0 +1,98 @@
+ .controls{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    align-items:center;
+    margin-bottom:12px;
+}
+ .slider{
+    position:relative;
+    overflow:hidden;
+    border-radius:8px;
+    background:#111;
+    color:white;
+}
+ .slider .slides{
+    display:flex;
+    transition:transform .5s ease;
+}
+ .slider .slide{
+    min-width:100%;
+    box-sizing:border-box;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    position: relative;
+}
+ .slider img{
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 0;
+    display: block;
+}
+ .slider .caption{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0,0,0,0.7);
+    padding: 12px;
+    margin: 0;
+    text-align: center;
+    z-index: 10;
+    color: white;
+    font-weight: 600;
+}
+ .slider .navs{
+    position:absolute;
+    top:50%;
+    left:0;
+    right:0;
+    transform:translateY(-50%);
+    display:flex;
+    justify-content:space-between;
+    padding:0 8px;
+    z-index: 20;
+}
+ .slider button{
+    background:rgba(0,0,0,0.4);
+    border:none;
+    color:white;
+    padding:8px;
+    border-radius:6px;
+    cursor:pointer;
+}
+ .slider .counter {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(0,0,0,0.5);
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-size: 14px;
+}
+ .pags{
+    position: absolute;
+    bottom: 50px;
+    left: 0;
+    right: 0;
+    display:flex;
+    gap:6px;
+    justify-content:center;
+    padding:8px;
+    z-index: 15;
+}
+ .pags button{
+    border-radius:50%;
+    width:12px;
+    height:12px;
+    border:none;
+    cursor:pointer;
+    opacity:.5;
+}
+ .pags button.active{
+    opacity:1;
+    background:#333;
+}
