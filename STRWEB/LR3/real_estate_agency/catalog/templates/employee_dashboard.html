@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if user.is_authenticated and user.employee %}
+<div>
+    <h1>Панель сотрудника</h1>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div>
+                {{ message }}
+                <button type="button" aria-label="Close"></button>
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <div>
+        <div>
+            <h5>Мои клиенты</h5>
+            {% if clients %}
+                <ul>
+                    {% for client in clients %}
+                        <li>
+                            {{ client.user.get_full_name }} ({{ client.user.email }})
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>У вас нет активных клиентов.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div>
+        <div>
+            <h5>Активные заявки</h5>
+            {% if requests %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Недвижимость</th>
+                            <th>Клиент</th>
+                            <th>Статус</th>
+                            <th>Дата создания</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for request in requests %}
+                            <tr>
+                                <td>{{ request.estate.address }}</td>
+                                <td>{{ request.client.user.get_full_name }}</td>
+                                <td>{{ request.get_status_display }}</td>
+                                <td>{{ request.created_at|date:"d.m.Y" }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>У вас нет активных заявок.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div>
+        <div>
+            <h5>Мои продажи</h5>
+            {% if sales %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Недвижимость</th>
+                            <th>Клиент</th>
+                            <th>Дата продажи</th>
+                            <th>Стоимость</th>
+                            <th>Услуги риэлтора</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sale in sales %}
+                            <tr>
+                                <td>{{ sale.estate.address }}</td>
+                                <td>{{ sale.client.user.get_full_name|default:"Не указан" }}</td>
+                                <td>{{ sale.date_of_sale|date:"d.m.Y" }}</td>
+                                <td>{{ sale.cost }} $</td>
+                                <td>{{ sale.estate.category.cost }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>У вас нет продаж.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% else %}
+<div>
+    Пожалуйста, <a href="{% url 'login' %}">войдите</a> или <a href="{% url 'signup' %}">зарегистрируйтесь</a> как сотрудник.
+</div>
+{% endif %}
+{% endblock %}

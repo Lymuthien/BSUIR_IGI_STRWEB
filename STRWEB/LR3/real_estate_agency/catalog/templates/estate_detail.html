@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if user.is_authenticated %}
+<div>
+    <div>
+        <div>
+            <h1>{{ estate.address }}</h1>
+
+            {% if user.is_staff or user.is_superuser %}
+                <div>
+                    <a href="{% url 'estate_update' estate.pk %}">
+                        Редактировать
+                    </a>
+                    <a href="{% url 'estate_delete' estate.pk %}">
+                        Удалить
+                    </a>
+                </div>
+            {% endif %}
+
+            <div>
+                <img src="{{ estate.get_image_url }}" alt="{{ estate.address }}">
+            </div>
+
+            <div>
+                <div>
+                    <h5>Карта</h5>
+                    <img src="{{ map_image_url }}" alt="Карта для {{ estate.address }}">
+                </div>
+            </div>
+
+            <div>
+                <div>
+                    <h5>Характеристики</h5>
+                    <ul>
+                        <li>
+                            <strong>Цена:</strong> {{ estate.cost }} $
+                        </li>
+                        <li>
+                            <strong>Площадь:</strong> {{ estate.area }} м²
+                        </li>
+                        <li>
+                            <strong>Категория:</strong> {{ estate.category }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div>
+                <div>
+                    <h5>Описание</h5>
+                    <p>{{ estate.description }}</p>
+                </div>
+            </div>
+        </div>
+
+        {% if user.client %}
+        <div>
+            <div>
+                <div>
+                    <h5>Оставить заявку</h5>
+                    {% if request_exists %}
+                        <div>
+                            Вы уже отправили заявку на это объявление.
+                        </div>
+                    {% else %}
+                        {% if form.errors %}
+                            <div>
+                                <ul>
+                                    {% for field, errors in form.errors.items %}
+                                        {% for error in errors %}
+                                            <li>{{ error }}</li>
+                                        {% endfor %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                        <form method="post" action="{% url 'create_request' estate.pk %}">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <button type="submit">
+                                Отправить заявку
+                            </button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% else %}
+<div>
+    Чтобы просмотреть страницу, пожалуйста, <a href="{% url 'login' %}">войдите</a> или <a href="{% url 'signup' %}">зарегистрируйтесь</a>.
+</div>
+{% endif %}
+{% endblock %}

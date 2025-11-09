@@ -1,0 +1,137 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Гарант недвижимость{% endblock %}</title>
+    <meta name="description" content="Агентство недвижимости «Гарант» — продажа, аренда и сопровождение сделок. Акции, вакансии, отзывы, контакты.">
+    <meta name="author" content="Гарант недвижимость">
+    <meta property="og:image" content="{% static 'img/logo.png' %}">
+    <link rel="icon" type="image/png" href="{% static 'img/logo.png' %}">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Montserrat:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+
+    {% block head %}{% endblock %}
+</head>
+<body>
+
+    <div id="preloader" aria-hidden="true">
+        <div class="dots">
+            <span class="dot" aria-hidden="true"></span>
+            <span class="dot" aria-hidden="true"></span>
+            <span class="dot" aria-hidden="true"></span>
+        </div>
+    </div>
+
+    <header id="site-header">
+        <div class="container header-row">
+
+            <div class="brand">
+                <img src="{% static 'img/Гарант.png' %}" alt="Логотип" id="logo" class="logo" />
+                <div class="brand-title">Гарант недвижимость</div>
+            </div>
+
+            <div class="header-right">
+                <nav id="main-nav" role="navigation">
+                    <ul class="nav-list">
+                        <li><a href="{% url 'home' %}">Главная</a></li>
+                        <li><a href="{% url 'about' %}">О компании</a></li>
+                        <li><a href="{% url 'news' %}">Новости</a></li>
+                        <li><a href="{% url 'faq' %}">Словарь терминов</a></li>
+                        <li><a href="{% url 'contacts' %}">Контакты</a></li>
+                        <li><a href="{% url 'vacancies' %}">Вакансии</a></li>
+                        <li><a href="{% url 'reviews' %}">Отзывы</a></li>
+                        <li><a href="{% url 'promo-codes' %}">Промокоды</a></li>
+                        <li><a href="{% url 'services' %}">Услуги</a></li>
+                        <li><a href="{% url 'estates' %}">Каталог</a></li>
+                    </ul>
+                </nav>
+
+                <div id="user-area" class="user-area">
+                    {% if user.is_authenticated %}
+                        <details class="user-details">
+                            <summary class="user-summary">
+                                {% if user.first_name %}{{ user.first_name }}{% else %}{{ user.username }}{% endif %}
+                            </summary>
+                            <ul class="user-menu">
+                                <li><a href="{% url 'profile' user.profile.id %}">Профиль</a></li>
+                                {% if user.is_superuser %}
+                                    <li><a href="{% url 'admin:index' %}">Панель управления</a></li>
+                                    <li><a href="{% url 'statistics' %}">Статистика</a></li>
+                                    <li><a href="{% url 'admin_clients' %}">Управление клиентами</a></li>
+                                    <li><a href="{% url 'admin_employees' %}">Управление сотрудниками</a></li>
+                                {% elif user.client %}
+                                    <li><a href="{% url 'client_dashboard' %}">Мои покупки</a></li>
+                                {% elif user.employee %}
+                                    <li><a href="{% url 'employee_dashboard' %}">Мои клиенты</a></li>
+                                {% endif %}
+                                <li>
+                                    <form action="{% url 'logout' %}" method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-link">Выйти</button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </details>
+                    {% else %}
+                        <a class="btn-link" href="{% url 'login' %}">Вход</a>
+                        <span class="sep">|</span>
+                        <a class="btn-link" href="{% url 'signup' %}">Регистрация</a>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+    </header>
+
+
+    <main class="site-main container">
+        {% block content %}{% endblock %}
+    </main>
+
+    {% block pagination %}
+        {% if is_paginated %}
+            <nav class="pagination">
+                <ul>
+                    {% if page_obj.has_previous %}
+                        <li>
+                            <a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">«</a>
+                        </li>
+                    {% else %}
+                        <li class="disabled">«</li>
+                    {% endif %}
+
+                    {% for num in page_obj.paginator.page_range %}
+                        {% if page_obj.number == num %}
+                            <li class="active"><span>{{ num }}</span></li>
+                        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+                            <li><a href="{{ request.path }}?page={{ num }}">{{ num }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                        <li>
+                            <a href="{{ request.path }}?page={{ page_obj.next_page_number }}">»</a>
+                        </li>
+                    {% else %}
+                        <li class="disabled">»</li>
+                    {% endif %}
+                </ul>
+                <div class="page-info">
+                    Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
+                </div>
+            </nav>
+        {% endif %}
+    {% endblock %}
+
+    <footer class="site-footer">
+        <div class="container">
+            <a href="{% url 'policy' %}">Политика конфиденциальности</a>
+            <p>&copy; Гарант недвижимость</p>
+        </div>
+    </footer>
+
+</body>
+</html>

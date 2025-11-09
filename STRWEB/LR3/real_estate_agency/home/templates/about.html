@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}О компании{% endblock %}
+
+{% block head %}
+  <meta name="description" content="О нашей компании: история, миссия, сертификаты и реквизиты.">
+{% endblock %}
+
+{% block content %}
+<main itemscope itemtype="https://schema.org/AboutPage">
+    <header>
+        <h1 itemprop="name">О компании</h1>
+    </header>
+
+    <article aria-labelledby="about-title" itemprop="description">
+        <h2 id="about-title">Краткая информация</h2>
+        <p class="article-text"><dfn title="Mission statement">Миссия</dfn>: {{ about_info.text|linebreaks }}</p>
+
+        {% if about_info.logo %}
+            <figure itemprop="logo" itemscope itemtype="https://schema.org/ImageObject">
+                <img src="{{ about_info.logo.url }}" alt="Логотип" id="about-logo" class="logo"/>
+                <figcaption>Логотип компании</figcaption>
+            </figure>
+        {% endif %}
+
+        {% if about_info.video %}
+            <section aria-label="Видео о компании">
+                <h3>Видео</h3>
+                <div itemprop="video" itemscope itemtype="https://schema.org/VideoObject" class="video-container">
+                    <iframe src="{{ about_info.video }}" title="Видео о компании" width="560" height="315" loading="lazy" referrerpolicy="no-referrer"></iframe>
+                    <meta itemprop="description" content="Видео о компании {{ about_info.text|truncatewords:20 }}">
+                </div>
+            </section>
+        {% endif %}
+
+        <section>
+            <h3>История компании</h3>
+            <ul class="history-timeline">
+                <li class="history-year">
+                    <strong>2016 – Год основания и первые шаги</strong>
+                    <p>Основание компании «Гарант Недвижимость» в Минске. Небольшая, но амбициозная команда энтузиастов
+                        рынка недвижимости ставит перед собой цель изменить подход к риелторским услугам, сделав акцент
+                        на клиентском сервисе и прозрачности.</p>
+                </li>
+
+                <li class="history-year">
+                    <strong>2017-2018 – Становление и рост</strong>
+                    <p>«Гарант Недвижимость» завоевывает доверие клиентов не только в Минске, но и в Минской области.</p>
+                    <p>Формируется юридический отдел для обеспечения полной безопасности сделок.</p>
+                </li>
+
+                <li class="history-year">
+                    <strong>2022-Настоящее – Закрепление успеха и народное признание</strong>
+                    <p>«Гарант Недвижимость» официально становится №1 в Беларуси по количеству положительных отзывов в Google.</p>
+                </li>
+            </ul>
+        </section>
+
+        <section>
+            <h3 class="a b">Реквизиты</h3>
+            <div class="requisites">{{ about_info.props|default:"Реквизиты не указаны"|linebreaks }}</div>
+
+            {% if about_info.certificate %}
+                 <div class="company-section">
+                    <h3>Сертификат</h3>
+                    <div class="certificate">
+                        <div class="certificate-content">
+                            <h4>СЕРТИФИКАТ</h4>
+                            <p>Настоящим удостоверяется, что</p>
+                            <h2>Гарант недвижимость</h2>
+                            <p>получает награду</p>
+                            <h3>"Лучшее риэлторское агентство 2025"</h3>
+                            <p>
+                                Дата выдачи:
+                                <span>01 октября 2025 года</span>
+                            </p>
+                            <p>
+                            Номер сертификата:
+                            <span>11589</span>
+                            </p>
+                            <div class="certificate-signature">
+                                <p>Генеральный директор</p>
+                                <img src="{% static 'img/signature.png' %}" alt="Подпись генерального директора" />
+                            </div>
+                        </div>
+                        <div class="certificate-border"></div>
+                    </div>
+                 </div>
+            {% endif %}
+        </section>
+
+        <section>
+            <audio controls class="audio-box">
+                <source src="{% static 'media/carica.mp3' %}" type="audio/wav">
+                <em>Ваш браузер не поддерживает аудио.</em>
+            </audio>
+        </section>
+  </article>
+
+</main>
+{% endblock %}

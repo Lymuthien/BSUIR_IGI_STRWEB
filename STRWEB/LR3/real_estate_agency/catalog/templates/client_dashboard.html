@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if user.is_authenticated and user.client %}
+<div>
+    <div>
+        <h1>Мои заявки</h1>
+
+        <div>
+            Заявки
+
+            <table>
+                <thead>
+                <tr>
+                    <th>Недвижимость</th>
+                    <th>Статус</th>
+                    <th>Риэлтор</th>
+                    <th>Дата создания</th>
+                    <th>Действия</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for request in requests %}
+                    <tr>
+                        <td>{{ request.estate.address }}</td>
+                        <td>{{ request.get_status_display }}</td>
+                        <td>{{ request.employee.user.get_full_name|default:"Не назначен" }}</td>
+                        <td>{{ request.created_at|date:"d.m.Y" }}</td>
+                        <td>
+                            {% if request.status == 'new' or request.status == 'in_progress' %}
+                                <form method="post" style="display:inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="request_id" value="{{ request.pk }}">
+                                    <input type="hidden" name="action" value="buy">
+                                    <button type="submit" class="btn btn-success btn-sm">Купить</button>
+                                </form>
+                                <form method="post" style="display:inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="request_id" value="{{ request.pk }}">
+                                    <input type="hidden" name="action" value="cancel">
+                                    <button type="submit" class="btn btn-danger btn-sm">Отменить</button>
+                                </form>
+                            {% else %}
+                                <span class="text-muted">Действия недоступны</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div>
+            <h5>Мои покупки</h5>
+            <table>
+                <thead>
+                <tr>
+                    <th>Недвижимость</th>
+                    <th>Дата покупки</th>
+                    <th>Стоимость</th>
+                    <th>Услуги риэлтора</th>
+                    <th>Риэлтор</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for sale in sales %}
+                    <tr>
+                        <td>{{ sale.estate.address }}</td>
+                        <td>{{ sale.date_of_sale|date:"d.m.Y" }}</td>
+                        <td>{{ sale.cost }} $</td>
+                        <td>{{ sale.estate.category.cost }} $</td>
+                        <td>{{ sale.employee.user.get_full_name|default:"Не указан" }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% else %}
+    <div>
+        Пожалуйста, <a href="/login/">войдите</a> или <a href="/signup/">зарегистрируйтесь</a> как клиент.
+    </div>
+{% endif %}
+{% endblock %}

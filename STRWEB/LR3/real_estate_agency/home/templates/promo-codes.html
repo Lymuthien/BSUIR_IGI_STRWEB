@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Промокоды и акции{% endblock %}
+
+{% block content %}
+<div class="promos-page">
+    <nav class="promo-nav">
+        <a href="#active">Активные промокоды</a>
+        <a href="#archive">Архив</a>
+    </nav>
+
+    <section id="active" class="promo-list">
+        <h2>Активные промокоды</h2>
+        {% for promo in active_promos %}
+            <div class="promo active">
+                <div class="promo-code">{{ promo.code }}</div>
+                <div class="promo-info">Скидка {{ promo.discount }}% — {{ promo.description }}</div>
+            </div>
+        {% empty %}
+            <p>В данный момент нет активных промокодов</p>
+        {% endfor %}
+    </section>
+
+    <section id="archive" class="promo-list">
+        <h2>Архивные промокоды</h2>
+        {% for promo in archived_promos %}
+            <div class="promo archived">
+                <div class="promo-code">{{ promo.code }}</div>
+                <div class="promo-info">Скидка {{ promo.discount }}% — {{ promo.description }}</div>
+            </div>
+        {% empty %}
+            <p>Нет архивных промокодов</p>
+        {% endfor %}
+    </section>
+</div>
+{% endblock %}

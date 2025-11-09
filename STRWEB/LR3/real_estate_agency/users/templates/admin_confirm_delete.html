@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Подтверждение удаления{% endblock %}
+
+{% block content %}
+<div>
+    <div>
+        <div>
+            <div>
+                <div>
+                    <h4>Подтверждение удаления</h4>
+                </div>
+                <div>
+                    <div>
+                        <h6>Внимание!</h6>
+                        <p>Вы собираетесь удалить запись. Это действие нельзя отменить.</p>
+                    </div>
+
+                    <div>
+                        <div>
+                            <h6>Информация о пользователе:</h6>
+                            <ul>
+                                <li>Имя пользователя: {{ object.username }}</li>
+                                <li>ФИО: {{ object.first_name }} {{ object.last_name }}</li>
+                                <li>Email: {{ object.email|default:"Не указан" }}</li>
+                                <li>Роль: {{ object.get_role_display }}</li>
+                                <li>Статус:
+                                    {% if object.is_active %}Активен{% else %}Неактивен{% endif %}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    {% if object.employee %}
+                    <div>
+                        <h6>Дополнительная информация:</h6>
+                        <p>
+                            Этот пользователь является сотрудником. При удалении также будут удалены все связанные данные.
+                        </p>
+                    </div>
+                    {% endif %}
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <div>
+                            <button type="submit">Да, удалить</button>
+                            <a href="{% url 'admin_employees' %}">Отмена</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
