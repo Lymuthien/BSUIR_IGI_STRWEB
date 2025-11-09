@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ru">
+   <head>
+      {% load static %}
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>LR3 — Интерфейсные расширения</title>
+      <link rel="stylesheet" href="{% static 'lr3/styles.css' %}">
+   </head>
+   <body>
+      <div class="preloader" id="preloader">Загрузка...</div>
+      <div class="container">
+         <div class="header">
+            <h2>LR3 — JS расширения для проекта</h2>
+            <div>
+               <button id="themeToggle" class="theme-toggle">Тема</button>
+            </div>
+         </div>
+         <div class="nav">
+            <a href="/lr3/contacts/">Контакты (таблица)</a>
+            <a href="/lr3/formgen/">Генератор элементов</a>
+            <a href="/lr3/products/">Каталог</a>
+            <a href="/lr3/birth/">Возраст</a>
+            <a href="/lr3/classes/">Классы</a>
+            <a href="/lr3/api/">API Demo</a>
+            <a href="/lr3/chart/">Chart</a>
+            <a href="/lr3/scroll/">Scroll animation</a>
+         </div>
+      </div>
+      <script src="{% static 'lr3/lr3.js' %}"></script>
+   </body>
+</html>
