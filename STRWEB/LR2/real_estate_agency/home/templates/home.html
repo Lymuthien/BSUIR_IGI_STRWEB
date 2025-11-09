@@ -37,6 +37,7 @@
         box-shadow: 0 0 20px rgba(255,255,255,0.8);
         animation: moveClouds 40s linear infinite;
         z-index: 1;
+        animation-fill-mode: backwards;
     }
 
     .cloud::before, .cloud::after {
@@ -187,7 +188,7 @@
 {% block content %}
 <main>
     <header>
-        <h1>Добро пожаловать в компанию <abbr title="Гарант недвижимости">ГН</abbr></h1>
+        <h1 class="logo_name">Гарант недвижимость</h1>
     </header>
 
     <section class="promos">

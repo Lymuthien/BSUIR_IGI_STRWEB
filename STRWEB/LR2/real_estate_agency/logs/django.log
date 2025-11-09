@@ -3403,3 +3403,18 @@ ValueError: The 'image' attribute has no file associated with it.
 2025-10-12 22:13:58,034 INFO views AvailableEstateListView queryset prepared
 2025-10-12 22:13:58,730 INFO views AvailableEstateListView queryset prepared
 2025-10-12 22:16:22,064 INFO views AvailableEstateListView queryset prepared
+2025-10-16 19:34:17,150 INFO autoreload Watching for file changes with StatReloader
+2025-10-16 19:35:15,741 INFO views ServiceListView queryset prepared
+2025-10-16 19:35:16,060 INFO views AvailableEstateListView queryset prepared
+2025-10-16 19:47:39,422 INFO views ServiceListView queryset prepared
+2025-10-16 19:47:40,997 INFO views AvailableEstateListView queryset prepared
+2025-10-16 19:47:41,794 INFO views ServiceListView queryset prepared
+2025-10-16 19:47:46,513 INFO views AvailableEstateListView queryset prepared
+2025-10-16 19:51:16,456 INFO views ServiceListView queryset prepared
+2025-10-16 19:51:16,974 INFO views AvailableEstateListView queryset prepared
+2025-10-16 20:39:42,430 INFO views AvailableEstateListView queryset prepared
+2025-10-16 20:51:32,774 INFO views AvailableEstateListView queryset prepared
+2025-10-16 20:52:18,275 INFO views AvailableEstateListView queryset prepared
+2025-10-16 20:52:28,794 WARNING views User not authenticated or no client, request_exists set to False
+2025-10-16 20:52:32,154 ERROR mapbox_client Error while requesting Mapbox API for address Гольшанская ул, 32, Минск: 401 Client Error: Unauthorized for url: https://api.mapbox.com/geocoding/v5/mapbox.places/%D0%93%D0%BE%D0%BB%D1%8C%D1%88%D0%B0%D0%BD%D1%81%D0%BA%D0%B0%D1%8F%20%D1%83%D0%BB%2C%2032%2C%20%D0%9C%D0%B8%D0%BD%D1%81%D0%BA.json?types=address&language=ru&limit=1
+2025-10-16 20:52:32,194 INFO views EstateDetailView context prepared

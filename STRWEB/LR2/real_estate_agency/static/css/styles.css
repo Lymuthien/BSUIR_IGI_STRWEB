@@ -160,6 +160,19 @@ body::before {
     cursor:pointer
 }
 
+/* Kerning */
+.logo_name {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 700;
+    font-size: 2.5rem;
+
+    font-kerning: normal;
+    letter-spacing: 0.02em;
+    padding-top: 50px;
+    font-variant-ligatures: common-ligatures;
+    font-optical-sizing: auto;
+}
+
 /* Main layout */
 .site-main{
     padding:2rem 2rem;
@@ -226,13 +239,13 @@ button[disabled], .btn[disabled]{cursor:not-allowed}
     background:var(--accent);
     opacity:0.9;
     display:inline-block;
-    animation:pulse 1.2s infinite ease-in-out
+    animation:pulse 1.2s infinite ease-in-out;
 }
 #preloader .dot:nth-child(2){
     animation-delay:0.2s
 }
 #preloader .dot:nth-child(3){
-    animation-delay:0.4s
+    animation-delay:0.4s;
 }
 @keyframes pulse{
     0% {transform:scale(0.7);opacity:0.4}
@@ -636,7 +649,8 @@ table{
     width:100%;
     border-collapse:collapse;
     border-spacing:0;
-    margin:1rem 0
+    margin:1rem 0;
+    table-layout: auto;
 }
 thead th{
     background:linear-gradient(90deg,#e9f6ea,#fff,#e9f6ea);
@@ -789,6 +803,7 @@ p{
     display: grid;
     grid-template-rows: auto 1fr auto;
 }
+
 
 .estate-image {
     width: 100%;
