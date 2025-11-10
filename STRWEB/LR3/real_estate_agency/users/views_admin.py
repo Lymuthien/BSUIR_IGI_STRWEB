@@ -28,6 +28,23 @@ class AdminEmployeeListView(LoginRequiredMixin, SuperUserRequiredMixin, ListView
     template_name = 'admin_employees.html'
     context_object_name = 'employees'
 
+from django.http import JsonResponse
+
+def employees_api(request):
+    employees = Contact.objects.all()  # Remove .values() to get model instances
+    data = []
+    for emp in employees:
+        photo_url = emp.photo.url if emp.photo else None
+        data.append({
+            'id': emp.id,
+            'name': emp.name,
+            'position': emp.position,
+            'email': emp.email,
+            'phone': emp.phone,
+            'description': emp.description,
+            'photo_url': photo_url
+        })
+    return JsonResponse(data, safe=False)
 
 class AdminClientUpdateView(LoginRequiredMixin, SuperUserRequiredMixin, UpdateView):
     model = User

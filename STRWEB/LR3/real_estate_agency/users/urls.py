@@ -12,7 +12,6 @@ urlpatterns = [
 ]
 
 urlpatterns += [
-    # существующие маршруты
     path('admin/clients/', views_admin.AdminClientListView.as_view(), name='admin_clients'),
     path('admin/employees/', views_admin.AdminEmployeeListView.as_view(), name='admin_employees'),
     path('admin/client/<int:pk>/edit/', views_admin.AdminClientUpdateView.as_view(), name='admin_client_edit'),
@@ -20,5 +19,6 @@ urlpatterns += [
     path('admin/employee/create/', views_admin.AdminEmployeeCreateView.as_view(), name='admin_employee_create'),
     path('admin/employee/<int:pk>/delete/', views_admin.AdminEmployeeDeleteView.as_view(), name='admin_employee_delete'),
     path('admin/client/<int:pk>/toggle-status/', views_admin.toggle_client_status, name='admin_toggle_client_status'),
+    path('api/employees/', views_admin.employees_api, name='employees_api'),
 ]
 

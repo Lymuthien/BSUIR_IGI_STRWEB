@@ -6,76 +6,16 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!table) return;
     const thead = table.querySelector('thead');
     const tbody = table.querySelector('tbody');
-    // Собираем только непустые ряды (отфильтровываем пустую строку шаблона)
-    const allRows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('empty-row'));
-    let filteredRows = allRows.slice();
-    const totalItems = allRows.length;
-    let totalPages = Math.max(1, Math.ceil(filteredRows.length / PAGE_SIZE));
+    const detailsBlock = document.querySelector('.employee-details');
     // Хранилище выбранных id (сохраняет выбор при переключении страниц и при сортировке)
     const selectedIds = new Set();
     // Сортировка: ключ и направление (1 = asc, -1 = desc)
     let sortKey = null;
     let sortDir = 1;
-    // Блок деталей
-    const detailsBlock = document.querySelector('.employee-details');
-    // Проставим data-атрибуты и обработчики для индивидуальных чекбоксов
-    allRows.forEach(row => {
-        const cb = row.querySelector('input.employee-checkbox');
-        if (cb) {
-            const id = cb.value;
-            row.dataset.employeeId = id;
-            // Удобно сохранять основные поля в data-*
-            const idCell = row.querySelector('.cell-id');
-            const nameCell = row.querySelector('.cell-name');
-            const posCell = row.querySelector('.cell-position');
-            const emailCell = row.querySelector('.cell-email');
-            const phoneCell = row.querySelector('.cell-phone');
-            const descCell = row.querySelector('.cell-description');
-            const photoImg = row.querySelector('.cell-photo img');
-            row.dataset.id = idCell ? idCell.textContent.trim() : '';
-            row.dataset.name = nameCell ? nameCell.textContent.trim() : '';
-            row.dataset.position = posCell ? posCell.textContent.trim() : '';
-            row.dataset.email = emailCell ? emailCell.textContent.trim() : '';
-            row.dataset.phone = phoneCell ? phoneCell.textContent.trim() : '';
-            row.dataset.description = descCell ? descCell.textContent.trim() : '';
-            row.dataset.photo = photoImg ? photoImg.src : '';
-            cb.addEventListener('change', function () {
-                if (cb.checked) selectedIds.add(id);
-                else selectedIds.delete(id);
-                // обновляем состояние select-all для текущей страницы
-                updateSelectAllCheckbox();
-            });
-            // если чекбокс уже отмечен в разметке при загрузке — учтём это
-            if (cb.checked) selectedIds.add(cb.value);
-        }
-        // Обработчик клика на строку (кроме чекбокса)
-        row.addEventListener('click', function (e) {
-            if (!e.target.matches('input[type="checkbox"]')) {
-                showDetails(row);
-            }
-        });
-    });
-    // Функция показа деталей
-    function showDetails(row) {
-        if (!detailsBlock) return;
-        const html = `
-            <h3>Детали сотрудника</h3>
-            <p>ID: ${row.dataset.id}</p>
-            <p>ФИО: ${row.dataset.name}</p>
-            <p>Должность: ${row.dataset.position}</p>
-            <p>Email: ${row.dataset.email}</p>
-            <p>Телефон: ${row.dataset.phone}</p>
-            <p>Описание: ${row.dataset.description}</p>
-            ${row.dataset.photo ? `<img src="${row.dataset.photo}" style="max-width: 100px; height: auto;" alt="Фото сотрудника">` : ''}
-            <button class="close-details">Закрыть</button>
-        `;
-        detailsBlock.innerHTML = html;
-        detailsBlock.style.display = 'block';
-        // Обработчик закрытия
-        detailsBlock.querySelector('.close-details').addEventListener('click', function () {
-            detailsBlock.style.display = 'none';
-        });
-    }
+    let allRows = [];
+    let filteredRows = [];
+    let totalPages = 1;
+    let currentPage = 1;
     // Создаем блок навигации и вставляем под таблицей (если ещё нет)
     let paginationWrapper = document.querySelector('.client-pagination.pagination');
     if (!paginationWrapper) {
@@ -98,7 +38,139 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     const navList = paginationWrapper.querySelector('ul');
     const pageInfo = paginationWrapper.querySelector('.page-info');
-    let currentPage = 1;
+    // Функция загрузки данных с сервера
+    async function loadEmployees() {
+        try {
+            const response = await fetch('/accounts/api/employees/'); // Замените на реальный URL endpoint'а
+            if (!response.ok) {
+                throw new Error('Ошибка загрузки данных');
+            }
+            const employees = await response.json();
+            // Очищаем tbody
+            tbody.innerHTML = '';
+            if (employees.length === 0) {
+                const emptyRow = document.createElement('tr');
+                emptyRow.className = 'empty-row';
+                const td = document.createElement('td');
+                td.colSpan = 8;
+                td.className = 'text-center';
+                td.textContent = 'Сотрудники не найдены';
+                emptyRow.appendChild(td);
+                tbody.appendChild(emptyRow);
+                return;
+            }
+            // Создаём строки
+            allRows = employees.map(emp => {
+                const row = document.createElement('tr');
+                // Чекбокс
+                const cbTd = document.createElement('td');
+                const cb = document.createElement('input');
+                cb.type = 'checkbox';
+                cb.className = 'employee-checkbox';
+                cb.name = 'selected_employees';
+                cb.value = emp.id;
+                cbTd.appendChild(cb);
+                row.appendChild(cbTd);
+                // ID
+                const idTd = document.createElement('td');
+                idTd.className = 'cell-id';
+                idTd.textContent = emp.id;
+                row.appendChild(idTd);
+                // Name
+                const nameTd = document.createElement('td');
+                nameTd.className = 'cell-name';
+                nameTd.textContent = emp.name;
+                row.appendChild(nameTd);
+                // Position
+                const posTd = document.createElement('td');
+                posTd.className = 'cell-position';
+                posTd.textContent = emp.position;
+                row.appendChild(posTd);
+                // Email
+                const emailTd = document.createElement('td');
+                emailTd.className = 'cell-email';
+                emailTd.textContent = emp.email;
+                row.appendChild(emailTd);
+                // Phone
+                const phoneTd = document.createElement('td');
+                phoneTd.className = 'cell-phone';
+                phoneTd.textContent = emp.phone;
+                row.appendChild(phoneTd);
+                // Description
+                const descTd = document.createElement('td');
+                descTd.className = 'cell-description';
+                descTd.textContent = emp.description;
+                row.appendChild(descTd);
+                // Photo
+                const photoTd = document.createElement('td');
+                photoTd.className = 'cell-photo';
+                if (emp.photo_url) {
+                    const img = document.createElement('img');
+                    img.src = emp.photo_url;
+                    img.style.maxWidth = '50%';
+                    img.style.height = 'auto';
+                    img.alt = 'Фото сотрудника';
+                    photoTd.appendChild(img);
+                }
+                row.appendChild(photoTd);
+                // Data атрибуты
+                row.dataset.employeeId = emp.id;
+                row.dataset.id = emp.id || '';
+                row.dataset.name = emp.name || '';
+                row.dataset.position = emp.position || '';
+                row.dataset.email = emp.email || '';
+                row.dataset.phone = emp.phone || '';
+                row.dataset.description = emp.description || '';
+                row.dataset.photo = emp.photo_url || '';
+                // Обработчики
+                cb.addEventListener('change', function () {
+                    if (cb.checked) selectedIds.add(emp.id.toString());
+                    else selectedIds.delete(emp.id.toString());
+                    updateSelectAllCheckbox();
+                });
+                row.addEventListener('click', function (e) {
+                    if (!e.target.matches('input[type="checkbox"]')) {
+                        showDetails(row);
+                    }
+                });
+                // Добавляем в tbody
+                tbody.appendChild(row);
+                return row;
+            });
+            filteredRows = allRows.slice();
+            // Инициализируем
+            applySort();
+            updateSortIndicators();
+            renderPage(1);
+        } catch (error) {
+            console.error('Ошибка:', error);
+            // Можно показать ошибку в UI
+            tbody.innerHTML = '<tr><td colspan="8" class="text-center">Ошибка загрузки данных</td></tr>';
+        }
+    }
+    // Загружаем данные при старте
+    loadEmployees();
+    // Функция показа деталей
+    function showDetails(row) {
+        if (!detailsBlock) return;
+        const html = `
+            <h3>Детали сотрудника</h3>
+            <p>ID: ${row.dataset.id}</p>
+            <p>ФИО: ${row.dataset.name}</p>
+            <p>Должность: ${row.dataset.position}</p>
+            <p>Email: ${row.dataset.email}</p>
+            <p>Телефон: ${row.dataset.phone}</p>
+            <p>Описание: ${row.dataset.description}</p>
+            ${row.dataset.photo ? `<img src="${row.dataset.photo}" style="max-width: 100px; height: auto;" alt="Фото сотрудника">` : ''}
+            <button class="close-details">Закрыть</button>
+        `;
+        detailsBlock.innerHTML = html;
+        detailsBlock.style.display = 'block';
+        // Обработчик закрытия
+        detailsBlock.querySelector('.close-details').addEventListener('click', function () {
+            detailsBlock.style.display = 'none';
+        });
+    }
     // Фильтрация
     const searchInput = document.getElementById('search-input');
     const searchBtn = document.getElementById('search-btn');
@@ -333,8 +405,4 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     // Включаем сортировку по умолчанию (если нужно) — по id desc пример:
     // sortKey = 'id'; sortDir = -1; applySort(); renderPage(1); updateSortIndicators();
-    // Покажем первую страницу
-    applySort();
-    updateSortIndicators();
-    renderPage(1);
 });

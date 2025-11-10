@@ -32,29 +32,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for employee in employees %}
-                <tr>
-                    <td>
-                        <!-- класс employee-checkbox обязателен -->
-                        <input type="checkbox" class="employee-checkbox" name="selected_employees" value="{{ employee.id }}">
-                    </td>
-                    <td class="cell-id">{{ employee.id }}</td>
-                    <td class="cell-name">{{ employee.name }}</td>
-                    <td class="cell-position">{{ employee.position }}</td>
-                    <td class="cell-email">{{ employee.email }}</td>
-                    <td class="cell-phone">{{ employee.phone }}</td>
-                    <td class="cell-description">{{ employee.description }}</td>
-                    <td class="cell-photo">
-                        {% if employee.photo %}
-                        <img src="{{ employee.photo.url }}" style="max-width: 50%; height: auto;" alt="Фото сотрудника">
-                        {% endif %}
-                    </td>
-                </tr>
-                {% empty %}
-                <tr class="empty-row">
-                    <td colspan="9" class="text-center">Сотрудники не найдены</td>
-                </tr>
-                {% endfor %}
+                <!-- Данные будут загружены динамически -->
             </tbody>
         </table>
     </div>
