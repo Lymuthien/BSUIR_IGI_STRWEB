@@ -10,6 +10,18 @@
             Добавить сотрудника
         </button>
     </div>
+    <div class="add-form" style="display: none;">
+        <form id="add-employee-form">
+            <label>ФИО: <input type="text" id="add-name" required></label><br>
+            <label>Должность: <input type="text" id="add-position" required></label><br>
+            <label>Email: <input type="email" id="add-email" required></label><br>
+            <label>Телефон: <input type="text" id="add-phone" required></label><br>
+            <label>Описание: <textarea id="add-description" required></textarea></label><br>
+            <label>Фото URL: <input type="text" id="add-photo-url"></label><br>
+            <p class="validation-message" style="color: red;"></p>
+            <button type="button" id="add-submit" disabled>Добавить в таблицу</button>
+        </form>
+    </div>
     <div class="search-container">
         <input type="text" id="search-input" placeholder="Поиск по сотрудникам...">
         <button id="search-btn">Найти</button>

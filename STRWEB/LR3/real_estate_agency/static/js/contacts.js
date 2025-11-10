@@ -38,10 +38,166 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     const navList = paginationWrapper.querySelector('ul');
     const pageInfo = paginationWrapper.querySelector('.page-info');
+    // Добавление формы
+    const addBtn = document.querySelector('.add-employee-btn');
+    const addForm = document.querySelector('.add-form');
+    const addName = document.getElementById('add-name');
+    const addPosition = document.getElementById('add-position');
+    const addEmail = document.getElementById('add-email');
+    const addPhone = document.getElementById('add-phone');
+    const addDescription = document.getElementById('add-description');
+    const addPhotoUrl = document.getElementById('add-photo-url');
+    const validationMessage = document.querySelector('.validation-message');
+    const addSubmit = document.getElementById('add-submit');
+    addBtn.addEventListener('click', () => {
+        addForm.style.display = 'block';
+        // Сброс формы
+        addName.value = '';
+        addPosition.value = '';
+        addEmail.value = '';
+        addPhone.value = '';
+        addDescription.value = '';
+        addPhotoUrl.value = '';
+        validationMessage.textContent = '';
+        addSubmit.disabled = true;
+        resetFieldStyles();
+    });
+    function resetFieldStyles() {
+        [addName, addPosition, addEmail, addPhone, addDescription, addPhotoUrl].forEach(field => {
+            field.style.border = '';
+            field.style.backgroundColor = '';
+        });
+    }
+    // Функции валидации
+    function validateURL(url) {
+        if (!url) return { valid: true, message: '' }; // Необязательное поле?
+        const startsWithHttp = /^https?:\/\//i.test(url);
+        const endsWithPhpHtml = /\.(php|html)$/i.test(url);
+        if (startsWithHttp && endsWithPhpHtml) {
+            return { valid: true, message: '' };
+        } else {
+            return { valid: false, message: 'Невалидный URL: должен начинаться с http:// или https:// и заканчиваться на .php или .html' };
+        }
+    }
+    function validatePhone(phone) {
+    if (!phone.trim()) return { valid: false, message: 'Телефон обязателен' };
+
+    // Удаляем non-digits
+    const digits = phone.replace(/\D/g, '');
+
+    // Проверяем начало: 8... (11 digits) или 375... (12 digits)
+    if (!((digits.startsWith('8') && digits.length === 11) || (digits.startsWith('375') && digits.length === 12))) {
+        return { valid: false, message: 'Невалидная длина или префикс. Должно быть 11 (для 8...) или 12 (для 375...) цифр.' };
+    }
+
+    // Проверяем код оператора (29 для MTC)
+    const codePos = digits.startsWith('8') ? 1 : 3; // После 8 или 375
+    if (digits.substring(codePos, codePos + 2) !== '29' && digits.substring(codePos, codePos + 3) !== '029') {
+        return { valid: false, message: 'Код оператора должен быть 29 или 029.' };
+    }
+
+    // Проверяем ровно 7 цифр после кода
+    const afterCodePos = digits.startsWith('8') ? 4 : 5; // 8029... or 37529...
+    if (digits.substring(afterCodePos).length !== 7) {
+        return { valid: false, message: 'После кода оператора должно быть ровно 7 цифр.' };
+    }
+
+    // Для скобок: простая проверка баланса (опционально, если нужно строго)
+    const openParens = (phone.match(/\(/g) || []).length;
+    const closeParens = (phone.match(/\)/g) || []).length;
+    if (openParens !== closeParens) {
+        return { valid: false, message: 'Несбалансированные скобки.' };
+    }
+
+    return { valid: true, message: '' };
+}
+    // Проверка всех полей
+    function checkAllValid() {
+        const fields = [addName, addPosition, addEmail, addDescription];
+        const allFilled = fields.every(f => f.value.trim() !== '') && addPhone.value.trim() !== '';
+        const phoneValid = validatePhone(addPhone.value).valid;
+        const urlValid = validateURL(addPhotoUrl.value).valid;
+        return allFilled && phoneValid && urlValid;
+    }
+    // Валидация поля
+    function validateField(field, validateFunc) {
+        const { valid, message } = validateFunc(field.value);
+        if (!valid) {
+            field.style.border = '1px solid red';
+            field.style.backgroundColor = 'pink';
+            validationMessage.textContent = message;
+        } else {
+            field.style.border = '';
+            field.style.backgroundColor = '';
+            validationMessage.textContent = '';
+        }
+    }
+    // Обработчики
+    addPhone.addEventListener('blur', () => validateField(addPhone, validatePhone));
+    addPhotoUrl.addEventListener('blur', () => validateField(addPhotoUrl, validateURL));
+    // Проверка на ввод для активации кнопки
+    [addName, addPosition, addEmail, addPhone, addDescription, addPhotoUrl].forEach(input => {
+        input.addEventListener('input', () => {
+            if (validationMessage.textContent) {
+                // Сброс сообщения если начали править
+                validationMessage.textContent = '';
+            }
+            addSubmit.disabled = !checkAllValid();
+        });
+    });
+    // Добавление
+    addSubmit.addEventListener('click', async () => {
+        // Финальная валидация
+        validateField(addPhone, validatePhone);
+        validateField(addPhotoUrl, validateURL);
+        if (!checkAllValid()) return;
+        const newEmployee = {
+            name: addName.value.trim(),
+            position: addPosition.value.trim(),
+            email: addEmail.value.trim(),
+            phone: addPhone.value.trim(),
+            description: addDescription.value.trim(),
+            photo_url: addPhotoUrl.value.trim() || null
+        };
+        try {
+            const csrfToken = getCookie('csrftoken');
+            const response = await fetch('/accounts/api/employees/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify(newEmployee)
+            });
+            if (!response.ok) {
+                throw new Error('Ошибка добавления');
+            }
+            addForm.style.display = 'none';
+            loadEmployees();
+        } catch (error) {
+            console.error('Ошибка:', error);
+            validationMessage.textContent = 'Ошибка добавления сотрудника';
+        }
+    });
+    // Функция для получения cookie
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
     // Функция загрузки данных с сервера
     async function loadEmployees() {
         try {
-            const response = await fetch('/accounts/api/employees/'); // Замените на реальный URL endpoint'а
+            const response = await fetch('/accounts/api/employees/');
             if (!response.ok) {
                 throw new Error('Ошибка загрузки данных');
             }

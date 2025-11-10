@@ -30,21 +30,57 @@ class AdminEmployeeListView(LoginRequiredMixin, SuperUserRequiredMixin, ListView
 
 from django.http import JsonResponse
 
+from django.http import JsonResponse
+from django.core.files.base import ContentFile
+import requests  # Для скачивания по URL
+from .models import Employee
+
+
 def employees_api(request):
-    employees = Contact.objects.all()  # Remove .values() to get model instances
-    data = []
-    for emp in employees:
-        photo_url = emp.photo.url if emp.photo else None
-        data.append({
-            'id': emp.id,
-            'name': emp.name,
-            'position': emp.position,
-            'email': emp.email,
-            'phone': emp.phone,
-            'description': emp.description,
-            'photo_url': photo_url
-        })
-    return JsonResponse(data, safe=False)
+    if request.method == 'GET':
+        employees = Contact.objects.all()
+        data = []
+        for emp in employees:
+            photo_url = emp.photo.url if emp.photo else None
+            data.append({
+                'id': emp.id,
+                'name': emp.name,
+                'position': emp.position,
+                'email': emp.email,
+                'phone': emp.phone,
+                'description': emp.description,
+                'photo_url': photo_url
+            })
+        return JsonResponse(data, safe=False)
+
+    elif request.method == 'POST':
+        import json
+        try:
+            body = json.loads(request.body)
+            new_emp = Contact(
+                name=body.get('name'),
+                position=body.get('position'),
+                email=body.get('email'),
+                phone=body.get('phone'),
+                description=body.get('description'),
+            )
+            photo_url = body.get('photo_url')
+            if photo_url:
+                # Скачиваем изображение по URL
+                response = requests.get(photo_url, timeout=10)
+                if response.status_code == 200 and 'image' in response.headers.get('Content-Type', ''):
+                    # Определяем расширение (или фиксируем .jpg)
+                    ext = photo_url.split('.')[-1].lower() if '.' in photo_url else 'jpg'
+                    file_name = f"{body.get('name', 'employee').replace(' ', '_')}.{ext}"
+                    new_emp.photo.save(file_name, ContentFile(response.content), save=False)
+                else:
+                    raise ValueError('Невалидный URL изображения или не изображение')
+            new_emp.save()
+            return JsonResponse({'id': new_emp.id, 'message': 'Added successfully'}, status=201)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+
+    return JsonResponse({'error': 'Invalid method'}, status=405)
 
 class AdminClientUpdateView(LoginRequiredMixin, SuperUserRequiredMixin, UpdateView):
     model = User
