@@ -151,3 +151,63 @@
         .modal-content button:hover {
             background-color: #1e3a23;
         }
+
+        /* Parallax */
+ #parallax-section {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#parallax-section::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 200px;
+    width: 100%;
+    background: linear-gradient(to top, #fff, transparent);
+    z-index: 1000;
+}
+
+#parallax-section img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+}
+
+#parallax-text {
+    position: relative;
+    color: #4c5c5c;
+    font-size: 5rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    z-index: 10;
+}
+
+#parallax-section #people {
+    top: auto;
+    bottom: -10px;
+    width: auto;
+    left: 90%;
+}
+
+#buildings {
+    opacity: 0;
+    transform: translateY(100px);
+    transition: all 0.8s ease-out 0.1s;
+}
+
+#buildings-1 {
+    opacity: 0;
+    transform: translateY(180px) translateX(-110px);
+    transition: all 0.9s ease-out 0.15s;
+}
+

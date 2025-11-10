@@ -21,6 +21,19 @@ from django.contrib import admin
 from django.urls import include
 from django.urls import path
 from django.views.generic import RedirectView
+from django.views.generic import TemplateView
+
+# LR3 static-pages integration
+lr3_patterns = [
+    path('lr3/', TemplateView.as_view(template_name='lr3/index.html'), name='lr3_index'),
+    path('lr3/contacts/', TemplateView.as_view(template_name='lr3/contacts.html'), name='lr3_contacts'),
+    path('lr3/formgen/', TemplateView.as_view(template_name='lr3/formgen.html'), name='lr3_formgen'),
+    path('lr3/dates/', TemplateView.as_view(template_name='lr3/dates.html'), name='lr3_classes'),
+    path('lr3/api/', TemplateView.as_view(template_name='lr3/api_demo.html'), name='lr3_api'),
+    path('lr3/chart/', TemplateView.as_view(template_name='lr3/chart.html'), name='lr3_chart'),
+    path('lr3/scroll/', TemplateView.as_view(template_name='lr3/scroll.html'), name='lr3_scroll'),
+]
+
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -29,6 +42,7 @@ urlpatterns = [
     path('accounts/', include('users.urls')),
     path('', RedirectView.as_view(url='/home/', permanent=True)),
 ]
+urlpatterns += lr3_patterns
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 

@@ -13,16 +13,20 @@
         <h1 itemprop="name">О компании</h1>
     </header>
 
+<section id="parallax-section">
+  <img src="{% static 'img/parallax/bg.jpg' %}" id="parallax-bg" alt="Фон" />
+  <h2 id="parallax-text">Гарант Недвижимость</h2>
+
+    <img src="{% static 'img/parallax/people.png' %}" id="people" alt="Люди" />
+    <img src="{% static 'img/parallax/clouds_3.png' %}" id="clouds-2" alt="Облака 2" />
+
+    <img src="{% static 'img/parallax/buildings.png' %}" id="buildings" alt="Основные здания" />
+  <img src="{% static 'img/parallax/building_1.png' %}" id="buildings-1" alt="Дополнительные здания" />
+</section>
+
     <article aria-labelledby="about-title" itemprop="description">
         <h2 id="about-title">Краткая информация</h2>
         <p class="article-text"><dfn title="Mission statement">Миссия</dfn>: {{ about_info.text|linebreaks }}</p>
-
-        {% if about_info.logo %}
-            <figure itemprop="logo" itemscope itemtype="https://schema.org/ImageObject">
-                <img src="{{ about_info.logo.url }}" alt="Логотип" id="about-logo" class="logo"/>
-                <figcaption>Логотип компании</figcaption>
-            </figure>
-        {% endif %}
 
         {% if about_info.video %}
             <section aria-label="Видео о компании">
@@ -99,4 +103,6 @@
   </article>
 
 </main>
+    <script src="{% static 'js/scroll.js' %}"></script>
+
 {% endblock %}
