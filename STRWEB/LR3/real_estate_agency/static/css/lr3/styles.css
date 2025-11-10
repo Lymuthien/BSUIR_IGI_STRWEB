@@ -1,0 +1,209 @@
+body {
+     font-family: Arial, sans-serif;
+     max-width: 1000px;
+     margin: 0 auto;
+     padding: 20px;
+     background:#f5f5f5;
+}
+ .container {
+     background: white;
+     border-radius: 12px;
+     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+     margin: 20px auto;
+     max-width: 1200px;
+     overflow: hidden;
+}
+ .header {
+     background: #2c3e50;
+     color: white;
+     padding: 20px 30px;
+     display: flex;
+     justify-content: space-between;
+     align-items: center;
+}
+ .header h2 {
+     margin: 0;
+     font-size: 28px;
+     font-weight: 600;
+     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+ .nav {
+     display: flex;
+     gap: 0;
+     background: #f8f9fa;
+     border-bottom: 1px solid #e9ecef;
+}
+ .nav a {
+     padding: 18px 24px;
+     text-decoration: none;
+     color: #495057;
+     font-weight: 500;
+     transition: all 0.3s ease;
+     border-bottom: 3px solid transparent;
+}
+ .nav a:hover {
+     background: #e9ecef;
+     color: #007bff;
+     border-bottom: 3px solid #007bff;
+}
+ .dates-form {
+     display: flex;
+     gap: 10px;
+     margin-bottom: 20px;
+     flex-wrap: wrap;
+     align-items: center;
+}
+ .dates-form input {
+     padding: 8px 12px;
+     border: 1px solid #ddd;
+     border-radius: 4px;
+     width: 80px;
+}
+ .dates-form button {
+     padding: 8px 16px;
+     background: #007bff;
+     color: white;
+     border: none;
+     border-radius: 4px;
+     cursor: pointer;
+}
+ .dates-form button:hover {
+     background: #0056b3;
+}
+ .toggle-label {
+     display: flex;
+     align-items: center;
+     gap: 8px;
+     margin-bottom: 15px;
+     padding: 10px;
+     background: #f8f9fa;
+     border-radius: 4px;
+}
+ .download-link {
+     display: inline-block;
+     margin-top: 15px;
+     padding: 10px 15px;
+     background: #28a745;
+     color: white;
+     text-decoration: none;
+     border-radius: 4px;
+}
+ .download-link:hover {
+     background: #218838;
+}
+ #datesResult {
+     margin-top: 15px;
+     padding: 15px;
+     border: 1px solid #dee2e6;
+     border-radius: 4px;
+     background: #f8f9fa;
+}
+ .generated-list {
+     margin-top: 20px;
+     display: flex;
+     flex-direction: column;
+     gap: 15px;
+}
+ .generated-item.card {
+     border: 1px solid #dee2e6;
+     border-radius: 8px;
+     padding: 15px;
+     background: white;
+     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+     display: flex;
+     gap: 20px;
+     flex-wrap: wrap;
+}
+ .form-row {
+     display: flex;
+     gap: 10px;
+     align-items: center;
+     flex-wrap: wrap;
+     margin-bottom: 10px;
+}
+ .form-row input[type="text"], .form-row input[type="url"] {
+     padding: 6px 10px;
+     border: 1px solid #ced4da;
+     border-radius: 4px;
+     flex: 1;
+     min-width: 120px;
+}
+ .form-row label {
+     display: flex;
+     align-items: center;
+     gap: 5px;
+     font-size: 14px;
+}
+ .ctl-delete {
+     background: #dc3545;
+     color: white;
+     border: none;
+     padding: 6px 12px;
+     border-radius: 4px;
+     cursor: pointer;
+}
+ .ctl-delete:hover {
+     background: #c82333;
+}
+ .ctl-focus {
+     background: #17a2b8;
+     color: white;
+     border: none;
+     padding: 6px 12px;
+     border-radius: 4px;
+     cursor: pointer;
+}
+ .ctl-focus:hover {
+     background: #138496;
+}
+ #fg_generate_flag {
+     margin-right: 8px;
+}
+ .chart-page {
+     max-width: 1000px;
+     margin: 0 auto;
+     padding: 20px;
+}
+ .chart-container {
+     width: 100%;
+     height: 500px;
+     margin: 20px 0;
+     background: white;
+     border-radius: 8px;
+     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+     padding: 15px;
+}
+ .controls {
+     text-align: center;
+     margin: 25px 0;
+}
+ .save-btn {
+     padding: 12px 24px;
+     background: linear-gradient(135deg, #4CAF50, #45a049);
+     color: white;
+     border: none;
+     border-radius: 6px;
+     cursor: pointer;
+     font-size: 16px;
+     font-weight: 500;
+     transition: transform 0.2s, box-shadow 0.2s;
+     box-shadow: 0 4px 6px rgba(76, 175, 80, 0.3);
+}
+ .save-btn:hover {
+     transform: translateY(-2px);
+     box-shadow: 0 6px 8px rgba(76, 175, 80, 0.4);
+}
+ .page-title {
+     text-align: center;
+     color: #2c3e50;
+     margin: 20px 0;
+     font-size: 28px;
+     font-weight: 600;
+}
+ .chart-description {
+     text-align: center;
+     color: #666;
+     margin-bottom: 30px;
+     font-size: 16px;
+     line-height: 1.5;
+}

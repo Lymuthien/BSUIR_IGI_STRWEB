@@ -4,26 +4,31 @@
       {% load static %}
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
-      <title>LR3</title>
-      <link rel="stylesheet" href="{% static 'lr3/styles.css' %}">
+      <title>{% block title %}LR3{% endblock %}</title>
+      <link rel="stylesheet" href="{% static 'css/lr3/styles.css' %}">
+      {% block extra_css %}{% endblock %}
    </head>
    <body>
-      <div class="preloader" id="preloader">Загрузка...</div>
+      {% block pre_content %}{% endblock %}
       <div class="container">
          <div class="header">
-            <h2>LR3</h2>
-            <div>
-               <button id="themeToggle" class="theme-toggle">Тема</button>
-            </div>
+            <h2>{% block header_title %}LR3{% endblock %}</h2>
+            {% block header_extra %}{% endblock %}
          </div>
          <div class="nav">
-            <a href="/lr3/contacts/">Контакты (таблица)</a>
+            <a href="/lr3/contacts/">Контакты</a>
             <a href="/lr3/formgen/">Генератор элементов</a>
             <a href="/lr3/dates/">Даты</a>
-            <a href="/lr3/chart/">Chart</a>
+            <a href="/lr3/chart/">График</a>
             <a href="/lr3/scroll/">Scroll animation</a>
+            <a href="{% url 'home' %}">Домой</a>
+            {% block nav_extra %}{% endblock %}
          </div>
+         {% block content %}
+         {% endblock %}
       </div>
+      {% block extra_content %}{% endblock %}
       <script src="{% static 'lr3/lr3.js' %}"></script>
+      {% block extra_js %}{% endblock %}
    </body>
 </html>

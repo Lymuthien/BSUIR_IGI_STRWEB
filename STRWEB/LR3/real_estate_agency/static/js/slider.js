@@ -168,7 +168,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // initialize sliders found
     document.querySelectorAll('.slider').forEach(sl => {
         // read options from data attributes or from admin form if present
         const options = {};

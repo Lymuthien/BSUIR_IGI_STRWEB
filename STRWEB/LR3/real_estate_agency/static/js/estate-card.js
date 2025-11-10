@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const offX = 50 + ((x - middleX) / middleX) * 25;
             const offY = 50 - ((y - middleY) / middleY) * 20;
 
-            card.style.setProperty("--rotateX", 1 * offsetX + "deg");
+            card.style.setProperty("--rotateX", offsetX + "deg");
             card.style.setProperty("--rotateY", -1 * offsetY + "deg");
             card.style.setProperty("--posx", offX + "%");
             card.style.setProperty("--posy", offY + "%");

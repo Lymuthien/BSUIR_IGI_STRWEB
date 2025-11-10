@@ -1,6 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
 
-    // THEME
     const themeToggle = document.getElementById('themeToggle');
     const body = document.body;
 

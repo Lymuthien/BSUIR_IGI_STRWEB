@@ -1,10 +1,7 @@
-// PRODUCTS pagination — enhanced: supports both lr3/products.json mode and DOM pagination for existing Django list
 function initProducts() {
-    // legacy JSON mode: keep existing behaviour if productsGrid exists
     const root = document.getElementById('productsRoot');
     const productsGrid = document.getElementById('productsGrid');
     if (root && productsGrid) {
-        // existing JSON fetch pagination (unchanged semantics)
         fetch('/static/lr3/products.json').then(r => r.json()).then(data => {
             const perSelect = document.getElementById('productsPer');
             let per = Number(perSelect.value || 3);
@@ -38,11 +35,8 @@ function initProducts() {
                 }
             }
 
-            // restore page if exists in sessionStorage
             const savedPage = Number(sessionStorage.getItem('products_json_page'));
             if (!isNaN(savedPage) && savedPage >= 1) {
-                // will be clamped when drawing
-                // but keep current page variable
             }
 
             perSelect.addEventListener('change', () => {
@@ -57,7 +51,6 @@ function initProducts() {
         return;
     }
 
-    // DOM pagination mode for Django-rendered list:
     const serviceList = document.getElementById('serviceList');
     if (!serviceList) return; // nothing to paginate here
 
@@ -66,7 +59,6 @@ function initProducts() {
         serviceList.parentNode.appendChild(pagerContainer);
     }
 
-    // items are the LI elements
     const allItems = Array.from(serviceList.querySelectorAll('.service-item'));
     if (allItems.length === 0) return;
 
@@ -89,19 +81,16 @@ function initProducts() {
         return sel;
     })();
 
-    // page state saved in session so navigation within site doesn't lose it during the session
     let per = Number(perSelect.value) || 3;
     let page = Number(sessionStorage.getItem('service_list_page')) || 1;
 
     function renderPage() {
-        // clamp per/page
         per = Math.max(1, Number(per) || 3);
         const total = allItems.length;
         const pages = Math.max(1, Math.ceil(total / per));
         if (page < 1) page = 1;
         if (page > pages) page = pages;
 
-        // hide/show items
         allItems.forEach((it, idx) => {
             const start = (page - 1) * per;
             if (idx >= start && idx < start + per) {
@@ -111,17 +100,14 @@ function initProducts() {
             }
         });
 
-        // build pager
         pagerContainer.innerHTML = '';
         const pagesCount = Math.max(1, Math.ceil(total / per));
-        // previous button
         const prev = document.createElement('button');
         prev.textContent = '←';
         prev.disabled = page === 1;
         prev.addEventListener('click', () => { page = Math.max(1, page - 1); sessionStorage.setItem('service_list_page', String(page)); renderPage(); });
         pagerContainer.appendChild(prev);
 
-        // page numbers (if many pages, show window)
         const maxButtons = 7;
         let startPage = Math.max(1, page - Math.floor(maxButtons / 2));
         let endPage = Math.min(pagesCount, startPage + maxButtons - 1);
@@ -136,14 +122,12 @@ function initProducts() {
             pagerContainer.appendChild(b);
         }
 
-        // next button
         const next = document.createElement('button');
         next.textContent = '→';
         next.disabled = page === pagesCount;
         next.addEventListener('click', () => { page = Math.min(pagesCount, page + 1); sessionStorage.setItem('service_list_page', String(page)); renderPage(); });
         pagerContainer.appendChild(next);
 
-        // summary
         const info = document.createElement('span');
         info.style.marginLeft = '8px';
         info.className = 'small';
@@ -158,7 +142,6 @@ function initProducts() {
         renderPage();
     });
 
-    // initial render
     renderPage();
 }
 initProducts();

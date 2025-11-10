@@ -17,7 +17,6 @@ DateRecordProto.prototype.toObj = function() {
     };
 };
 
-// Manager (proto) - базовый "класс" управления коллекцией
 function DateManagerProto(storageKey) {
     this.storageKey = storageKey || 'lr3_proto_dates';
     this.items = [];
@@ -32,7 +31,7 @@ function DateManagerProto(storageKey) {
         this.items = [];
     }
 }
-// 5 основных методов (и чуть доп. вспомогательных)
+
 DateManagerProto.prototype.getItems = function() {
     return this.items.slice();
 };
@@ -83,7 +82,6 @@ DateManagerProto.prototype.renderResult = function(container) {
     resBox.innerHTML = html;
 };
 
-// Subclass prototype: SpringDateProto (adds source) and SpringDateManagerProto (adds note/getSpringDates)
 function SpringDateProto(day, month, year, source) {
     DateRecordProto.call(this, day, month, year);
     this.source = source || 'user';
@@ -94,11 +92,9 @@ SpringDateProto.prototype.note = function() {
     return `(${this.source}) ${this.getFull()}`;
 };
 
-// manager subclass
 function SpringDateManagerProto(storageKey, sourceDefault) {
     DateManagerProto.call(this, storageKey || 'lr3_proto_spring_dates');
     this.sourceDefault = sourceDefault || 'user';
-    // rehydrate items as SpringDateProto if storage had entries
     try {
         const raw = localStorage.getItem(this.storageKey);
         if (raw) {
@@ -110,7 +106,6 @@ function SpringDateManagerProto(storageKey, sourceDefault) {
 SpringDateManagerProto.prototype = Object.create(DateManagerProto.prototype);
 SpringDateManagerProto.prototype.constructor = SpringDateManagerProto;
 
-// override addFromForm to create SpringDateProto with source
 SpringDateManagerProto.prototype.addFromForm = function(formEl) {
     const d = formEl.day.value.trim(),
         m = formEl.month.value.trim(),
@@ -185,7 +180,6 @@ class SpringDates extends DateRecord {
     }
 }
 
-// Manager class: 5 основных методов
 class DateManager {
     constructor(storageKey) {
         this.storageKey = storageKey || 'lr3_class_dates';
@@ -293,30 +287,24 @@ class SpringDateManager extends DateManager {
     }
 }
 
-/* ---------------------------
-   Bind to existing form and UI
-   --------------------------- */
-// existing form on page
+
 (function() {
     const datesForm = document.getElementById('datesForm');
     const datesResult = document.getElementById('datesResult') || document.getElementById('datesResultProto');
 
-    // create instances
     const protoManager = new DateManagerProto('lr3_proto_dates');
     const protoSpringManager = new SpringDateManagerProto('lr3_proto_spring_dates', 'proto_source');
 
     const classManager = new DateManager('lr3_class_dates');
     const classSpringManager = new SpringDateManager('lr3_class_spring_dates', 'class_source');
 
-    // Choose which variant to use: true = class/extends, false = prototype
-    // You can toggle this variable (or change by URL param etc.)
     const useClassVariant = (window.location.search.indexOf('class_dates=1') !== -1) || false;
 
     function renderAllAndResult() {
         if (useClassVariant) {
             classManager.renderAll(datesResult);
             classManager.renderResult(datesResult);
-            classSpringManager.renderAll(datesResult); // optionally show spring manager data too
+            classSpringManager.renderAll(datesResult);
             classSpringManager.renderResult(datesResult);
         } else {
             protoManager.renderAll(datesResult);
@@ -327,12 +315,10 @@ class SpringDateManager extends DateManager {
     }
 
     if (!datesForm) {
-        // nothing to bind; but still render existing storage if container present
         if (datesResult) renderAllAndResult();
         return;
     }
 
-    // On submit - add to both managers (so both storages populated), then render chosen variant
     datesForm.addEventListener('submit', function(e) {
         e.preventDefault();
         try {
@@ -353,10 +339,8 @@ class SpringDateManager extends DateManager {
         datesForm.reset();
     });
 
-    // initial render on load
     renderAllAndResult();
 
-    // add download button for spring dates (g.txt) using class variant if present, otherwise proto
     const downloadAnchor = document.getElementById('springDownload');
     if (downloadAnchor) {
         downloadAnchor.addEventListener('click', function(ev) {
@@ -374,26 +358,21 @@ class SpringDateManager extends DateManager {
             const url = URL.createObjectURL(blob);
             downloadAnchor.href = url;
             downloadAnchor.download = 'g.txt';
-            // allow default click to navigate to blob URL
             setTimeout(() => {
                 URL.revokeObjectURL(url);
             }, 2000);
-            // programmatic click (in case anchor not visited directly)
             downloadAnchor.click();
         });
     }
-    // --- toggle between function/class variant with checkbox and URL sync ---
     (function() {
         const checkbox = document.getElementById('toggleClassVariant');
         if (!checkbox) return;
 
-        // определить, какой вариант сейчас активен
         const params = new URLSearchParams(window.location.search);
         const classMode = params.has('class_dates');
 
-        checkbox.checked = classMode; // выставляем флажок при загрузке
+        checkbox.checked = classMode;
 
-        // при изменении флажка меняем адрес и перезагружаем страницу
         checkbox.addEventListener('change', function() {
             const url = new URL(window.location.href);
             if (checkbox.checked) {
@@ -401,7 +380,6 @@ class SpringDateManager extends DateManager {
             } else {
                 url.searchParams.delete('class_dates');
             }
-            // обновляем адрес и перезагружаем страницу
             window.location.href = url.toString();
         });
     })();

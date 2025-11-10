@@ -6,10 +6,8 @@
     const container = document.getElementById('generatedContainer');
     const tmpl = document.getElementById('tmpl-generated-item');
 
-    // storage key
     const STORAGE_KEY = 'lr3_generated_dynamic';
 
-    // load saved array
     function loadItems() {
         try {
             return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
@@ -22,7 +20,6 @@
         localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
     }
 
-    // create DOM for a single element card, returns element with dataset.index
     function createItemNode(item, index) {
         const node = tmpl.content.firstElementChild.cloneNode(true);
         node.dataset.index = index;
@@ -37,7 +34,6 @@
         const btnDelete = node.querySelector('.ctl-delete');
         const btnFocus = node.querySelector('.ctl-focus');
 
-        // apply attributes from item to real input
         function applyAttrsToInput() {
             inputEl.type = item.type || 'url';
             if (item.name) inputEl.setAttribute('name', item.name);
@@ -54,7 +50,6 @@
             else inputEl.removeAttribute('readonly');
         }
 
-        // populate controllers initial values
         ctlName.value = item.name || '';
         ctlPlaceholder.value = item.placeholder || '';
         ctlValue.value = item.value || '';
@@ -62,18 +57,14 @@
         ctlRequired.checked = !!item.required;
         ctlReadonly.checked = !!item.readonly;
 
-        // initial apply
         applyAttrsToInput();
 
-        // live binding: whenever controller changes, update 'item' object, apply to input, persist storage
         function scheduleSave() {
-            // update storage array
             const arr = loadItems();
             arr[index] = item;
             saveItems(arr);
         }
 
-        // set handlers
         ctlName.addEventListener('input', (e) => {
             item.name = e.target.value || null;
             applyAttrsToInput();
@@ -105,7 +96,6 @@
             scheduleSave();
         });
 
-        // clicking the generated input shows a quick snapshot of attributes (for UX)
         inputEl.addEventListener('click', () => {
             const attrs = [];
             if (inputEl.name) attrs.push('name="' + inputEl.name + '"');
@@ -114,7 +104,6 @@
             if (inputEl.pattern) attrs.push('pattern="' + inputEl.pattern + '"');
             if (inputEl.required) attrs.push('required');
             if (inputEl.readOnly) attrs.push('readonly');
-            // small tooltip-like inline alert (non-blocking)
             const old = node.querySelector('.gen-attrs-tip');
             if (old) old.remove();
             const tip = document.createElement('div');
@@ -127,13 +116,10 @@
             }, 2500);
         });
 
-        // delete handler
         btnDelete.addEventListener('click', () => {
-            // remove from DOM and storage
             const arr = loadItems();
             arr.splice(index, 1);
             saveItems(arr);
-            // re-render all (to fix indexes)
             renderAll();
         });
 
@@ -142,7 +128,6 @@
         return node;
     }
 
-    // add a new item (with optional defaults)
     function addNewItem(defaults) {
         const arr = loadItems();
         const newItem = Object.assign({
@@ -160,7 +145,6 @@
         return arr.length - 1;
     }
 
-    // render all items from storage
     function renderAll() {
         const arr = loadItems();
         container.innerHTML = '';
@@ -170,21 +154,17 @@
         });
     }
 
-    // when user sets the checkbox, add element and immediately uncheck (so user can click again)
     flag.addEventListener('change', (e) => {
         if (e.target.checked) {
-            addNewItem(); // create new
-            // uncheck so user can add again easily
+            addNewItem();
             setTimeout(() => {
                 flag.checked = false;
             }, 100);
         }
     });
 
-    // init on load
     renderAll();
 
-    // expose small API for debugging (optional)
     window.lr3FormGen = {
         add: addNewItem,
         render: renderAll,
