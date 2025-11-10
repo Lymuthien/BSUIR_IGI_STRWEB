@@ -525,11 +525,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         navList.appendChild(nextLi);
     }
-    // Select-all: влияет только на видимые строки
+    // Select-all: влияет только на все отфильтрованные строки (все страницы)
     if (selectAllCheckbox) {
         selectAllCheckbox.addEventListener('change', function () {
-            const visibleRows = filteredRows.filter(row => row.style.display !== 'none');
-            visibleRows.forEach(row => {
+            filteredRows.forEach(row => {
                 const cb = row.querySelector('input.employee-checkbox');
                 if (!cb) return;
                 cb.checked = selectAllCheckbox.checked;
@@ -542,20 +541,19 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     function updateSelectAllCheckbox() {
         if (!selectAllCheckbox) return;
-        const visibleRows = filteredRows.filter(row => row.style.display !== 'none');
-        if (visibleRows.length === 0) {
+        if (filteredRows.length === 0) {
             selectAllCheckbox.checked = false;
             selectAllCheckbox.indeterminate = false;
             return;
         }
-        const checkedCount = visibleRows.reduce((c, row) => {
+        const checkedCount = filteredRows.reduce((c, row) => {
             const cb = row.querySelector('input.employee-checkbox');
             return c + (cb && cb.checked ? 1 : 0);
         }, 0);
         if (checkedCount === 0) {
             selectAllCheckbox.checked = false;
             selectAllCheckbox.indeterminate = false;
-        } else if (checkedCount === visibleRows.length) {
+        } else if (checkedCount === filteredRows.length) {
             selectAllCheckbox.checked = true;
             selectAllCheckbox.indeterminate = false;
         } else {
