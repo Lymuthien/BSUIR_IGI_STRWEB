@@ -1,11 +1,8 @@
 {% extends "base.html" %}
 {% load static %}
-
 {% block title %}Управление сотрудниками{% endblock %}
-
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/employees.css' %}">
-
 <div class="employee-management">
     <div class="header-section">
         <h1>Управление сотрудниками</h1>
@@ -13,7 +10,10 @@
             Добавить сотрудника
         </button>
     </div>
-
+    <div class="search-container">
+        <input type="text" id="search-input" placeholder="Поиск по сотрудникам...">
+        <button id="search-btn">Найти</button>
+    </div>
     <div class="table-container">
         <table class="employees-table">
             <thead>
@@ -59,9 +59,7 @@
         </table>
     </div>
 </div>
-
 <!-- Подключаем JS (замените прежний contacts.js на employees.js) -->
 <script src="{% static 'js/contacts.js' %}"></script>
-
 {% endblock %}
 {% block pagination %}{% endblock %}

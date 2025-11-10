@@ -4,23 +4,20 @@ document.addEventListener('DOMContentLoaded', function () {
     const table = document.querySelector('.employees-table');
     const selectAllCheckbox = document.getElementById('select-all');
     if (!table) return;
-
     const thead = table.querySelector('thead');
     const tbody = table.querySelector('tbody');
     // Собираем только непустые ряды (отфильтровываем пустую строку шаблона)
-    let rows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('empty-row'));
-    const totalItems = rows.length;
-    let totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE));
-
+    const allRows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('empty-row'));
+    let filteredRows = allRows.slice();
+    const totalItems = allRows.length;
+    let totalPages = Math.max(1, Math.ceil(filteredRows.length / PAGE_SIZE));
     // Хранилище выбранных id (сохраняет выбор при переключении страниц и при сортировке)
     const selectedIds = new Set();
-
     // Сортировка: ключ и направление (1 = asc, -1 = desc)
     let sortKey = null;
     let sortDir = 1;
-
     // Проставим data-атрибуты и обработчики для индивидуальных чекбоксов
-    rows.forEach(row => {
+    allRows.forEach(row => {
         const cb = row.querySelector('input.employee-checkbox');
         if (cb) {
             const id = cb.value;
@@ -31,13 +28,13 @@ document.addEventListener('DOMContentLoaded', function () {
             const posCell = row.querySelector('.cell-position');
             const emailCell = row.querySelector('.cell-email');
             const phoneCell = row.querySelector('.cell-phone');
-
+            const descCell = row.querySelector('.cell-description');
             row.dataset.id = idCell ? idCell.textContent.trim() : '';
             row.dataset.name = nameCell ? nameCell.textContent.trim() : '';
             row.dataset.position = posCell ? posCell.textContent.trim() : '';
             row.dataset.email = emailCell ? emailCell.textContent.trim() : '';
             row.dataset.phone = phoneCell ? phoneCell.textContent.trim() : '';
-
+            row.dataset.description = descCell ? descCell.textContent.trim() : '';
             cb.addEventListener('change', function () {
                 if (cb.checked) selectedIds.add(id);
                 else selectedIds.delete(id);
@@ -48,14 +45,12 @@ document.addEventListener('DOMContentLoaded', function () {
             if (cb.checked) selectedIds.add(cb.value);
         }
     });
-
     // Создаем блок навигации и вставляем под таблицей (если ещё нет)
     let paginationWrapper = document.querySelector('.client-pagination.pagination');
     if (!paginationWrapper) {
         paginationWrapper = document.createElement('div');
         paginationWrapper.className = 'client-pagination pagination';
         paginationWrapper.setAttribute('aria-label', 'Навигация по страницам работников');
-
         const navList = document.createElement('ul');
         navList.style.margin = '0';
         navList.style.padding = '0';
@@ -63,22 +58,41 @@ document.addEventListener('DOMContentLoaded', function () {
         navList.style.gap = '6px';
         navList.style.listStyle = 'none';
         navList.style.alignItems = 'center';
-
         paginationWrapper.appendChild(navList);
-
         const pageInfo = document.createElement('div');
         pageInfo.className = 'page-info';
         pageInfo.style.marginTop = '8px';
         paginationWrapper.appendChild(pageInfo);
-
         table.parentNode.insertBefore(paginationWrapper, table.nextSibling);
     }
-
     const navList = paginationWrapper.querySelector('ul');
     const pageInfo = paginationWrapper.querySelector('.page-info');
-
     let currentPage = 1;
-
+    // Фильтрация
+    const searchInput = document.getElementById('search-input');
+    const searchBtn = document.getElementById('search-btn');
+    if (searchBtn && searchInput) {
+        searchBtn.addEventListener('click', applyFilter);
+    }
+    function applyFilter() {
+        const query = searchInput.value.trim().toLowerCase();
+        if (!query) {
+            filteredRows = allRows.slice();
+        } else {
+            filteredRows = allRows.filter(row => {
+                return row.dataset.id.toLowerCase().includes(query) ||
+                       row.dataset.name.toLowerCase().includes(query) ||
+                       row.dataset.position.toLowerCase().includes(query) ||
+                       row.dataset.email.toLowerCase().includes(query) ||
+                       row.dataset.phone.toLowerCase().includes(query) ||
+                       row.dataset.description.toLowerCase().includes(query);
+            });
+        }
+        // После фильтрации применяем сортировку и рендерим первую страницу
+        applySort();
+        currentPage = 1;
+        renderPage(currentPage);
+    }
     // Обработчики заголовков для сортировки
     const sortableHeaders = Array.from(thead.querySelectorAll('th.sortable'));
     sortableHeaders.forEach(th => {
@@ -98,14 +112,12 @@ document.addEventListener('DOMContentLoaded', function () {
             updateSortIndicators();
         });
     });
-
     function applySort() {
         if (!sortKey) return;
-        // Сортируем массив rows — сравним data-sortKey
-        rows.sort((a, b) => {
+        // Сортируем массив filteredRows — сравним data-sortKey
+        filteredRows.sort((a, b) => {
             const va = (a.dataset[sortKey] || '').trim();
             const vb = (b.dataset[sortKey] || '').trim();
-
             // для id — числовое сравнение
             if (sortKey === 'id') {
                 const na = Number(va) || 0;
@@ -116,11 +128,9 @@ document.addEventListener('DOMContentLoaded', function () {
             const cmp = va.localeCompare(vb, undefined, { numeric: true, sensitivity: 'base' });
             return sortDir * cmp;
         });
-
         // После сортировки перестроим DOM (порядок в tbody)
-        rows.forEach(r => tbody.appendChild(r));
+        filteredRows.forEach(r => tbody.appendChild(r));
     }
-
     function updateSortIndicators() {
         // Сбрасываем все
         sortableHeaders.forEach(th => {
@@ -136,21 +146,20 @@ document.addEventListener('DOMContentLoaded', function () {
             if (ind) ind.textContent = sortDir === 1 ? '▲' : '▼';
         }
     }
-
     function renderPage(page) {
         if (page < 1) page = 1;
-        totalPages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
+        totalPages = Math.max(1, Math.ceil(filteredRows.length / PAGE_SIZE));
         if (page > totalPages) page = totalPages;
         currentPage = page;
-
         const from = (currentPage - 1) * PAGE_SIZE;
         const to = from + PAGE_SIZE;
-
-        rows.forEach((row, idx) => {
+        // Сначала скрываем все filteredRows
+        filteredRows.forEach(row => {
+            row.style.display = 'none';
+        });
+        filteredRows.forEach((row, idx) => {
             if (idx >= from && idx < to) {
                 row.style.display = '';
-            } else {
-                row.style.display = 'none';
             }
             // Обновляем чекбокс состояния из selectedIds
             const cb = row.querySelector('input.employee-checkbox');
@@ -158,15 +167,43 @@ document.addEventListener('DOMContentLoaded', function () {
                 cb.checked = selectedIds.has(cb.value);
             }
         });
-
+        // Показываем все allRows, которые не в filteredRows, как hidden (но они уже в DOM)
+        allRows.forEach(row => {
+            if (!filteredRows.includes(row)) {
+                row.style.display = 'none';
+            }
+        });
+        // Обработка пустого результата
+        let noResultsRow = tbody.querySelector('.no-results-row');
+        const visibleCount = filteredRows.filter(r => r.style.display !== 'none').length;
+        if (filteredRows.length === 0 || visibleCount === 0) {
+            if (!noResultsRow) {
+                noResultsRow = document.createElement('tr');
+                noResultsRow.className = 'no-results-row';
+                const td = document.createElement('td');
+                td.colSpan = 8;
+                td.className = 'text-center';
+                td.textContent = 'Сотрудники не найдены';
+                noResultsRow.appendChild(td);
+                tbody.appendChild(noResultsRow);
+            }
+            noResultsRow.style.display = '';
+        } else {
+            if (noResultsRow) {
+                noResultsRow.style.display = 'none';
+            }
+        }
+        // Если есть исходная empty-row и filteredRows не пуст, скрываем её
+        const emptyRow = tbody.querySelector('.empty-row');
+        if (emptyRow) {
+            emptyRow.style.display = (allRows.length > 0) ? 'none' : '';
+        }
         renderPaginationControls();
         updateSelectAllCheckbox();
-        pageInfo.textContent = `Страница ${currentPage} из ${totalPages} — всего записей: ${rows.length}`;
+        pageInfo.textContent = `Страница ${currentPage} из ${totalPages} — всего записей: ${filteredRows.length}`;
     }
-
     function renderPaginationControls() {
         navList.innerHTML = '';
-
         // Prev
         const prevLi = document.createElement('li');
         if (currentPage > 1) {
@@ -183,7 +220,6 @@ document.addEventListener('DOMContentLoaded', function () {
             prevLi.textContent = '«';
         }
         navList.appendChild(prevLi);
-
         // Номера страниц — показываем максимум 5 навигационных кнопок вокруг текущей
         const windowSize = 5;
         let start = Math.max(1, currentPage - Math.floor(windowSize / 2));
@@ -191,7 +227,6 @@ document.addEventListener('DOMContentLoaded', function () {
         if (end - start + 1 < windowSize) {
             start = Math.max(1, end - windowSize + 1);
         }
-
         for (let p = start; p <= end; p++) {
             const li = document.createElement('li');
             if (p === currentPage) {
@@ -211,7 +246,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             navList.appendChild(li);
         }
-
         // Next
         const nextLi = document.createElement('li');
         if (currentPage < totalPages) {
@@ -229,11 +263,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         navList.appendChild(nextLi);
     }
-
     // Select-all: влияет только на видимые строки
     if (selectAllCheckbox) {
         selectAllCheckbox.addEventListener('change', function () {
-            const visibleRows = rows.filter(row => row.style.display !== 'none');
+            const visibleRows = filteredRows.filter(row => row.style.display !== 'none');
             visibleRows.forEach(row => {
                 const cb = row.querySelector('input.employee-checkbox');
                 if (!cb) return;
@@ -244,10 +277,9 @@ document.addEventListener('DOMContentLoaded', function () {
             updateSelectAllCheckbox();
         });
     }
-
     function updateSelectAllCheckbox() {
         if (!selectAllCheckbox) return;
-        const visibleRows = rows.filter(row => row.style.display !== 'none');
+        const visibleRows = filteredRows.filter(row => row.style.display !== 'none');
         if (visibleRows.length === 0) {
             selectAllCheckbox.checked = false;
             selectAllCheckbox.indeterminate = false;
@@ -257,7 +289,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const cb = row.querySelector('input.employee-checkbox');
             return c + (cb && cb.checked ? 1 : 0);
         }, 0);
-
         if (checkedCount === 0) {
             selectAllCheckbox.checked = false;
             selectAllCheckbox.indeterminate = false;
@@ -269,10 +300,8 @@ document.addEventListener('DOMContentLoaded', function () {
             selectAllCheckbox.indeterminate = true;
         }
     }
-
     // Включаем сортировку по умолчанию (если нужно) — по id desc пример:
     // sortKey = 'id'; sortDir = -1; applySort(); renderPage(1); updateSortIndicators();
-
     // Покажем первую страницу
     applySort();
     updateSortIndicators();
