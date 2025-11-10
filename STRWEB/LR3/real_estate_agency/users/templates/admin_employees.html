@@ -4,6 +4,8 @@
 {% block title %}Управление сотрудниками{% endblock %}
 
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/employees.css' %}">
+
 <div class="employee-management">
     <div class="header-section">
         <h1>Управление сотрудниками</h1>
@@ -19,11 +21,12 @@
                     <th>
                         <input type="checkbox" id="select-all">
                     </th>
-                    <th>ID</th>
-                    <th>ФИО</th>
-                    <th>Должность</th>
-                    <th>Email</th>
-                    <th>Телефон</th>
+                    <!-- Для сортируемых заголовков добавлен data-sort-key -->
+                    <th class="sortable" data-sort-key="id">ID <span class="sort-indicator"></span></th>
+                    <th class="sortable" data-sort-key="name">ФИО <span class="sort-indicator"></span></th>
+                    <th class="sortable" data-sort-key="position">Должность <span class="sort-indicator"></span></th>
+                    <th class="sortable" data-sort-key="email">Email <span class="sort-indicator"></span></th>
+                    <th class="sortable" data-sort-key="phone">Телефон <span class="sort-indicator"></span></th>
                     <th>Описание</th>
                     <th>Фото</th>
                 </tr>
@@ -35,13 +38,13 @@
                         <!-- класс employee-checkbox обязателен -->
                         <input type="checkbox" class="employee-checkbox" name="selected_employees" value="{{ employee.id }}">
                     </td>
-                    <td>{{ employee.id }}</td>
-                    <td>{{ employee.name }}</td>
-                    <td>{{ employee.position }}</td>
-                    <td>{{ employee.email }}</td>
-                    <td>{{ employee.phone }}</td>
-                    <td>{{ employee.description }}</td>
-                    <td>
+                    <td class="cell-id">{{ employee.id }}</td>
+                    <td class="cell-name">{{ employee.name }}</td>
+                    <td class="cell-position">{{ employee.position }}</td>
+                    <td class="cell-email">{{ employee.email }}</td>
+                    <td class="cell-phone">{{ employee.phone }}</td>
+                    <td class="cell-description">{{ employee.description }}</td>
+                    <td class="cell-photo">
                         {% if employee.photo %}
                         <img src="{{ employee.photo.url }}" style="max-width: 50%; height: auto;" alt="Фото сотрудника">
                         {% endif %}
@@ -57,6 +60,7 @@
     </div>
 </div>
 
+<!-- Подключаем JS (замените прежний contacts.js на employees.js) -->
 <script src="{% static 'js/contacts.js' %}"></script>
 
 {% endblock %}

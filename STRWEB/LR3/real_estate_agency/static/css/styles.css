@@ -883,3 +883,79 @@
      font-family: 'Courier New', monospace;
      font-size: 12px;
 }
+
+
+
+/* Contacts */
+/* Базовые стили таблицы */
+.employees-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: Arial, sans-serif;
+}
+
+.employees-table thead th {
+    background: #f5f7fa;
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #e0e6ef;
+    user-select: none;
+    cursor: default;
+    position: relative;
+}
+
+.employees-table tbody td {
+    padding: 10px;
+    border-bottom: 1px solid #f0f3f7;
+}
+
+/* Стиль для кликабельных заголовков */
+.employees-table thead th.sortable {
+    cursor: pointer;
+    color: #213547;
+}
+
+/* Индикатор сортировки (стрелка) */
+.sort-indicator {
+    margin-left: 6px;
+    font-size: 0.85em;
+    display: inline-block;
+    width: 1em;
+    text-align: center;
+}
+
+/* Активный заголовок */
+.employees-table thead th.active {
+    font-weight: 600;
+}
+
+/* Навигация пагинации (минимальная стилизация) */
+.client-pagination {
+    margin-top: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.client-pagination ul li {
+    padding: 6px 8px;
+    border-radius: 4px;
+}
+
+.client-pagination ul li a {
+    text-decoration: none;
+    display: inline-block;
+}
+
+.client-pagination ul li.disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+/* Активная страница */
+.client-pagination ul li.active {
+    background: #e8f0ff;
+    font-weight: 700;
+}
+
+

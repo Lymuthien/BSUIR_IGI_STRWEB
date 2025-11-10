@@ -31,7 +31,6 @@ lr3_patterns = [
     path('lr3/dates/', TemplateView.as_view(template_name='lr3/dates.html'), name='lr3_classes'),
     path('lr3/api/', TemplateView.as_view(template_name='lr3/api_demo.html'), name='lr3_api'),
     path('lr3/chart/', TemplateView.as_view(template_name='lr3/chart.html'), name='lr3_chart'),
-    path('lr3/scroll/', TemplateView.as_view(template_name='lr3/scroll.html'), name='lr3_scroll'),
 ]
 
 

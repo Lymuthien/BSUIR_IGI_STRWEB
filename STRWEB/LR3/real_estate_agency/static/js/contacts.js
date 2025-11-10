@@ -5,20 +5,39 @@ document.addEventListener('DOMContentLoaded', function () {
     const selectAllCheckbox = document.getElementById('select-all');
     if (!table) return;
 
+    const thead = table.querySelector('thead');
     const tbody = table.querySelector('tbody');
-    const rows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('empty-row'));
+    // Собираем только непустые ряды (отфильтровываем пустую строку шаблона)
+    let rows = Array.from(tbody.querySelectorAll('tr')).filter(r => !r.classList.contains('empty-row'));
     const totalItems = rows.length;
-    const totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE));
+    let totalPages = Math.max(1, Math.ceil(totalItems / PAGE_SIZE));
 
-    // Хранилище выбранных id (сохраняет выбор при переключении страниц)
+    // Хранилище выбранных id (сохраняет выбор при переключении страниц и при сортировке)
     const selectedIds = new Set();
 
-    // Проставим data-employee-id и обработчики для индивидуальных чекбоксов
+    // Сортировка: ключ и направление (1 = asc, -1 = desc)
+    let sortKey = null;
+    let sortDir = 1;
+
+    // Проставим data-атрибуты и обработчики для индивидуальных чекбоксов
     rows.forEach(row => {
         const cb = row.querySelector('input.employee-checkbox');
         if (cb) {
             const id = cb.value;
             row.dataset.employeeId = id;
+            // Удобно сохранять основные поля в data-*
+            const idCell = row.querySelector('.cell-id');
+            const nameCell = row.querySelector('.cell-name');
+            const posCell = row.querySelector('.cell-position');
+            const emailCell = row.querySelector('.cell-email');
+            const phoneCell = row.querySelector('.cell-phone');
+
+            row.dataset.id = idCell ? idCell.textContent.trim() : '';
+            row.dataset.name = nameCell ? nameCell.textContent.trim() : '';
+            row.dataset.position = posCell ? posCell.textContent.trim() : '';
+            row.dataset.email = emailCell ? emailCell.textContent.trim() : '';
+            row.dataset.phone = phoneCell ? phoneCell.textContent.trim() : '';
+
             cb.addEventListener('change', function () {
                 if (cb.checked) selectedIds.add(id);
                 else selectedIds.delete(id);
@@ -30,32 +49,97 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Создаем блок навигации и вставляем под таблицей
-    const paginationWrapper = document.createElement('div');
-    paginationWrapper.className = 'client-pagination pagination';
-    paginationWrapper.setAttribute('aria-label', 'Навигация по страницам работников');
+    // Создаем блок навигации и вставляем под таблицей (если ещё нет)
+    let paginationWrapper = document.querySelector('.client-pagination.pagination');
+    if (!paginationWrapper) {
+        paginationWrapper = document.createElement('div');
+        paginationWrapper.className = 'client-pagination pagination';
+        paginationWrapper.setAttribute('aria-label', 'Навигация по страницам работников');
 
-    const navList = document.createElement('ul');
-    navList.style.margin = '0';
-    navList.style.padding = '0';
-    navList.style.display = 'flex';
-    navList.style.gap = '6px';
-    navList.style.listStyle = 'none';
-    navList.style.alignItems = 'center';
+        const navList = document.createElement('ul');
+        navList.style.margin = '0';
+        navList.style.padding = '0';
+        navList.style.display = 'flex';
+        navList.style.gap = '6px';
+        navList.style.listStyle = 'none';
+        navList.style.alignItems = 'center';
 
-    paginationWrapper.appendChild(navList);
+        paginationWrapper.appendChild(navList);
 
-    const pageInfo = document.createElement('div');
-    pageInfo.className = 'page-info';
-    pageInfo.style.marginTop = '8px';
-    paginationWrapper.appendChild(pageInfo);
+        const pageInfo = document.createElement('div');
+        pageInfo.className = 'page-info';
+        pageInfo.style.marginTop = '8px';
+        paginationWrapper.appendChild(pageInfo);
 
-    table.parentNode.insertBefore(paginationWrapper, table.nextSibling);
+        table.parentNode.insertBefore(paginationWrapper, table.nextSibling);
+    }
+
+    const navList = paginationWrapper.querySelector('ul');
+    const pageInfo = paginationWrapper.querySelector('.page-info');
 
     let currentPage = 1;
 
+    // Обработчики заголовков для сортировки
+    const sortableHeaders = Array.from(thead.querySelectorAll('th.sortable'));
+    sortableHeaders.forEach(th => {
+        const key = th.dataset.sortKey;
+        if (!key) return;
+        th.addEventListener('click', function () {
+            if (sortKey === key) {
+                sortDir = -sortDir; // переключаем направление
+            } else {
+                sortKey = key;
+                sortDir = 1; // по умолчанию возрастание
+            }
+            // при сортировке логично показать первую страницу
+            currentPage = 1;
+            applySort();
+            renderPage(currentPage);
+            updateSortIndicators();
+        });
+    });
+
+    function applySort() {
+        if (!sortKey) return;
+        // Сортируем массив rows — сравним data-sortKey
+        rows.sort((a, b) => {
+            const va = (a.dataset[sortKey] || '').trim();
+            const vb = (b.dataset[sortKey] || '').trim();
+
+            // для id — числовое сравнение
+            if (sortKey === 'id') {
+                const na = Number(va) || 0;
+                const nb = Number(vb) || 0;
+                return sortDir * (na - nb);
+            }
+            // Для остальных — локаль чувствительная к регистру
+            const cmp = va.localeCompare(vb, undefined, { numeric: true, sensitivity: 'base' });
+            return sortDir * cmp;
+        });
+
+        // После сортировки перестроим DOM (порядок в tbody)
+        rows.forEach(r => tbody.appendChild(r));
+    }
+
+    function updateSortIndicators() {
+        // Сбрасываем все
+        sortableHeaders.forEach(th => {
+            th.classList.remove('active');
+            const ind = th.querySelector('.sort-indicator');
+            if (ind) ind.textContent = '';
+        });
+        if (!sortKey) return;
+        const activeTh = thead.querySelector(`th[data-sort-key="${sortKey}"]`);
+        if (activeTh) {
+            activeTh.classList.add('active');
+            const ind = activeTh.querySelector('.sort-indicator');
+            if (ind) ind.textContent = sortDir === 1 ? '▲' : '▼';
+        }
+    }
+
     function renderPage(page) {
         if (page < 1) page = 1;
+        totalPages = Math.max(1, Math.ceil(rows.length / PAGE_SIZE));
         if (page > totalPages) page = totalPages;
         currentPage = page;
 
@@ -77,7 +161,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         renderPaginationControls();
         updateSelectAllCheckbox();
-        pageInfo.textContent = `Страница ${currentPage} из ${totalPages} — всего записей: ${totalItems}`;
+        pageInfo.textContent = `Страница ${currentPage} из ${totalPages} — всего записей: ${rows.length}`;
     }
 
     function renderPaginationControls() {
@@ -186,6 +270,11 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
+    // Включаем сортировку по умолчанию (если нужно) — по id desc пример:
+    // sortKey = 'id'; sortDir = -1; applySort(); renderPage(1); updateSortIndicators();
+
     // Покажем первую страницу
+    applySort();
+    updateSortIndicators();
     renderPage(1);
 });
