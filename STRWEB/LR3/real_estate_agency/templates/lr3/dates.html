@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="ru">
+   <head>
+      {% load static %}
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      <title>Классы</title>
+      <link rel="stylesheet" href="{% static 'css/lr3_styles.css' %}">
+   </head>
+   <body>
+      <div class="container">
+         <div class="header">
+            <h3>Классы</h3>
+            <a href="/lr3/">Назад</a>
+         </div>
+         <div style="margin-bottom: 10px;">
+            <label style="display:flex;align-items:center;gap:6px;">
+            <input type="checkbox" id="toggleClassVariant">
+            <span>Использовать реализацию через <code>class / extends</code></span>
+            </label>
+         </div>
+         <form id="datesForm"><input name="day" placeholder="день" required><input name="month" placeholder="месяц" required><input name="year" placeholder="год" required><button type="submit">Добавить дату</button></form>
+         <div id="datesResult" style="margin-top:12px;"></div>
+         <a id="springDownload" href="#" download="g.txt">Скачать g.txt (spring dates)</a>
+      </div>
+      <script src="{% static 'js/dates.js' %}"></script>
+   </body>
+</html>
