@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const thead = table.querySelector('thead');
     const tbody = table.querySelector('tbody');
     const detailsBlock = document.querySelector('.employee-details');
+    const bonusBlock = document.querySelector('.bonus-text');
+    const awardBtn = document.getElementById('award-bonus-btn');
     // Хранилище выбранных id (сохраняет выбор при переключении страниц и при сортировке)
     const selectedIds = new Set();
     // Сортировка: ключ и направление (1 = asc, -1 = desc)
@@ -80,37 +82,37 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
     function validatePhone(phone) {
-    if (!phone.trim()) return { valid: false, message: 'Телефон обязателен' };
+        if (!phone.trim()) return { valid: false, message: 'Телефон обязателен' };
 
-    // Удаляем non-digits
-    const digits = phone.replace(/\D/g, '');
+        // Удаляем non-digits
+        const digits = phone.replace(/\D/g, '');
 
-    // Проверяем начало: 8... (11 digits) или 375... (12 digits)
-    if (!((digits.startsWith('8') && digits.length === 11) || (digits.startsWith('375') && digits.length === 12))) {
-        return { valid: false, message: 'Невалидная длина или префикс. Должно быть 11 (для 8...) или 12 (для 375...) цифр.' };
+        // Проверяем начало: 8... (11 digits) или 375... (12 digits)
+        if (!((digits.startsWith('8') && digits.length === 11) || (digits.startsWith('375') && digits.length === 12))) {
+            return { valid: false, message: 'Невалидная длина или префикс. Должно быть 11 (для 8...) или 12 (для 375...) цифр.' };
+        }
+
+        // Проверяем код оператора (29 для MTC)
+        const codePos = digits.startsWith('8') ? 1 : 3; // После 8 или 375
+        if (digits.substring(codePos, codePos + 2) !== '29' && digits.substring(codePos, codePos + 3) !== '029') {
+            return { valid: false, message: 'Код оператора должен быть 29 или 029.' };
+        }
+
+        // Проверяем ровно 7 цифр после кода
+        const afterCodePos = digits.startsWith('8') ? 4 : 5; // 8029... or 37529...
+        if (digits.substring(afterCodePos).length !== 7) {
+            return { valid: false, message: 'После кода оператора должно быть ровно 7 цифр.' };
+        }
+
+        // Для скобок: простая проверка баланса (опционально, если нужно строго)
+        const openParens = (phone.match(/\(/g) || []).length;
+        const closeParens = (phone.match(/\)/g) || []).length;
+        if (openParens !== closeParens) {
+            return { valid: false, message: 'Несбалансированные скобки.' };
+        }
+
+        return { valid: true, message: '' };
     }
-
-    // Проверяем код оператора (29 для MTC)
-    const codePos = digits.startsWith('8') ? 1 : 3; // После 8 или 375
-    if (digits.substring(codePos, codePos + 2) !== '29' && digits.substring(codePos, codePos + 3) !== '029') {
-        return { valid: false, message: 'Код оператора должен быть 29 или 029.' };
-    }
-
-    // Проверяем ровно 7 цифр после кода
-    const afterCodePos = digits.startsWith('8') ? 4 : 5; // 8029... or 37529...
-    if (digits.substring(afterCodePos).length !== 7) {
-        return { valid: false, message: 'После кода оператора должно быть ровно 7 цифр.' };
-    }
-
-    // Для скобок: простая проверка баланса (опционально, если нужно строго)
-    const openParens = (phone.match(/\(/g) || []).length;
-    const closeParens = (phone.match(/\)/g) || []).length;
-    if (openParens !== closeParens) {
-        return { valid: false, message: 'Несбалансированные скобки.' };
-    }
-
-    return { valid: true, message: '' };
-}
     // Проверка всех полей
     function checkAllValid() {
         const fields = [addName, addPosition, addEmail, addDescription];
@@ -283,6 +285,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (cb.checked) selectedIds.add(emp.id.toString());
                     else selectedIds.delete(emp.id.toString());
                     updateSelectAllCheckbox();
+                    updateAwardButton();
                 });
                 row.addEventListener('click', function (e) {
                     if (!e.target.matches('input[type="checkbox"]')) {
@@ -534,6 +537,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 else selectedIds.delete(cb.value);
             });
             updateSelectAllCheckbox();
+            updateAwardButton();
         });
     }
     function updateSelectAllCheckbox() {
@@ -559,6 +563,25 @@ document.addEventListener('DOMContentLoaded', function () {
             selectAllCheckbox.indeterminate = true;
         }
     }
+    // Обновление кнопки Премировать (активна если есть выбранные)
+    function updateAwardButton() {
+        awardBtn.disabled = selectedIds.size === 0;
+    }
+    // Функционал премирования
+    awardBtn.addEventListener('click', function () {
+        if (selectedIds.size === 0) return;
+        // Собираем фамилии (предполагаем, что фамилия - первое слово в name)
+        const selectedSurnames = allRows
+            .filter(row => selectedIds.has(row.dataset.employeeId))
+            .map(row => row.dataset.name.split(' ')[0] || 'Без фамилии');
+        if (selectedSurnames.length === 0) return;
+        const text = `Премия выдается следующим сотрудникам: ${selectedSurnames.join(', ')}.`;
+        bonusBlock.textContent = text;
+        bonusBlock.style.display = 'block';
+        // Опционально: сброс выбора после
+        // selectedIds.clear();
+        // renderPage(currentPage);
+    });
     // Включаем сортировку по умолчанию (если нужно) — по id desc пример:
     // sortKey = 'id'; sortDir = -1; applySort(); renderPage(1); updateSortIndicators();
 });
