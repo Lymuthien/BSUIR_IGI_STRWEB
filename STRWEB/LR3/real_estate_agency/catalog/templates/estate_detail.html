@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
 {% if user.is_authenticated %}
@@ -54,6 +55,21 @@
             </div>
         </div>
 
+        {# --- GEO WIDGET: показывает расстояние, примерное время в пути и ссылку на маршрут --- #}
+        <div id="geoWidgetRoot"
+             data-estate-address="{{ estate.address|escapejs }}">
+            <h4>Как добраться до объекта</h4>
+            <p class="small">Нажмите кнопку «Моё местоположение», чтобы определить ваше положение и получить расстояние, примерное время в пути и ссылку на маршрут.</p>
+
+            <button id="geoBtnEstate" class="btn">Моё местоположение</button>
+
+            <div id="geoStatusEstate" class="small"></div>
+
+            <div id="geoResultEstate"></div>
+
+            <div id="geoActionsEstate"></div>
+        </div>
+
         {% if user.client %}
         <div>
             <div>
@@ -75,10 +91,14 @@
                                 </ul>
                             </div>
                         {% endif %}
-                        <form method="post" action="{% url 'create_request' estate.pk %}">
+                        <form method="post" action="{% url 'create_request' estate.pk %}" id="requestForm">
                             {% csrf_token %}
                             {{ form.as_p }}
-                            <button type="submit">
+                            {# hidden fields that we will populate with user's coords/distance if available #}
+                            <input type="hidden" name="visitor_lat" id="visitor_lat">
+                            <input type="hidden" name="visitor_lon" id="visitor_lon">
+                            <input type="hidden" name="visitor_distance_km" id="visitor_distance_km">
+                            <button type="submit" id="requestSubmit">
                                 Отправить заявку
                             </button>
                         </form>
@@ -94,4 +114,6 @@
     Чтобы просмотреть страницу, пожалуйста, <a href="{% url 'login' %}">войдите</a> или <a href="{% url 'signup' %}">зарегистрируйтесь</a>.
 </div>
 {% endif %}
+      <script src="{% static 'js/api.js' %}"></script>
 {% endblock %}
+
