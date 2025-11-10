@@ -74,6 +74,7 @@ class FAQListView(ListView):
 class ContactListView(ListView):
     model = Contact
     template_name = "contact_list.html"
+    paginate_by = None
 
 
 class PolicyView(ListView):

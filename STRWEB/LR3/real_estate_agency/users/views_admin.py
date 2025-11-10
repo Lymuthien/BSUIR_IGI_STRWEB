@@ -27,7 +27,6 @@ class AdminEmployeeListView(LoginRequiredMixin, SuperUserRequiredMixin, ListView
     model = Contact
     template_name = 'admin_employees.html'
     context_object_name = 'employees'
-    paginate_by = 3
 
 
 class AdminClientUpdateView(LoginRequiredMixin, SuperUserRequiredMixin, UpdateView):

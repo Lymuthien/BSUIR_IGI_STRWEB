@@ -1,51 +1,63 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Управление сотрудниками{% endblock %}
 
 {% block content %}
-<div>
-    <div>
+<div class="employee-management">
+    <div class="header-section">
         <h1>Управление сотрудниками</h1>
-        <div>
-                Добавить сотрудника
-        </div>
+        <button class="add-employee-btn">
+            Добавить сотрудника
+        </button>
     </div>
 
-    <div>
-        <div>
-            <div>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>ФИО</th>
-                            <th>Должность</th>
-                            <th>Email</th>
-                            <th>Телефон</th>
-                            <th>Описание</th>
-                            <th>Фото</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for employee in employees %}
-                        <tr>
-                            <td>{{ employee.id }}</td>
-                            <td>{{ employee.name }}</td>
-                            <td>{{ employee.position }}</td>
-                            <td>{{ employee.email }}</td>
-                            <td>{{ employee.phone }}</td>
-                            <td>{{ employee.description }}</td>
-                            <td><img src="{{ employee.photo.url }}" style="max-width: 50%; height: auto;"></td>
-                        </tr>
-                        {% empty %}
-                        <tr>
-                            <td colspan="8" class="text-center">Сотрудники не найдены</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    <div class="table-container">
+        <table class="employees-table">
+            <thead>
+                <tr>
+                    <th>
+                        <input type="checkbox" id="select-all">
+                    </th>
+                    <th>ID</th>
+                    <th>ФИО</th>
+                    <th>Должность</th>
+                    <th>Email</th>
+                    <th>Телефон</th>
+                    <th>Описание</th>
+                    <th>Фото</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for employee in employees %}
+                <tr>
+                    <td>
+                        <!-- класс employee-checkbox обязателен -->
+                        <input type="checkbox" class="employee-checkbox" name="selected_employees" value="{{ employee.id }}">
+                    </td>
+                    <td>{{ employee.id }}</td>
+                    <td>{{ employee.name }}</td>
+                    <td>{{ employee.position }}</td>
+                    <td>{{ employee.email }}</td>
+                    <td>{{ employee.phone }}</td>
+                    <td>{{ employee.description }}</td>
+                    <td>
+                        {% if employee.photo %}
+                        <img src="{{ employee.photo.url }}" style="max-width: 50%; height: auto;" alt="Фото сотрудника">
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr class="empty-row">
+                    <td colspan="9" class="text-center">Сотрудники не найдены</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
+
+<script src="{% static 'js/contacts.js' %}"></script>
+
 {% endblock %}
+{% block pagination %}{% endblock %}
