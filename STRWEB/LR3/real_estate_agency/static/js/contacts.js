@@ -16,6 +16,8 @@ document.addEventListener('DOMContentLoaded', function () {
     // Сортировка: ключ и направление (1 = asc, -1 = desc)
     let sortKey = null;
     let sortDir = 1;
+    // Блок деталей
+    const detailsBlock = document.querySelector('.employee-details');
     // Проставим data-атрибуты и обработчики для индивидуальных чекбоксов
     allRows.forEach(row => {
         const cb = row.querySelector('input.employee-checkbox');
@@ -29,12 +31,14 @@ document.addEventListener('DOMContentLoaded', function () {
             const emailCell = row.querySelector('.cell-email');
             const phoneCell = row.querySelector('.cell-phone');
             const descCell = row.querySelector('.cell-description');
+            const photoImg = row.querySelector('.cell-photo img');
             row.dataset.id = idCell ? idCell.textContent.trim() : '';
             row.dataset.name = nameCell ? nameCell.textContent.trim() : '';
             row.dataset.position = posCell ? posCell.textContent.trim() : '';
             row.dataset.email = emailCell ? emailCell.textContent.trim() : '';
             row.dataset.phone = phoneCell ? phoneCell.textContent.trim() : '';
             row.dataset.description = descCell ? descCell.textContent.trim() : '';
+            row.dataset.photo = photoImg ? photoImg.src : '';
             cb.addEventListener('change', function () {
                 if (cb.checked) selectedIds.add(id);
                 else selectedIds.delete(id);
@@ -44,7 +48,34 @@ document.addEventListener('DOMContentLoaded', function () {
             // если чекбокс уже отмечен в разметке при загрузке — учтём это
             if (cb.checked) selectedIds.add(cb.value);
         }
+        // Обработчик клика на строку (кроме чекбокса)
+        row.addEventListener('click', function (e) {
+            if (!e.target.matches('input[type="checkbox"]')) {
+                showDetails(row);
+            }
+        });
     });
+    // Функция показа деталей
+    function showDetails(row) {
+        if (!detailsBlock) return;
+        const html = `
+            <h3>Детали сотрудника</h3>
+            <p>ID: ${row.dataset.id}</p>
+            <p>ФИО: ${row.dataset.name}</p>
+            <p>Должность: ${row.dataset.position}</p>
+            <p>Email: ${row.dataset.email}</p>
+            <p>Телефон: ${row.dataset.phone}</p>
+            <p>Описание: ${row.dataset.description}</p>
+            ${row.dataset.photo ? `<img src="${row.dataset.photo}" style="max-width: 100px; height: auto;" alt="Фото сотрудника">` : ''}
+            <button class="close-details">Закрыть</button>
+        `;
+        detailsBlock.innerHTML = html;
+        detailsBlock.style.display = 'block';
+        // Обработчик закрытия
+        detailsBlock.querySelector('.close-details').addEventListener('click', function () {
+            detailsBlock.style.display = 'none';
+        });
+    }
     // Создаем блок навигации и вставляем под таблицей (если ещё нет)
     let paginationWrapper = document.querySelector('.client-pagination.pagination');
     if (!paginationWrapper) {
