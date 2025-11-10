@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const detailsBlock = document.querySelector('.employee-details');
     const bonusBlock = document.querySelector('.bonus-text');
     const awardBtn = document.getElementById('award-bonus-btn');
+    const preloader = document.getElementById('preloader');
     // Хранилище выбранных id (сохраняет выбор при переключении страниц и при сортировке)
     const selectedIds = new Set();
     // Сортировка: ключ и направление (1 = asc, -1 = desc)
@@ -161,6 +162,7 @@ document.addEventListener('DOMContentLoaded', function () {
             description: addDescription.value.trim(),
             photo_url: addPhotoUrl.value.trim() || null
         };
+        preloader.style.display = 'flex';
         try {
             const csrfToken = getCookie('csrftoken');
             const response = await fetch('/accounts/api/employees/', {
@@ -179,6 +181,8 @@ document.addEventListener('DOMContentLoaded', function () {
         } catch (error) {
             console.error('Ошибка:', error);
             validationMessage.textContent = 'Ошибка добавления сотрудника';
+        } finally {
+            preloader.style.display = 'none';
         }
     });
     // Функция для получения cookie
@@ -198,6 +202,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     // Функция загрузки данных с сервера
     async function loadEmployees() {
+        preloader.style.display = 'flex';
         try {
             const response = await fetch('/accounts/api/employees/');
             if (!response.ok) {
@@ -305,6 +310,8 @@ document.addEventListener('DOMContentLoaded', function () {
             console.error('Ошибка:', error);
             // Можно показать ошибку в UI
             tbody.innerHTML = '<tr><td colspan="8" class="text-center">Ошибка загрузки данных</td></tr>';
+        } finally {
+            preloader.style.display = 'none';
         }
     }
     // Загружаем данные при старте
