@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Новости{% endblock %}
+
+{% block content %}
+<h1>Новости</h1>
+<div class="news-list">
+    {% for news in news_list %}
+        <article class="news-item">
+            <div class="news-thumb">
+                {% if news.image %}
+                    <img src="{{ news.image.url }}" alt="{{ news.title }}">
+                {% endif %}
+            </div>
+            <div class="news-body">
+                <h5 class="news-head">{{ news.title }}</h5>
+                <p class="news-summary">{{ news.summary }}</p>
+                <a class="btn btn-secondary" href="{% url 'news_detail' news.pk %}">Читать далее</a>
+                <time class="news-date">{{ news.created|date:"d.m.Y" }}</time>
+            </div>
+        </article>
+    {% empty %}
+        <p>Новостей пока нет</p>
+    {% endfor %}
+</div>
+{% endblock %}

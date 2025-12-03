@@ -1,0 +1,43 @@
+{% extends "lr3/index.html" %}
+{% load static %}
+
+{% block title %}Генератор{% endblock %}
+
+{% block header_title %}Генератор элементов{% endblock %}
+
+{% block content %}
+<section id="formGenRoot">
+    <label style="display:inline-flex;align-items:center;gap:8px;margin-bottom:20px;">
+        <input id="fg_generate_flag" type="checkbox">
+        <span>Добавить элемент</span>
+    </label>
+    
+    <div id="generatedContainer" class="generated-list" aria-live="polite"></div>
+    
+    <template id="tmpl-generated-item">
+        <div class="generated-item card">
+            <div class="gen-left" style="flex:1;min-width:220px;">
+                <label>Элемент: <input class="gen-element" type="url"></label>
+            </div>
+            <div class="gen-right" style="min-width:320px;">
+                <div class="form-row">
+                    <input class="ctl-name" placeholder="name">
+                    <input class="ctl-placeholder" placeholder="placeholder">
+                    <input class="ctl-value" placeholder="value">
+                    <input class="ctl-pattern" placeholder="pattern (regex)">
+                    <label><input type="checkbox" class="ctl-required"> required</label>
+                    <label><input type="checkbox" class="ctl-readonly"> readonly</label>
+                </div>
+                <div class="form-row" style="gap:8px;">
+                    <button class="ctl-delete">Удалить</button>
+                    <button class="ctl-focus" type="button">Фокус</button>
+                </div>
+            </div>
+        </div>
+    </template>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/formgen.js' %}"></script>
+{% endblock %}

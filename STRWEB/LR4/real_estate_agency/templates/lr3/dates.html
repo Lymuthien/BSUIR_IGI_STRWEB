@@ -1,0 +1,27 @@
+{% extends "lr3/index.html" %}
+{% load static %}
+
+{% block title %}Классы{% endblock %}
+
+{% block header_title %}Классы{% endblock %}
+
+{% block content %}
+<div class="toggle-label">
+    <input type="checkbox" id="toggleClassVariant">
+    <span>Использовать реализацию через <code>class / extends</code></span>
+</div>
+
+<form id="datesForm" class="dates-form">
+    <input name="day" placeholder="день" required>
+    <input name="month" placeholder="месяц" required>
+    <input name="year" placeholder="год" required>
+    <button type="submit">Добавить дату</button>
+</form>
+
+<div id="datesResult"></div>
+<a id="springDownload" href="#" download="g.txt" class="download-link">Скачать g.txt (spring dates)</a>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/dates.js' %}"></script>
+{% endblock %}

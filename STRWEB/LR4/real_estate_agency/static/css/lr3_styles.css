@@ -1,0 +1,213 @@
+ .controls{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    align-items:center;
+    margin-bottom:12px;
+}
+ .slider{
+    position:relative;
+    overflow:hidden;
+    border-radius:8px;
+    background:#111;
+    color:white;
+}
+ .slider .slides{
+    display:flex;
+    transition:transform .5s ease;
+}
+ .slider .slide{
+    min-width:100%;
+    box-sizing:border-box;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    position: relative;
+}
+ .slider img{
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 0;
+    display: block;
+}
+ .slider .caption{
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0,0,0,0.7);
+    padding: 12px;
+    margin: 0;
+    text-align: center;
+    z-index: 10;
+    color: white;
+    font-weight: 600;
+}
+ .slider .navs{
+    position:absolute;
+    top:50%;
+    left:0;
+    right:0;
+    transform:translateY(-50%);
+    display:flex;
+    justify-content:space-between;
+    padding:0 8px;
+    z-index: 20;
+}
+ .slider button{
+    background:rgba(0,0,0,0.4);
+    border:none;
+    color:white;
+    padding:8px;
+    border-radius:6px;
+    cursor:pointer;
+}
+ .slider .counter {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(0,0,0,0.5);
+    padding: 5px 10px;
+    border-radius: 12px;
+    font-size: 14px;
+}
+ .pags{
+    position: absolute;
+    bottom: 50px;
+    left: 0;
+    right: 0;
+    display:flex;
+    gap:6px;
+    justify-content:center;
+    padding:8px;
+    z-index: 15;
+}
+ .pags button{
+    border-radius:50%;
+    width:12px;
+    height:12px;
+    border:none;
+    cursor:pointer;
+    opacity:.5;
+}
+ .pags button.active{
+    opacity:1;
+    background:#333;
+}
+
+/* Age alert */
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999; /* Очень высокий z-index */
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            z-index: 10000;
+        }
+
+        .modal-content h3 {
+            margin-bottom: 1rem;
+            color: #2c5530;
+        }
+
+        .modal-content input[type="date"] {
+            width: 100%;
+            padding: 10px;
+            margin: 15px 0;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        .modal-content button {
+            width: 100%;
+            padding: 12px;
+            background-color: #2c5530;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .modal-content button:hover {
+            background-color: #1e3a23;
+        }
+
+        /* Parallax */
+ #parallax-section {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#parallax-section::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 200px;
+    width: 100%;
+    background: linear-gradient(to top, #fff, transparent);
+    z-index: 1000;
+}
+
+#parallax-section img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+}
+
+#parallax-text {
+    position: relative;
+    color: #4c5c5c;
+    font-size: 5rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    z-index: 10;
+}
+
+#parallax-section #people {
+    top: auto;
+    bottom: -10px;
+    width: auto;
+    left: 90%;
+}
+
+#buildings {
+    opacity: 0;
+    transform: translateY(100px);
+    transition: all 0.8s ease-out 0.1s;
+}
+
+#buildings-1 {
+    opacity: 0;
+    transform: translateY(180px) translateX(-110px);
+    transition: all 0.9s ease-out 0.15s;
+}
+

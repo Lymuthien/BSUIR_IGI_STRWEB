@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Управление сотрудниками{% endblock %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/employees.css' %}">
+<div class="employee-management">
+    <div class="header-section">
+        <h1>Управление сотрудниками</h1>
+        <button class="add-employee-btn">
+            Добавить сотрудника
+        </button>
+        <button id="award-bonus-btn" disabled>
+            Премировать
+        </button>
+    </div>
+    <div class="add-form" style="display: none;">
+        <form id="add-employee-form">
+            <label>ФИО: <input type="text" id="add-name" required></label><br>
+            <label>Должность: <input type="text" id="add-position" required></label><br>
+            <label>Email: <input type="email" id="add-email" required></label><br>
+            <label>Телефон: <input type="text" id="add-phone" required></label><br>
+            <label>Описание: <textarea id="add-description" required></textarea></label><br>
+            <label>Фото URL: <input type="text" id="add-photo-url"></label><br>
+            <p class="validation-message" style="color: red;"></p>
+            <button type="button" id="add-submit" disabled>Добавить в таблицу</button>
+        </form>
+    </div>
+    <div class="search-container">
+        <input type="text" id="search-input" placeholder="Поиск по сотрудникам...">
+        <button id="search-btn">Найти</button>
+    </div>
+    <div class="table-container">
+        <table class="employees-table">
+            <thead>
+                <tr>
+                    <th>
+                        <input type="checkbox" id="select-all">
+                    </th>
+                    <!-- Для сортируемых заголовков добавлен data-sort-key -->
+                    <th class="sortable" data-sort-key="id">ID <span class="sort-indicator"></span></th>
+                    <th class="sortable" data-sort-key="name">ФИО <span class="sort-indicator"></span></th>
+                    <th class="sortable" data-sort-key="position">Должность <span class="sort-indicator"></span></th>
+                    <th class="sortable" data-sort-key="email">Email <span class="sort-indicator"></span></th>
+                    <th class="sortable" data-sort-key="phone">Телефон <span class="sort-indicator"></span></th>
+                    <th>Описание</th>
+                    <th>Фото</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Данные будут загружены динамически -->
+            </tbody>
+        </table>
+    </div>
+    <div class="bonus-text" style="display: none; margin-top: 20px;"></div>
+    <div class="employee-details" style="display: none;"></div>
+</div>
+<div id="preloader" style="display: none;">
+    <div class="dots">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+    </div>
+</div>
+<!-- Подключаем JS (замените прежний contacts.js на employees.js) -->
+<script src="{% static 'js/contacts.js' %}"></script>
+{% endblock %}
+{% block pagination %}{% endblock %}

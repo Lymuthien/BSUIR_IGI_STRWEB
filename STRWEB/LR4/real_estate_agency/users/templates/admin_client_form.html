@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}{% if form.instance.pk %}Редактирование клиента{% else %}Создание клиента{% endif %}{% endblock %}
+
+{% block content %}
+<div>
+    <div>
+        <div>
+            <div>
+                <div>
+                    <h4>
+                        {% if form.instance.pk %}
+                            Редактирование клиента: {{ form.instance.username }}
+                        {% else %}
+                            Создание клиента
+                        {% endif %}
+                    </h4>
+                </div>
+                <div>
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+
+                        {% if form.errors %}
+                        <div>
+                            <h6>Ошибки в форме:</h6>
+                            <ul>
+                                {% for field, errors in form.errors.items %}
+                                    {% for error in errors %}
+                                        <li>{{ field }}: {{ error }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        {% endif %}
+
+                        <div>
+                            <div>
+                                <div>
+                                    <label>Имя</label>
+                                    {{ form.first_name }}
+                                    {% if form.first_name.help_text %}
+                                        <div>{{ form.first_name.help_text }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div>
+                                <div>
+                                    <label>Фамилия</label>
+                                    {{ form.last_name }}
+                                    {% if form.last_name.help_text %}
+                                        <div>{{ form.last_name.help_text }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div>
+                                <div>
+                                    <label>Email</label>
+                                    {{ form.email }}
+                                    {% if form.email.help_text %}
+                                        <div>{{ form.email.help_text }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div>
+                                <div>
+                                    <label>Телефон</label>
+                                    {{ form.phone_number }}
+                                    {% if form.phone_number.help_text %}
+                                        <div>{{ form.phone_number.help_text }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div>
+                                {{ form.is_active }}
+                                <label>
+                                    Активный аккаунт
+                                </label>
+                            </div>
+                            {% if form.is_active.help_text %}
+                                <div>{{ form.is_active.help_text }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div>
+                            <button type="submit">Сохранить</button>
+                            <a href="{% url 'admin_clients' %}">Назад к списку</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

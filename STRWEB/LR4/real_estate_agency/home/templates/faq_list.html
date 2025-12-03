@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Словарь терминов{% endblock %}
+
+{% block content %}
+<h1>Словарь терминов и часто задаваемых вопросов</h1>
+
+<div class="faq-list">
+    {% for faq in faq_list %}
+        <details class="faq-item">
+            <summary><strong>{{ faq.question }}</strong> <small class="faq-date">{{ faq.added_date|date:"d.m.Y" }}</small></summary>
+            <div class="faq-answer">
+                <p>{{ faq.answer }}</p>
+            </div>
+        </details>
+    {% empty %}
+        <p>Вопросов пока нет</p>
+    {% endfor %}
+</div>
+{% endblock %}

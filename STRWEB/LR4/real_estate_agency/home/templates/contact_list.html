@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}Контакты{% endblock %}
+
+{% block content %}
+<div class="contacts">
+    <h1>Наша <strong>команда</strong></h1>
+
+    {% if contact_list %}
+        <section class="staff-list">
+            {% for contact in contact_list %}
+                <article class="staff-card">
+                    <div class="staff-photo">
+                        <img src="{{ contact.photo.url }}" alt="{{ contact.name }}">
+                    </div>
+                    <div class="staff-info">
+                        <h3>{{ contact.name }}</h3>
+                        <p class="position">{{ contact.position }}</p>
+                        <p class="desc">{{ contact.description }}</p>
+                        <ul class="staff-contacts">
+                            <li><b>Телефон:</b> {{ contact.phone }}</li>
+                            <li><b>Email:</b> <a href="mailto:{{ contact.email }}">{{ contact.email }}</a></li>
+                        </ul>
+                    </div>
+                </article>
+            {% endfor %}
+        </section>
+    {% else %}
+        <p><s>В данный момент нет сотрудников</s></p>
+    {% endif %}
+</div>
+{% endblock %}
