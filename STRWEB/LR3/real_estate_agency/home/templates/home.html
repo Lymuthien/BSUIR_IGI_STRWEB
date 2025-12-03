@@ -24,14 +24,15 @@
             <label><input type="checkbox" id="sliderAuto" checked> Автоматически</label>
             <label><input type="checkbox" id="sliderNavs" checked> Навигация</label>
             <label><input type="checkbox" id="sliderPags" checked> Пагинация</label>
+            <label><input type="checkbox" id="sliderMouse" checked> Остановка при наводе мышки</label>
         </div>
         {% endif %}
 
         <div class="slider" id="mainSlider" data-loop="true" data-navs="true" data-pags="true" data-auto="true" data-delay="5" data-stopmousehover="true">
             <div class="slides">
-                <div class="slide" data-caption="Лучшие предложения"><a href="{% url 'estates' %}"><img src="{% static 'img/banner4.jpg' %}\" alt="slide 1"></a></div>
-                <div class="slide" data-caption="Выгодное сотрудничество"><a href={% url 'about' %}><img src="{% static 'img/banner6.jpg' %}\" alt="slide 2"></a></div>
-                <div class="slide" data-caption="Присоединяйтесь к нам"><a href="{% url 'contacts' %}"><img src="{% static 'img/banner5.jpg' %}\" alt="slide 3"></a></div>
+                <div class="slide" data-caption="Лучшие предложения"><a href="{% url 'estates' %}"><img src="{% static 'img/banner4.jpg' %}" alt="slide 1"></a></div>
+                <div class="slide" data-caption="Выгодное сотрудничество"><a href={% url 'about' %}><img src="{% static 'img/banner6.jpg' %}" alt="slide 2"></a></div>
+                <div class="slide" data-caption="Присоединяйтесь к нам"><a href="{% url 'contacts' %}"><img src="{% static 'img/banner5.jpg' %}" alt="slide 3"></a></div>
             </div>
             <div class="caption"></div>
             <div class="counter">1/3</div>

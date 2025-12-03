@@ -55,7 +55,6 @@
             </div>
         </div>
 
-        {# --- GEO WIDGET: показывает расстояние, примерное время в пути и ссылку на маршрут --- #}
         <div id="geoWidgetRoot"
              data-estate-address="{{ estate.address|escapejs }}">
             <h4>Как добраться до объекта</h4>
@@ -94,7 +93,6 @@
                         <form method="post" action="{% url 'create_request' estate.pk %}" id="requestForm">
                             {% csrf_token %}
                             {{ form.as_p }}
-                            {# hidden fields that we will populate with user's coords/distance if available #}
                             <input type="hidden" name="visitor_lat" id="visitor_lat">
                             <input type="hidden" name="visitor_lon" id="visitor_lon">
                             <input type="hidden" name="visitor_distance_km" id="visitor_distance_km">

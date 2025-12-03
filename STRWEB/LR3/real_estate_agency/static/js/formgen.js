@@ -1,4 +1,4 @@
-(function() {
+document.addEventListener('DOMContentLoaded', function() {
     const root = document.getElementById('formGenRoot');
     if (!root) return;
 
@@ -171,4 +171,4 @@
         save: () => saveItems(loadItems())
     };
 
-})();
+});

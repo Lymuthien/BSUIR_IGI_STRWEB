@@ -59,12 +59,14 @@ document.addEventListener('DOMContentLoaded', function() {
         function closeModal() {
             modal.style.display = 'none';
         }
-
-        modal.addEventListener('click', function(e) {
-            if (e.target === modal) {
-                e.preventDefault();
-                e.stopPropagation();
-            }
-        });
     }
+
+    const logoutLinks = document.querySelectorAll('a[href*="logout"], form[action*="logout"]');
+
+    logoutLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            sessionStorage.removeItem('birthdayVerified');
+            sessionStorage.removeItem('userAge');
+        });
+    });
 });

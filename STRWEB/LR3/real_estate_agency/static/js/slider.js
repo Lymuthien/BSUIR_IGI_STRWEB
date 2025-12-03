@@ -16,9 +16,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 delay: 5
             }, options);
 
+            this._mouseEnterHandler = () => {
+                if (this.options.stopMouseHover && this.options.auto) {
+                    this.stopAuto();
+                }
+            };
+
+            this._mouseLeaveHandler = () => {
+                if (this.options.stopMouseHover && this.options.auto) {
+                    this.startAuto();
+                }
+            };
+
             this.build();
             if (this.options.auto) this.startAuto();
         }
+
         createNavs() {
             if (this.navsElement) {
                 this.navsElement.remove();
@@ -66,10 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             this.update();
 
-            if (this.options.stopMouseHover && this.options.auto) {
-                this.root.addEventListener('mouseenter', () => this.stopAuto());
-                this.root.addEventListener('mouseleave', () => this.startAuto());
-            }
+            this.setMouse(this.options.stopMouseHover);
         }
 
         update() {
@@ -128,6 +138,17 @@ document.addEventListener('DOMContentLoaded', () => {
         setLoop(value) {
             this.options.loop = value;
         }
+        setMouse(value) {
+            this.options.stopMouseHover = value;
+
+            this.root.removeEventListener('mouseenter', this._mouseEnterHandler);
+            this.root.removeEventListener('mouseleave', this._mouseLeaveHandler);
+
+            if (value && this.options.auto) {
+                this.root.addEventListener('mouseenter', this._mouseEnterHandler);
+                this.root.addEventListener('mouseleave', this._mouseLeaveHandler);
+            }
+        }
 
         setAuto(value) {
             this.options.auto = value;
@@ -136,6 +157,8 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 this.stopAuto();
             }
+
+            this.setMouse(this.options.stopMouseHover);
         }
 
         setDelay(value) {
@@ -169,7 +192,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     document.querySelectorAll('.slider').forEach(sl => {
-        // read options from data attributes or from admin form if present
         const options = {};
         ['loop', 'navs', 'pags', 'auto', 'stopmousehover'].forEach(k => {
             const v = sl.dataset[k];
@@ -211,6 +233,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (sliderPags) {
             sliderPags.addEventListener('change', (e) => {
                 s.setPags(e.target.checked);
+            });
+        }
+
+        const sliderMouse = document.getElementById('sliderMouse');
+        if (sliderMouse) {
+            sliderMouse.addEventListener('change', (e) => {
+                s.setMouse(e.target.checked);
             });
         }
     });

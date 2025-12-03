@@ -28,18 +28,13 @@ document.addEventListener('DOMContentLoaded', function() {
             const buildingProgress = Math.max(0, (scrollProgress - 0.1) / 0.6);
 
             if (buildingProgress > 0) {
-                const building1Opacity = Math.min(buildingProgress * 1.5, 1);
-                const building1Translate = (1 - buildingProgress) * 20;
-
-                buildings.style.opacity = building1Opacity;
-                buildings.style.transform = `translateY(${building1Translate}px)`;
+                buildings.style.opacity = Math.min(buildingProgress * 1.5, 1);
+                buildings.style.transform = `translateY(${(1 - buildingProgress) * 20}px)`;
 
                 const building2Progress = Math.max(0, (scrollProgress - 0.2) / 0.5);
-                const building2Opacity = Math.min(building2Progress * 1.3, 1);
-                const building2Translate = 130 - building2Progress * 60;
 
-                buildings1.style.opacity = building2Opacity;
-                buildings1.style.transform = `translateY(${building2Translate}px) translateX(-110px)`;
+                buildings1.style.opacity = Math.min(building2Progress * 1.3, 1);
+                buildings1.style.transform = `translateY(${130 - building2Progress * 60}px) translateX(-110px)`;
             } else {
                 buildings.style.opacity = 0;
                 buildings.style.transform = 'translateY(100px)';

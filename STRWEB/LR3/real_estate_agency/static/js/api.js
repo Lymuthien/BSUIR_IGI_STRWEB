@@ -1,4 +1,4 @@
-(() => {
+document.addEventListener('DOMContentLoaded', function() {
     const root = document.getElementById('geoWidgetRoot');
     if (!root) return;
 
@@ -21,7 +21,6 @@
         if (actionsEl) actionsEl.innerHTML = '';
     }
 
-    // Haversine (km)
     function haversineKm(lat1, lon1, lat2, lon2) {
         const toRad = v => v * Math.PI / 180;
         const R = 6371; // Earth radius km
@@ -92,9 +91,9 @@
             }, {
                 enableHighAccuracy: true,
                 timeout: 15000
-            });
+            }); 
         } catch (e) {
             setStatus('Ошибка: ' + (e.message || e));
         }
     });
-})();
+});

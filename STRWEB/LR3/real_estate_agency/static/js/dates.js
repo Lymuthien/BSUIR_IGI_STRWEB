@@ -20,7 +20,6 @@ DateRecordProto.prototype.toObj = function() {
 function DateManagerProto(storageKey) {
     this.storageKey = storageKey || 'lr3_proto_dates';
     this.items = [];
-    // load from storage
     try {
         const raw = localStorage.getItem(this.storageKey);
         if (raw) {
@@ -32,24 +31,29 @@ function DateManagerProto(storageKey) {
     }
 }
 
-DateManagerProto.prototype.getItems = function() {
-    return this.items.slice();
-};
-DateManagerProto.prototype.setItems = function(arr) {
-    this.items = arr.slice();
-    try {
-        localStorage.setItem(this.storageKey, JSON.stringify(this.items.map(i => i.toObj())));
-    } catch (e) {}
-};
+Object.defineProperty(DateManagerProto.prototype, 'itemsList', {
+    get() {
+        return this.items.slice();
+    },
+    set(arr) {
+        this.items = arr.slice();
+        try {
+            localStorage.setItem(
+                this.storageKey,
+                JSON.stringify(this.items.map(i => i.toObj()))
+            );
+        } catch (e) {}
+    }
+});
+
 DateManagerProto.prototype.addFromForm = function(formEl) {
-    // formEl: элемент формы, ожидаем поля day, month, year
     const d = formEl.day.value.trim(),
         m = formEl.month.value.trim(),
         y = formEl.year.value.trim();
     if (!d || !m || !y) return false;
     const rec = new DateRecordProto(d, m, y);
     this.items.push(rec);
-    this.setItems(this.items);
+    this.itemsList = this.items;
     return rec;
 };
 DateManagerProto.prototype.renderAll = function(container) {
@@ -73,7 +77,7 @@ DateManagerProto.prototype.renderResult = function(container) {
     const html = `<div><strong>Всего дат:</strong> ${total}</div>
                   <div><strong>Весенних дат:</strong> ${springs.length}</div>
                   <div class="small">Список весенних: ${springs.map(s=>s.getFull()).join(', ') || '(пусто)'}</div>`;
-    // append or replace small result area
+
     let resBox = root.querySelector('.lr3-dates-summary');
     if (!resBox) {
         resBox = document.createElement('div');
@@ -86,6 +90,7 @@ function SpringDateProto(day, month, year, source) {
     DateRecordProto.call(this, day, month, year);
     this.source = source || 'user';
 }
+
 SpringDateProto.prototype = Object.create(DateRecordProto.prototype);
 SpringDateProto.prototype.constructor = SpringDateProto;
 SpringDateProto.prototype.note = function() {
@@ -184,7 +189,6 @@ class DateManager {
     constructor(storageKey) {
         this.storageKey = storageKey || 'lr3_class_dates';
         this.items = [];
-        // load
         try {
             const raw = localStorage.getItem(this.storageKey);
             if (raw) {
@@ -195,10 +199,10 @@ class DateManager {
             this.items = [];
         }
     }
-    getItems() {
+    get items_s() {
         return this.items.slice();
     }
-    setItems(arr) {
+    set items_s(arr) {
         this.items = arr.slice();
         try {
             localStorage.setItem(this.storageKey, JSON.stringify(this.items.map(i => i.toObj())));
@@ -211,7 +215,7 @@ class DateManager {
         if (!d || !m || !y) return false;
         const rec = new DateRecord(d, m, y);
         this.items.push(rec);
-        this.setItems(this.items);
+        this.items_s = this.items;
         return rec;
     }
     renderAll(container) {
@@ -247,7 +251,6 @@ class SpringDateManager extends DateManager {
     constructor(storageKey, sourceDefault) {
         super(storageKey || 'lr3_class_spring_dates');
         this.sourceDefault = sourceDefault || 'user';
-        // rehydrate as SpringDates if possible
         try {
             const raw = localStorage.getItem(this.storageKey);
             if (raw) {
@@ -264,7 +267,7 @@ class SpringDateManager extends DateManager {
         if (!d || !m || !y) return false;
         const rec = new SpringDates(d, m, y, src);
         this.items.push(rec);
-        this.setItems(this.items); // will save via parent setItems
+        this.items_s = this.items;
         return rec;
     }
     getSpringDates() {
@@ -292,23 +295,17 @@ class SpringDateManager extends DateManager {
     const datesForm = document.getElementById('datesForm');
     const datesResult = document.getElementById('datesResult') || document.getElementById('datesResultProto');
 
-    const protoManager = new DateManagerProto('lr3_proto_dates');
     const protoSpringManager = new SpringDateManagerProto('lr3_proto_spring_dates', 'proto_source');
 
-    const classManager = new DateManager('lr3_class_dates');
     const classSpringManager = new SpringDateManager('lr3_class_spring_dates', 'class_source');
 
     const useClassVariant = (window.location.search.indexOf('class_dates=1') !== -1) || false;
 
     function renderAllAndResult() {
         if (useClassVariant) {
-            classManager.renderAll(datesResult);
-            classManager.renderResult(datesResult);
             classSpringManager.renderAll(datesResult);
             classSpringManager.renderResult(datesResult);
         } else {
-            protoManager.renderAll(datesResult);
-            protoManager.renderResult(datesResult);
             protoSpringManager.renderAll(datesResult);
             protoSpringManager.renderResult(datesResult);
         }
@@ -322,20 +319,16 @@ class SpringDateManager extends DateManager {
     datesForm.addEventListener('submit', function(e) {
         e.preventDefault();
         try {
-            protoManager.addFromForm(datesForm);
             protoSpringManager.addFromForm(datesForm);
         } catch (e) {
             console.error(e);
         }
         try {
-            classManager.addFromForm(datesForm);
             classSpringManager.addFromForm(datesForm);
         } catch (e) {
             console.error(e);
         }
-        // re-render chosen variant
         renderAllAndResult();
-        // reset form inputs if desired
         datesForm.reset();
     });
 
@@ -343,25 +336,21 @@ class SpringDateManager extends DateManager {
 
     const downloadAnchor = document.getElementById('springDownload');
     if (downloadAnchor) {
-        downloadAnchor.addEventListener('click', function(ev) {
+        downloadAnchor.addEventListener('click', ev => {
             ev.preventDefault();
+
             const arr = useClassVariant ? classSpringManager.getSpringDates() : protoSpringManager.getSpringDates();
-            const content = JSON.stringify(arr.map(d => d.toObj ? d.toObj() : {
-                day: d.day,
-                month: d.month,
-                year: d.year,
-                source: d.source || ''
-            }), null, 2);
-            const blob = new Blob([content], {
-                type: 'application/json'
-            });
+            const content = JSON.stringify(arr.map(d => d.toObj()), null, 2);
+
+            const blob = new Blob([content], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
-            downloadAnchor.href = url;
-            downloadAnchor.download = 'g.txt';
-            setTimeout(() => {
-                URL.revokeObjectURL(url);
-            }, 2000);
-            downloadAnchor.click();
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = "g.txt";
+            a.click();
+
+            URL.revokeObjectURL(url);
         });
     }
     (function() {
@@ -369,9 +358,7 @@ class SpringDateManager extends DateManager {
         if (!checkbox) return;
 
         const params = new URLSearchParams(window.location.search);
-        const classMode = params.has('class_dates');
-
-        checkbox.checked = classMode;
+        checkbox.checked = params.has('class_dates');
 
         checkbox.addEventListener('change', function() {
             const url = new URL(window.location.href);

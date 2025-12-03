@@ -221,19 +221,7 @@
             <p>&copy; Гарант недвижимость</p>
          </div>
       </footer>
-      <script src="{% static 'js/main.js' %}"></script>
+          <script src="{% static 'js/main.js' %}"></script>
    </body>
-   <script>
-      document.addEventListener('DOMContentLoaded', function() {
-          const logoutLinks = document.querySelectorAll('a[href*="logout"], form[action*="logout"]');
-
-          logoutLinks.forEach(link => {
-              link.addEventListener('click', function() {
-                  sessionStorage.removeItem('birthdayVerified');
-                  sessionStorage.removeItem('userAge');
-              });
-          });
-      });
-   </script>
    <script src="{% static 'js/age.js' %}"></script>
 </html>

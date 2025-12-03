@@ -26,10 +26,8 @@ from django.views.generic import TemplateView
 # LR3 static-pages integration
 lr3_patterns = [
     path('lr3/', TemplateView.as_view(template_name='lr3/index.html'), name='lr3_index'),
-    path('lr3/contacts/', TemplateView.as_view(template_name='lr3/contacts.html'), name='lr3_contacts'),
     path('lr3/formgen/', TemplateView.as_view(template_name='lr3/formgen.html'), name='lr3_formgen'),
     path('lr3/dates/', TemplateView.as_view(template_name='lr3/dates.html'), name='lr3_classes'),
-    path('lr3/api/', TemplateView.as_view(template_name='lr3/api_demo.html'), name='lr3_api'),
     path('lr3/chart/', TemplateView.as_view(template_name='lr3/chart.html'), name='lr3_chart'),
 ]
 
