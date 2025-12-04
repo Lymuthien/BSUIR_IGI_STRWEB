@@ -1,0 +1,9 @@
+.dashboard-page {
+  min-height: calc(100vh - 200px);
+  padding: 2rem 0;
+}
+
+.dashboard-content {
+  margin-top: 2rem;
+}
+
