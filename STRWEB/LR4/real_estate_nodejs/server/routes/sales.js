@@ -6,7 +6,6 @@ const Estate = require('../models/Estate');
 const Service = require('../models/Service');
 const { requireAuth, requireRole } = require('../middleware/auth');
 
-// Get all sales (authenticated - employees and admins only)
 router.get('/', requireAuth, requireRole('employee', 'admin'), async (req, res) => {
   try {
     const { client, employee, status, sortBy = 'dateOfSale', sortOrder = 'desc' } = req.query;
@@ -31,7 +30,6 @@ router.get('/', requireAuth, requireRole('employee', 'admin'), async (req, res) 
   }
 });
 
-// Get user's own sales (authenticated clients)
 router.get('/my-sales', requireAuth, async (req, res) => {
   try {
     const query = { client: req.user._id };
@@ -47,7 +45,6 @@ router.get('/my-sales', requireAuth, async (req, res) => {
   }
 });
 
-// Get single sale
 router.get('/:id', requireAuth, async (req, res) => {
   try {
     const sale = await Sale.findById(req.params.id)
@@ -59,7 +56,6 @@ router.get('/:id', requireAuth, async (req, res) => {
       return res.status(404).json({ message: 'Sale not found' });
     }
 
-    // Check if user has permission to view this sale
     if (sale.client._id.toString() !== req.user._id.toString() && 
         sale.employee._id.toString() !== req.user._id.toString() && 
         req.user.role !== 'admin') {
@@ -72,7 +68,6 @@ router.get('/:id', requireAuth, async (req, res) => {
   }
 });
 
-// Create sale (authenticated - employees and admins only)
 router.post('/',
   requireAuth,
   requireRole('employee', 'admin'),
@@ -91,7 +86,6 @@ router.post('/',
 
       const { client, estate: estateId, dateOfContract, dateOfSale } = req.body;
 
-      // Check if estate exists and is available
       const estate = await Estate.findById(estateId);
       if (!estate) {
         return res.status(404).json({ message: 'Estate not found' });
@@ -101,7 +95,6 @@ router.post('/',
         return res.status(400).json({ message: 'Estate is already sold' });
       }
 
-      // Get service cost
       let serviceCost = 0;
       if (estate.category) {
         const service = await Service.findById(estate.category);
@@ -110,7 +103,6 @@ router.post('/',
         }
       }
 
-      // Create sale
       const saleData = {
         client,
         employee: req.user._id,
@@ -123,7 +115,6 @@ router.post('/',
 
       const sale = await Sale.create(saleData);
 
-      // Update estate status
       estate.status = 'sold';
       await estate.save();
 
@@ -139,7 +130,6 @@ router.post('/',
   }
 );
 
-// Update sale status (authenticated - employees and admins only)
 router.patch('/:id',
   requireAuth,
   requireRole('employee', 'admin'),

@@ -90,13 +90,11 @@ userSchema.pre('save', async function(next) {
   }
 });
 
-// Method to compare password
 userSchema.methods.comparePassword = async function(candidatePassword) {
   if (!this.password) return false;
   return await bcrypt.compare(candidatePassword, this.password);
 };
 
-// Virtual for full name
 userSchema.virtual('fullName').get(function() {
   return `${this.firstName} ${this.lastName}`;
 });

@@ -34,11 +34,9 @@ const estateSchema = new mongoose.Schema({
   images: [{
     type: String
   }],
-  // AI generated description from OpenAI
   aiDescription: {
     type: String
   },
-  // AI analysis from Google Vision
   aiAnalysis: {
     type: mongoose.Schema.Types.Mixed
   },

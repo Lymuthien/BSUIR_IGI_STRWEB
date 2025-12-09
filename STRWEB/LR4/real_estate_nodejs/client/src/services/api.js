@@ -116,10 +116,5 @@ export const salesAPI = {
   updateStatus: (id, status) => api.patch(`/sales/${id}`, { status })
 };
 
-// AI API
-export const aiAPI = {
-  consultation: (message, context) => api.post('/ai/consultation', { message, context })
-};
-
 export default api;
 

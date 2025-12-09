@@ -7,7 +7,6 @@ connectDB();
 
 const seedData = async () => {
   try {
-    // Clear existing data
     await User.deleteMany({});
     await Estate.deleteMany({});
     await Service.deleteMany({});
@@ -50,7 +49,7 @@ const seedData = async () => {
     ]);
     console.log('Created services...');
 
-    // Create users (use create() instead of insertMany() to trigger password hashing)
+    // Create users 
     const admin = await User.create({
       username: 'admin',
       email: 'admin@agency.com',
@@ -98,7 +97,7 @@ const seedData = async () => {
     const users = [admin, employee1, client1, client2];
     console.log('Created users...');
 
-    // Create estates (at least 10)
+    // Create estates 
     const estates = await Estate.insertMany([
       {
         address: 'Minsk, Independence Avenue 10, Apt. 25',
@@ -252,7 +251,7 @@ const seedData = async () => {
     ]);
     console.log('Created reviews...');
 
-    console.log('\n✅ Seed data created successfully!');
+    console.log('\nSeed data created successfully!');
     console.log(`Created: ${categories.length} categories, ${services.length} services, ${users.length} users, ${estates.length} estates`);
     
     process.exit(0);

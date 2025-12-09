@@ -49,7 +49,6 @@ app.use('/api/estates', require('./routes/estates'));
 app.use('/api/reviews', require('./routes/reviews'));
 app.use('/api/sales', require('./routes/sales'));
 app.use('/api/services', require('./routes/services'));
-app.use('/api/ai', require('./routes/ai'));
 
 // Error handling middleware
 app.use((err, req, res, next) => {

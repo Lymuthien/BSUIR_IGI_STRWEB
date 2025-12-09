@@ -1,3 +1,17 @@
+MongoDB:
+- Подключение - server/config/database.js
+- Модели (с валидаторами - Review, и типами данных) - server/models
+
+Аутентификация + авторизация:
+- Разные способы + управление сессиями - server/config/passport.js
+- проверка авт/аут - server/middleware/auth.js
+
+CRUD: все запросы (включая фильтрацию) - server/routes
+
+Наполнение: server/scripts/seed.js
+AI API:
+- Ограничение запросов и логика - server/routes/estates.js
+
 # Real Estate Agency - Node.js + React Application
 
 Веб-приложение риэлторского агентства, разработанное с использованием Node.js (Express) для сервера и React для клиента.
@@ -33,7 +47,6 @@ real_estate_nodejs/
 - Passport.js (Local + Google OAuth)
 - Multer (загрузка файлов)
 - Express Validator
-- OpenAI API
 - Google Vision API
 
 ### Клиент
@@ -49,7 +62,7 @@ real_estate_nodejs/
 ### Требования
 - Node.js 16+
 - MongoDB 4.4+
-- API ключи для OpenAI и Google Vision (опционально)
+- API ключ для Google Vision (опционально)
 
 ### Сервер
 
@@ -71,7 +84,6 @@ MONGODB_URI=mongodb://localhost:27017/real_estate_agency
 SESSION_SECRET=your-secret-key-change-in-production
 GOOGLE_CLIENT_ID=your-google-client-id
 GOOGLE_CLIENT_SECRET=your-google-client-secret
-OPENAI_API_KEY=your-openai-api-key
 GOOGLE_VISION_API_KEY=your-google-vision-api-key
 CLIENT_URL=http://localhost:3000
 ```
@@ -136,7 +148,6 @@ npm start
 
 ### AI функции
 - Google Vision AI - анализ фотографий недвижимости
-- OpenAI GPT - генерация описаний и AI-консультант
 
 ### Асинхронность
 - XMLHttpRequest - загрузка файлов с прогрессом
@@ -169,7 +180,6 @@ npm start
 - `MarketAnalyzer` - анализ рынка (классовый)
 - `PropertyMatcher` - подбор объектов (useContext)
 - `DealFlow` - управление сделками (классовый)
-- `AIConsultant` - AI консультант (хуки)
 - `AsyncOperations` - демонстрация асинхронности
 
 ### Обработчики событий
@@ -209,7 +219,7 @@ npm start
 - `PUT /api/estates/:id` - обновление объекта (требуется авторизация)
 - `DELETE /api/estates/:id` - удаление объекта (требуется авторизация)
 - `POST /api/reviews` - создание отзыва
-- `POST /api/ai/consultation` - AI консультация
+- `POST /api/estates/:id/analyze-image` - анализ изображения (Google Vision AI)
 
 ## Тестовые данные
 
@@ -223,7 +233,7 @@ npm start
 ## Примечания
 
 - Для работы Google OAuth необходимо настроить OAuth credentials в Google Cloud Console
-- Для работы AI функций необходимы API ключи OpenAI и Google Vision
+- Для работы AI анализа изображений необходим API ключ Google Vision
 - MongoDB должна быть запущена перед запуском сервера
 
 ## Лицензия

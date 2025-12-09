@@ -62,7 +62,6 @@ MONGODB_URI=mongodb://localhost:27017/real_estate_agency
 SESSION_SECRET=your-secret-key-here
 GOOGLE_CLIENT_ID=your-google-client-id
 GOOGLE_CLIENT_SECRET=your-google-client-secret
-OPENAI_API_KEY=your-openai-api-key
 GOOGLE_VISION_API_KEY=your-vision-api-key
 CLIENT_URL=http://localhost:3000
 ```
@@ -80,7 +79,7 @@ CLIENT_URL=http://localhost:3000
 - Просмотр каталога недвижимости
 - Поиск и фильтрация объектов
 - Просмотр деталей объекта
-- AI консультант
+- Анализ изображений (Google Vision AI)
 
 ### Для авторизованных пользователей:
 - Создание/редактирование объектов (employee/admin)

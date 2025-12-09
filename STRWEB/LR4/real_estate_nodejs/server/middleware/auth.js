@@ -1,4 +1,3 @@
-// Middleware to check if user is authenticated
 const requireAuth = (req, res, next) => {
   if (req.isAuthenticated()) {
     return next();
@@ -6,7 +5,6 @@ const requireAuth = (req, res, next) => {
   return res.status(401).json({ message: 'Authentication required' });
 };
 
-// Middleware to check user role
 const requireRole = (...roles) => {
   return (req, res, next) => {
     if (!req.isAuthenticated()) {

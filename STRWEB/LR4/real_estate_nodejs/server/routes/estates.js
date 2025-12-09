@@ -6,7 +6,7 @@ const { requireAuth, requireRole } = require('../middleware/auth');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const { analyzeEstateImage, generateEstateDescription } = require('../utils/aiService');
+const { analyzeEstateImage } = require('../utils/aiService');
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
@@ -25,7 +25,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB
+  limits: { fileSize: 5 * 1024 * 1024 }, 
   fileFilter: (req, file, cb) => {
     const allowedTypes = /jpeg|jpg|png|gif/;
     const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
@@ -73,7 +73,6 @@ router.get('/',
         limit = 10
       } = req.query;
 
-      // Build query
       const query = {};
 
       if (search) {
@@ -99,11 +98,9 @@ router.get('/',
         query.status = status;
       }
 
-      // Build sort object
       const sort = {};
       sort[sortBy] = sortOrder === 'asc' ? 1 : -1;
 
-      // Execute query
       const skip = (parseInt(page) - 1) * parseInt(limit);
       
       const estates = await Estate.find(query)
@@ -129,7 +126,6 @@ router.get('/',
   }
 );
 
-// Get single estate (public)
 router.get('/:id', async (req, res) => {
   try {
     const estate = await Estate.findById(req.params.id)
@@ -146,7 +142,6 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Create estate (authenticated only)
 router.post('/',
   requireAuth,
   upload.single('image'),
@@ -172,21 +167,8 @@ router.post('/',
         createdBy: req.user._id
       };
 
-      // Handle image upload
       if (req.file) {
         estateData.image = `/uploads/${req.file.filename}`;
-      }
-
-      // Generate AI description if OpenAI is configured
-      if (process.env.OPENAI_API_KEY) {
-        try {
-          const aiDescription = await generateEstateDescription(estateData);
-          if (aiDescription) {
-            estateData.aiDescription = aiDescription;
-          }
-        } catch (error) {
-          console.error('Error generating AI description:', error);
-        }
       }
 
       const estate = await Estate.create(estateData);
@@ -200,7 +182,6 @@ router.post('/',
   }
 );
 
-// Update estate (authenticated only)
 router.put('/:id',
   requireAuth,
   upload.single('image'),
@@ -228,7 +209,6 @@ router.put('/:id',
         return res.status(403).json({ message: 'Permission denied' });
       }
 
-      // Handle image upload
       if (req.file) {
         req.body.image = `/uploads/${req.file.filename}`;
       }
@@ -246,7 +226,6 @@ router.put('/:id',
   }
 );
 
-// Delete estate (authenticated only)
 router.delete('/:id', requireAuth, async (req, res) => {
   try {
     const estate = await Estate.findById(req.params.id);
@@ -268,8 +247,7 @@ router.delete('/:id', requireAuth, async (req, res) => {
   }
 });
 
-// Analyze estate image with Google Vision AI (authenticated only)
-// Can analyze uploaded image or existing estate image
+
 router.post('/:id/analyze-image', requireAuth, upload.single('image'), async (req, res) => {
   try {
     const estate = await Estate.findById(req.params.id);
@@ -297,7 +275,6 @@ router.post('/:id/analyze-image', requireAuth, upload.single('image'), async (re
       return res.status(400).json({ message: 'No image available for analysis. Please upload an image first.' });
     }
 
-    // Analyze with Google Vision AI
     const analysis = await analyzeEstateImage(imageBase64);
 
     estate.aiAnalysis = analysis;

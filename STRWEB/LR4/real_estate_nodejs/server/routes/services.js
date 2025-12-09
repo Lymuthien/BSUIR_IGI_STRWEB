@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const { Service, ServiceCategory } = require('../models/Service');
 
-// Get all service categories (public)
 router.get('/categories', async (req, res) => {
   try {
     const categories = await ServiceCategory.find().sort({ name: 1 });
@@ -12,7 +11,6 @@ router.get('/categories', async (req, res) => {
   }
 });
 
-// Get all services (public)
 router.get('/', async (req, res) => {
   try {
     const services = await Service.find()
@@ -24,7 +22,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Get single service
 router.get('/:id', async (req, res) => {
   try {
     const service = await Service.findById(req.params.id)

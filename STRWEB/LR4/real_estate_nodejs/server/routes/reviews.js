@@ -4,7 +4,6 @@ const { body, validationResult } = require('express-validator');
 const Review = require('../models/Review');
 const { requireAuth } = require('../middleware/auth');
 
-// Get all reviews (public)
 router.get('/', async (req, res) => {
   try {
     const { estate, user, rating, sortBy = 'createdAt', sortOrder = 'desc' } = req.query;
@@ -28,7 +27,6 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Get single review
 router.get('/:id', async (req, res) => {
   try {
     const review = await Review.findById(req.params.id)
@@ -45,7 +43,6 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Create review (authenticated only)
 router.post('/',
   requireAuth,
   [
@@ -77,7 +74,6 @@ router.post('/',
   }
 );
 
-// Update review (authenticated - own review only)
 router.put('/:id',
   requireAuth,
   [
@@ -97,7 +93,6 @@ router.put('/:id',
         return res.status(404).json({ message: 'Review not found' });
       }
 
-      // Check if user owns the review
       if (review.user.toString() !== req.user._id.toString()) {
         return res.status(403).json({ message: 'Permission denied' });
       }
@@ -116,7 +111,6 @@ router.put('/:id',
   }
 );
 
-// Delete review (authenticated - own review only)
 router.delete('/:id', requireAuth, async (req, res) => {
   try {
     const review = await Review.findById(req.params.id);
@@ -125,7 +119,6 @@ router.delete('/:id', requireAuth, async (req, res) => {
       return res.status(404).json({ message: 'Review not found' });
     }
 
-    // Check if user owns the review or is admin
     if (review.user.toString() !== req.user._id.toString() && req.user.role !== 'admin') {
       return res.status(403).json({ message: 'Permission denied' });
     }
