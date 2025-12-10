@@ -48,7 +48,7 @@ router.post('/',
   [
     body('rating').isInt({ min: 1, max: 5 }),
     body('text').trim().notEmpty().isLength({ max: 1000 }),
-    body('estate').optional().isMongoId()
+    body('estate').optional({ nullable: true, checkFalsy: true }).isMongoId()
   ],
   async (req, res) => {
     try {
@@ -58,9 +58,15 @@ router.post('/',
       }
 
       const reviewData = {
-        ...req.body,
+        rating: req.body.rating,
+        text: req.body.text,
         user: req.user._id
       };
+      
+      // Добавляем estate только если оно предоставлено и не пустое
+      if (req.body.estate && typeof req.body.estate === 'string' && req.body.estate.trim() !== '') {
+        reviewData.estate = req.body.estate;
+      }
 
       const review = await Review.create(reviewData);
       const populatedReview = await Review.findById(review._id)

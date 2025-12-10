@@ -4,7 +4,6 @@ import { estatesAPI } from '../services/api';
 import EstateForm from '../components/EstateForm';
 import { useAuth } from '../context/AuthContext';
 
-// Функциональный компонент для страницы создания/редактирования
 const EstateFormPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();

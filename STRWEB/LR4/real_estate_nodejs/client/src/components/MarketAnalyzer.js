@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { estatesAPI } from '../services/api';
 import '../styles/MarketAnalyzer.css';
 
-// Классовый компонент для сложного жизненного цикла
 class MarketAnalyzer extends Component {
   constructor(props) {
     super(props);
@@ -10,9 +9,7 @@ class MarketAnalyzer extends Component {
       estates: [],
       analysis: null,
       loading: false,
-      error: null,
-      sortBy: 'cost',
-      sortOrder: 'asc'
+      error: null
     };
   }
 
@@ -20,19 +17,10 @@ class MarketAnalyzer extends Component {
     this.loadEstates();
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.sortBy !== this.state.sortBy || 
-        prevState.sortOrder !== this.state.sortOrder) {
-      this.loadEstates();
-    }
-  }
-
   loadEstates = async () => {
     this.setState({ loading: true, error: null });
     try {
       const response = await estatesAPI.getAll({
-        sortBy: this.state.sortBy,
-        sortOrder: this.state.sortOrder,
         limit: 100
       });
       
@@ -85,43 +73,18 @@ class MarketAnalyzer extends Component {
     });
   };
 
-  handleSortChange = (e) => {
-    this.setState({ sortBy: e.target.value });
-  };
-
-  handleSortOrderChange = (e) => {
-    this.setState({ sortOrder: e.target.value });
-  };
-
   handleAnalyze = () => {
     this.loadEstates();
   };
 
   render() {
-    const { analysis, loading, error, sortBy, sortOrder } = this.state;
+    const { analysis, loading, error } = this.state;
 
     return (
       <div className="market-analyzer">
         <h3>Market Analysis</h3>
         
         <div className="analyzer-controls">
-          <select 
-            value={sortBy} 
-            onChange={this.handleSortChange}
-            className="form-select"
-          >
-            <option value="cost">Cost</option>
-            <option value="area">Area</option>
-            <option value="createdAt">Date</option>
-          </select>
-          <select 
-            value={sortOrder} 
-            onChange={this.handleSortOrderChange}
-            className="form-select"
-          >
-            <option value="asc">Ascending</option>
-            <option value="desc">Descending</option>
-          </select>
           <button 
             onClick={this.handleAnalyze}
             className="btn btn-primary"

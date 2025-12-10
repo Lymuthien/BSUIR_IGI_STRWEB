@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { estatesAPI } from '../services/api';
+import { useAuth } from '../context/AuthContext';
 import '../styles/PropertyMatcher.css';
 
-// Функциональный компонент для подбора объектов
 const PropertyMatcher = () => {
+  const { user, isAuthenticated } = useAuth();
   const [criteria, setCriteria] = useState({
     minCost: '',
     maxCost: '',
@@ -38,7 +39,6 @@ const PropertyMatcher = () => {
       const response = await estatesAPI.getAll(params);
       let filtered = response.data.estates || [];
 
-      // Filter by rooms if specified
       if (criteria.rooms) {
         filtered = filtered.filter(e => e.rooms === parseInt(criteria.rooms));
       }
@@ -66,6 +66,11 @@ const PropertyMatcher = () => {
   return (
     <div className="property-matcher">
       <h3>Find Your Perfect Property</h3>
+      {isAuthenticated && user && (
+        <p className="text-muted">
+          Welcome, {user.firstName}! We'll help you find the perfect property.
+        </p>
+      )}
       <form onSubmit={handleMatch} className="matcher-form">
         <div className="form-grid">
           <div className="form-group">

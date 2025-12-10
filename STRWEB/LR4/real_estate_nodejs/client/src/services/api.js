@@ -45,6 +45,7 @@ export const authAPI = {
   login: (data) => api.post('/auth/login', data),
   logout: () => api.post('/auth/logout'),
   getMe: () => api.get('/auth/me'),
+  getClients: () => api.get('/auth/clients'),
   googleAuth: () => window.location.href = `${API_BASE_URL}/auth/google`
 };
 

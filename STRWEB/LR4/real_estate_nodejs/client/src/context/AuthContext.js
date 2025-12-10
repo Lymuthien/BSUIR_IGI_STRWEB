@@ -25,7 +25,6 @@ export const AuthProvider = ({ children }) => {
       const response = await authAPI.getMe();
       setUser(response.data.user);
     } catch (err) {
-      // 401 is expected for unauthenticated users, don't treat it as an error
       setUser(null);
     } finally {
       setLoading(false);

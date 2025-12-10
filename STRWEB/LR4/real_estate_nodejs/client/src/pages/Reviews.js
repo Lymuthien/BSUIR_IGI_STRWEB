@@ -4,7 +4,6 @@ import { useAuth } from '../context/AuthContext';
 import { formatDateWithTimezone } from '../utils/dateUtils';
 import '../styles/Reviews.css';
 
-// Функциональный компонент для страницы отзывов
 const Reviews = () => {
   const { isAuthenticated } = useAuth();
   const [reviews, setReviews] = useState([]);
@@ -41,6 +40,26 @@ const Reviews = () => {
     }));
   };
 
+  const handleFocus = (e) => {
+    e.target.classList.remove('is-invalid');
+  };
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    if (name === 'text' && !value.trim()) {
+      e.target.setCustomValidity('Review text is required');
+      e.target.classList.add('is-invalid');
+    } else {
+      e.target.setCustomValidity('');
+      e.target.classList.remove('is-invalid');
+    }
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && e.target.tagName === 'TEXTAREA' && !e.shiftKey) {
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!isAuthenticated) {
@@ -49,12 +68,18 @@ const Reviews = () => {
     }
 
     try {
-      await reviewsAPI.create(formData);
+      // Убираем поле estate, если оно пустое (сервер ожидает либо валидный ID, либо отсутствие поля)
+      const submitData = { ...formData };
+      if (!submitData.estate || submitData.estate.trim() === '') {
+        delete submitData.estate;
+      }
+      
+      await reviewsAPI.create(submitData);
       setFormData({ rating: 5, text: '', estate: '' });
       setShowForm(false);
       loadReviews();
     } catch (err) {
-      alert(err.response?.data?.message || 'Error submitting review');
+      alert(err.response?.data?.message || err.response?.data?.errors?.[0]?.msg || 'Error submitting review');
     }
   };
 
@@ -97,6 +122,9 @@ const Reviews = () => {
                 name="text"
                 value={formData.text}
                 onChange={handleChange}
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+                onKeyPress={handleKeyPress}
                 rows="4"
                 className="form-control"
                 required

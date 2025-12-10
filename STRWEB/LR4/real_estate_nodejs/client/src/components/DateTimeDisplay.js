@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { getCurrentDateTime, formatDateWithTimezone, formatDateUTC } from '../utils/dateUtils';
 import '../styles/DateTimeDisplay.css';
 
-// Функциональный компонент со стрелочной функцией
 const DateTimeDisplay = ({ label = 'Server Time', date, showTimezone = true }) => {
   const [currentTime, setCurrentTime] = useState(getCurrentDateTime());
 

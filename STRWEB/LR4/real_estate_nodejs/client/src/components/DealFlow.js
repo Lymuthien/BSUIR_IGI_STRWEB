@@ -3,7 +3,6 @@ import { salesAPI } from '../services/api';
 import { formatDateWithTimezone } from '../utils/dateUtils';
 import '../styles/DealFlow.css';
 
-// Классовый компонент для управления потоком сделок
 class DealFlow extends Component {
   constructor(props) {
     super(props);
@@ -32,7 +31,6 @@ class DealFlow extends Component {
       const response = await salesAPI.getAll(params);
       let sales = response.data || [];
 
-      // Client-side sorting
       sales.sort((a, b) => {
         let aValue = a[this.state.sortBy];
         let bValue = b[this.state.sortBy];
@@ -76,10 +74,78 @@ class DealFlow extends Component {
 
   handleStatusUpdate = async (saleId, newStatus) => {
     try {
-      await salesAPI.updateStatus(saleId, newStatus);
-      this.loadSales();
+      if (newStatus === 'completed') {
+        await this.processDealChain(saleId);
+      } else {
+        await salesAPI.updateStatus(saleId, newStatus);
+        this.loadSales();
+      }
     } catch (error) {
       alert('Error updating sale status: ' + error.message);
+    }
+  };
+
+  // Promise цепочка сделки
+  processDealChain = async (saleId) => {
+    this.setState({ loading: true, error: null });
+
+    try {
+      const step1 = await new Promise((resolve, reject) => {
+        setTimeout(() => {
+          const documentsValid = true; 
+          if (documentsValid) {
+            resolve({ step: 1, message: 'Documents checked successfully' });
+          } else {
+            reject(new Error('Documents validation failed'));
+          }
+        }, 1000);
+      });
+
+      console.log('Step 1:', step1.message);
+
+      const step2 = await new Promise((resolve, reject) => {
+        setTimeout(() => {
+          const signed = true;
+          if (signed) {
+            resolve({ step: 2, message: 'Documents signed' });
+          } else {
+            reject(new Error('Signing failed'));
+          }
+        }, 1000);
+      });
+
+      console.log('Step 2:', step2.message);
+
+      const step3 = await new Promise((resolve, reject) => {
+        setTimeout(() => {
+          const registered = true;
+          if (registered) {
+            resolve({ step: 3, message: 'Deal registered' });
+          } else {
+            reject(new Error('Registration failed'));
+          }
+        }, 1000);
+      });
+
+      console.log('Step 3:', step3.message);
+
+      const step4 = await new Promise((resolve, reject) => {
+        setTimeout(() => {
+          const commission = 5000; 
+          resolve({ step: 4, message: `Commission calculated: $${commission.toLocaleString()}` });
+        }, 1000);
+      });
+
+      console.log('Step 4:', step4.message);
+
+      await salesAPI.updateStatus(saleId, 'completed');
+      
+      alert(`Deal completed successfully!\n\n${step1.message}\n${step2.message}\n${step3.message}\n${step4.message}`);
+      
+      this.loadSales();
+    } catch (error) {
+      this.setState({ error: error.message, loading: false });
+      alert('Error processing deal: ' + error.message);
     }
   };
 

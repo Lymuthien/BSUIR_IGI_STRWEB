@@ -1,17 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { formatDateWithTimezone } from '../utils/dateUtils';
 import '../styles/EstateCard.css';
 
-// Функциональный компонент со стрелочной функцией для презентационного компонента
 const EstateCard = ({ estate, onView, onEdit, onDelete }) => {
+  const [isHovered, setIsHovered] = useState(false);
+
   const handleViewClick = (e) => {
     // Only prevent default if onView handler is provided
     if (onView) {
       e.preventDefault();
       onView(estate);
     }
-    // Otherwise let Link handle navigation normally
+  };
+
+  const handleMouseEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
   };
 
   const handleEditClick = (e) => {
@@ -31,7 +39,11 @@ const EstateCard = ({ estate, onView, onEdit, onDelete }) => {
     : 0;
 
   return (
-    <div className="estate-card">
+    <div 
+      className="estate-card"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
       <div className="estate-card-image">
         {estate.image ? (
           <img src={`http://localhost:3001${estate.image}`} alt={estate.address} />

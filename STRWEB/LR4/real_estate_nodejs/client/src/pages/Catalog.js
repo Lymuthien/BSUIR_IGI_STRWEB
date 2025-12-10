@@ -2,9 +2,9 @@ import React, { useEffect, useReducer, useCallback } from 'react';
 import { estatesAPI } from '../services/api';
 import EstateCard from '../components/EstateCard';
 import DateTimeDisplay from '../components/DateTimeDisplay';
+import DistrictMap from '../components/DistrictMap';
 import '../styles/Catalog.css';
 
-// useReducer для управления состоянием каталога
 const catalogReducer = (state, action) => {
   switch (action.type) {
     case 'SET_LOADING':
@@ -24,7 +24,6 @@ const catalogReducer = (state, action) => {
   }
 };
 
-// Функциональный компонент с useReducer хук
 const Catalog = () => {
   const [state, dispatch] = useReducer(catalogReducer, {
     estates: [],
@@ -104,6 +103,21 @@ const Catalog = () => {
     loadEstates();
   };
 
+  const handleFilterFocus = (e) => {
+    e.target.parentElement?.classList.add('filter-focused');
+  };
+
+  const handleFilterBlur = (e) => {
+    e.target.parentElement?.classList.remove('filter-focused');
+  };
+
+  const handleFilterKeyPress = (e) => {
+    if (e.key === 'Enter' && e.target.name === 'search') {
+      e.preventDefault();
+      handleSearch(e);
+    }
+  };
+
   const handleClearFilters = () => {
     dispatch({
       type: 'SET_FILTERS',
@@ -119,11 +133,22 @@ const Catalog = () => {
     dispatch({ type: 'SET_PAGE', payload: 1 });
   };
 
+  const handleDistrictSelect = (district) => {
+    dispatch({
+      type: 'SET_FILTERS',
+      payload: { search: district.name }
+    });
+    dispatch({ type: 'SET_PAGE', payload: 1 });
+    loadEstates();
+  };
+
   return (
     <div className="catalog-page">
       <div className="container">
         <h1>Property Catalog</h1>
         <DateTimeDisplay label="Catalog Load Time" />
+        
+        <DistrictMap onDistrictSelect={handleDistrictSelect} />
 
         <div className="catalog-filters">
           <form onSubmit={handleSearch} className="filter-form">
@@ -133,6 +158,9 @@ const Catalog = () => {
                 name="search"
                 value={state.filters.search}
                 onChange={handleFilterChange}
+                onFocus={handleFilterFocus}
+                onBlur={handleFilterBlur}
+                onKeyPress={handleFilterKeyPress}
                 placeholder="Search by address or description..."
                 className="form-control"
               />

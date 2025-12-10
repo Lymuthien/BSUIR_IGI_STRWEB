@@ -3,7 +3,6 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import '../styles/Register.css';
 
-// Функциональный компонент для страницы регистрации
 const Register = () => {
   const navigate = useNavigate();
   const { register } = useAuth();
@@ -32,6 +31,41 @@ const Register = () => {
         delete newErrors[name];
         return newErrors;
       });
+    }
+  };
+
+  const handleFocus = (e) => {
+    const { name } = e.target;
+    if (errors[name]) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
+      });
+    }
+  };
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    const newErrors = { ...errors };
+    if (name === 'email' && value && !/\S+@\S+\.\S+/.test(value)) {
+      newErrors.email = 'Email is invalid';
+    } else if (name === 'password' && value && value.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+    } else if (name === 'confirmPassword' && value && value !== formData.password) {
+      newErrors.confirmPassword = 'Passwords do not match';
+    } else if (name === 'firstName' && !value) {
+      newErrors.firstName = 'First name is required';
+    } else if (name === 'lastName' && !value) {
+      newErrors.lastName = 'Last name is required';
+    } else {
+      delete newErrors[name];
+    }
+    setErrors(newErrors);
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && e.target.type !== 'textarea') {
     }
   };
 
@@ -112,6 +146,9 @@ const Register = () => {
                         name="firstName"
                         value={formData.firstName}
                         onChange={handleChange}
+                        onFocus={handleFocus}
+                        onBlur={handleBlur}
+                        onKeyPress={handleKeyPress}
                         className={`form-control ${errors.firstName ? 'is-invalid' : ''}`}
                       />
                       {errors.firstName && <div className="invalid-feedback">{errors.firstName}</div>}
@@ -125,6 +162,9 @@ const Register = () => {
                         name="lastName"
                         value={formData.lastName}
                         onChange={handleChange}
+                        onFocus={handleFocus}
+                        onBlur={handleBlur}
+                        onKeyPress={handleKeyPress}
                         className={`form-control ${errors.lastName ? 'is-invalid' : ''}`}
                       />
                       {errors.lastName && <div className="invalid-feedback">{errors.lastName}</div>}
@@ -139,6 +179,9 @@ const Register = () => {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
+                    onFocus={handleFocus}
+                    onBlur={handleBlur}
+                    onKeyPress={handleKeyPress}
                     className={`form-control ${errors.email ? 'is-invalid' : ''}`}
                   />
                   {errors.email && <div className="invalid-feedback">{errors.email}</div>}
@@ -153,6 +196,9 @@ const Register = () => {
                         name="password"
                         value={formData.password}
                         onChange={handleChange}
+                        onFocus={handleFocus}
+                        onBlur={handleBlur}
+                        onKeyPress={handleKeyPress}
                         className={`form-control ${errors.password ? 'is-invalid' : ''}`}
                       />
                       {errors.password && <div className="invalid-feedback">{errors.password}</div>}
@@ -166,6 +212,9 @@ const Register = () => {
                         name="confirmPassword"
                         value={formData.confirmPassword}
                         onChange={handleChange}
+                        onFocus={handleFocus}
+                        onBlur={handleBlur}
+                        onKeyPress={handleKeyPress}
                         className={`form-control ${errors.confirmPassword ? 'is-invalid' : ''}`}
                       />
                       {errors.confirmPassword && <div className="invalid-feedback">{errors.confirmPassword}</div>}
@@ -182,6 +231,9 @@ const Register = () => {
                         name="phoneNumber"
                         value={formData.phoneNumber}
                         onChange={handleChange}
+                        onFocus={handleFocus}
+                        onBlur={handleBlur}
+                        onKeyPress={handleKeyPress}
                         placeholder="+375(29)XXX-XX-XX"
                         className={`form-control ${errors.phoneNumber ? 'is-invalid' : ''}`}
                       />
@@ -196,6 +248,9 @@ const Register = () => {
                         name="birthDate"
                         value={formData.birthDate}
                         onChange={handleChange}
+                        onFocus={handleFocus}
+                        onBlur={handleBlur}
+                        onKeyPress={handleKeyPress}
                         className={`form-control ${errors.birthDate ? 'is-invalid' : ''}`}
                       />
                       {errors.birthDate && <div className="invalid-feedback">{errors.birthDate}</div>}

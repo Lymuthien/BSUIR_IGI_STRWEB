@@ -99,6 +99,18 @@ router.get('/me', requireAuth, (req, res) => {
   });
 });
 
+// Get all clients (for employees/admins to create sales)
+router.get('/clients', requireAuth, async (req, res) => {
+  try {
+    const clients = await User.find({ role: 'client' })
+      .select('firstName lastName email _id')
+      .sort({ lastName: 1, firstName: 1 });
+    res.json(clients);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 router.get('/google',
   passport.authenticate('google', { scope: ['profile', 'email'] })
 );

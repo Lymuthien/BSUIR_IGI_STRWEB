@@ -10,10 +10,8 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Reviews from './pages/Reviews';
-import AsyncOperations from './components/AsyncOperations';
 import './styles/App.css';
 
-// Главный компонент приложения с роутингом
 function App() {
   return (
     <AuthProvider>
@@ -31,12 +29,11 @@ function App() {
               <Route path="/register" element={<Register />} />
               <Route path="/reviews" element={<Reviews />} />
               <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/async-demo" element={<AsyncOperations />} />
             </Routes>
           </main>
           <footer className="footer">
             <div className="container">
-              <p>&copy; 2024 Real Estate Agency. All rights reserved.</p>
+              <p>&copy; 2025 Real Estate Agency. All rights reserved.</p>
             </div>
           </footer>
         </div>

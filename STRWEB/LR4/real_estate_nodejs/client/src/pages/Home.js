@@ -5,7 +5,6 @@ import MarketAnalyzer from '../components/MarketAnalyzer';
 import PropertyMatcher from '../components/PropertyMatcher';
 import '../styles/Home.css';
 
-// Функциональный компонент с декларативной функцией для главной страницы
 function Home() {
   return (
     <div className="home-page">

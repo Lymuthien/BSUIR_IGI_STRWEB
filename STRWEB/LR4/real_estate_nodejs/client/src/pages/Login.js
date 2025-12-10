@@ -4,7 +4,6 @@ import { useAuth } from '../context/AuthContext';
 import { authAPI } from '../services/api';
 import '../styles/Login.css';
 
-// Функциональный компонент для страницы входа
 const Login = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
@@ -27,6 +26,35 @@ const Login = () => {
         delete newErrors[name];
         return newErrors;
       });
+    }
+  };
+
+  const handleFocus = (e) => {
+    const { name } = e.target;
+    if (errors[name]) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
+      });
+    }
+  };
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    const newErrors = { ...errors };
+    if (name === 'email' && value && !/\S+@\S+\.\S+/.test(value)) {
+      newErrors.email = 'Email is invalid';
+    } else if (name === 'password' && !value) {
+      newErrors.password = 'Password is required';
+    } else {
+      delete newErrors[name];
+    }
+    setErrors(newErrors);
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
     }
   };
 
@@ -79,6 +107,9 @@ const Login = () => {
                     name="email"
                     value={formData.email}
                     onChange={handleChange}
+                    onFocus={handleFocus}
+                    onBlur={handleBlur}
+                    onKeyPress={handleKeyPress}
                     className={`form-control ${errors.email ? 'is-invalid' : ''}`}
                   />
                   {errors.email && <div className="invalid-feedback">{errors.email}</div>}
@@ -91,6 +122,9 @@ const Login = () => {
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
+                    onFocus={handleFocus}
+                    onBlur={handleBlur}
+                    onKeyPress={handleKeyPress}
                     className={`form-control ${errors.password ? 'is-invalid' : ''}`}
                   />
                   {errors.password && <div className="invalid-feedback">{errors.password}</div>}

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { servicesAPI } from '../services/api';
 import '../styles/EstateForm.css';
 
-// Функциональный компонент для формы добавления/редактирования недвижимости
 const EstateForm = ({ estate, onSubmit, onCancel }) => {
   const [formData, setFormData] = useState({
     address: '',
@@ -57,13 +56,48 @@ const EstateForm = ({ estate, onSubmit, onCancel }) => {
       ...prev,
       [name]: value
     }));
-    // Clear error for this field
     if (errors[name]) {
       setErrors(prev => {
         const newErrors = { ...prev };
         delete newErrors[name];
         return newErrors;
       });
+    }
+  };
+
+  const handleFocus = (e) => {
+    const { name } = e.target;
+    if (errors[name]) {
+      setErrors(prev => {
+        const newErrors = { ...prev };
+        delete newErrors[name];
+        return newErrors;
+      });
+    }
+  };
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target;
+    const newErrors = { ...errors };
+    if (name === 'address' && !value.trim()) {
+      newErrors.address = 'Address is required';
+    } else if (name === 'cost' && (!value || parseFloat(value) <= 0)) {
+      newErrors.cost = 'Valid cost is required';
+    } else if (name === 'area' && (!value || parseFloat(value) <= 0)) {
+      newErrors.area = 'Valid area is required';
+    } else if (name === 'description' && !value.trim()) {
+      newErrors.description = 'Description is required';
+    } else if (name === 'category' && !value) {
+      newErrors.category = 'Category is required';
+    } else {
+      delete newErrors[name];
+    }
+    setErrors(newErrors);
+  };
+
+  const handleKeyPress = (e) => {
+    if (e.target.tagName === 'TEXTAREA' && e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
     }
   };
 
@@ -75,7 +109,6 @@ const EstateForm = ({ estate, onSubmit, onCancel }) => {
         image: file
       }));
       
-      // Create preview
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result);
@@ -151,6 +184,9 @@ const EstateForm = ({ estate, onSubmit, onCancel }) => {
             name="address"
             value={formData.address}
             onChange={handleChange}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            onKeyPress={handleKeyPress}
             className={`form-control ${errors.address ? 'is-invalid' : ''}`}
           />
           {errors.address && <div className="invalid-feedback">{errors.address}</div>}
@@ -168,6 +204,9 @@ const EstateForm = ({ estate, onSubmit, onCancel }) => {
             step="0.01"
             min="0.01"
             className={`form-control ${errors.cost ? 'is-invalid' : ''}`}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            onKeyPress={handleKeyPress}
           />
           {errors.cost && <div className="invalid-feedback">{errors.cost}</div>}
         </div>
@@ -182,6 +221,9 @@ const EstateForm = ({ estate, onSubmit, onCancel }) => {
             step="0.01"
             min="0.01"
             className={`form-control ${errors.area ? 'is-invalid' : ''}`}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            onKeyPress={handleKeyPress}
           />
           {errors.area && <div className="invalid-feedback">{errors.area}</div>}
         </div>
@@ -194,6 +236,8 @@ const EstateForm = ({ estate, onSubmit, onCancel }) => {
             name="category"
             value={formData.category}
             onChange={handleChange}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
             className={`form-control ${errors.category ? 'is-invalid' : ''}`}
           >
             <option value="">Select category</option>
@@ -263,6 +307,9 @@ const EstateForm = ({ estate, onSubmit, onCancel }) => {
           name="description"
           value={formData.description}
           onChange={handleChange}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          onKeyPress={handleKeyPress}
           rows="5"
           className={`form-control ${errors.description ? 'is-invalid' : ''}`}
         />

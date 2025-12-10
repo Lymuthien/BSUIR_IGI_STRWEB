@@ -3,7 +3,7 @@ const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const Sale = require('../models/Sale');
 const Estate = require('../models/Estate');
-const Service = require('../models/Service');
+const { Service } = require('../models/Service');
 const { requireAuth, requireRole } = require('../middleware/auth');
 
 router.get('/', requireAuth, requireRole('employee', 'admin'), async (req, res) => {
@@ -70,9 +70,8 @@ router.get('/:id', requireAuth, async (req, res) => {
 
 router.post('/',
   requireAuth,
-  requireRole('employee', 'admin'),
   [
-    body('client').isMongoId(),
+    body('client').optional().isMongoId(),
     body('estate').isMongoId(),
     body('dateOfContract').optional().isISO8601(),
     body('dateOfSale').optional().isISO8601()
@@ -95,6 +94,29 @@ router.post('/',
         return res.status(400).json({ message: 'Estate is already sold' });
       }
 
+      // If client is not provided or user is not employee/admin, use current user as client
+      let clientId = client;
+      let employeeId = req.user._id;
+
+      // If user is client and didn't specify client, they're buying for themselves
+      if (req.user.role === 'client' && !client) {
+        clientId = req.user._id;
+        // For client purchases, employee will be null or we can assign a default employee
+        // For now, we'll use the client as employee (self-service purchase)
+        employeeId = req.user._id;
+      } else if (req.user.role === 'employee' || req.user.role === 'admin') {
+        // Employees/admins must specify a client
+        if (!client) {
+          return res.status(400).json({ message: 'Client is required for employee/admin sales' });
+        }
+        clientId = client;
+        employeeId = req.user._id;
+      } else {
+        // Default: client buying for themselves
+        clientId = req.user._id;
+        employeeId = req.user._id;
+      }
+
       let serviceCost = 0;
       if (estate.category) {
         const service = await Service.findById(estate.category);
@@ -103,12 +125,15 @@ router.post('/',
         }
       }
 
+      const totalCost = estate.cost + serviceCost;
+
       const saleData = {
-        client,
-        employee: req.user._id,
+        client: clientId,
+        employee: employeeId,
         estate: estateId,
         estateCost: estate.cost,
         serviceCost,
+        totalCost,
         dateOfContract: dateOfContract || new Date(),
         dateOfSale: dateOfSale || new Date()
       };

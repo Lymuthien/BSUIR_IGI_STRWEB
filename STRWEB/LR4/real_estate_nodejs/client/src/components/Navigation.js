@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import '../styles/Navigation.css';
 
-// Функциональный компонент с декларативной функцией
 function Navigation() {
   const { user, logout, isAuthenticated } = useAuth();
   const navigate = useNavigate();

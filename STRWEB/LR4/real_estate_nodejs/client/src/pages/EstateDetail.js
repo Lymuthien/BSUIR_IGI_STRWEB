@@ -1,12 +1,11 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { estatesAPI, reviewsAPI } from '../services/api';
+import { estatesAPI, reviewsAPI, salesAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import DateTimeDisplay from '../components/DateTimeDisplay';
 import { formatDateWithTimezone } from '../utils/dateUtils';
 import '../styles/EstateDetail.css';
 
-// Функциональный компонент для просмотра деталей объекта
 const EstateDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -23,6 +22,7 @@ const EstateDetail = () => {
   const [analyzingImage, setAnalyzingImage] = useState(false);
   const [imageAnalysis, setImageAnalysis] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [buying, setBuying] = useState(false);
 
   const loadEstate = useCallback(async () => {
     try {
@@ -96,6 +96,37 @@ const EstateDetail = () => {
     }
   };
 
+  const handleBuy = async () => {
+    if (!isAuthenticated) {
+      alert('Please login to purchase this property');
+      navigate('/login');
+      return;
+    }
+
+    if (estate.status !== 'available') {
+      alert(`This property is ${estate.status} and cannot be purchased`);
+      return;
+    }
+
+    if (!window.confirm(`Are you sure you want to purchase this property for $${estate.cost.toLocaleString()}?`)) {
+      return;
+    }
+
+    setBuying(true);
+    try {
+      await salesAPI.create({
+        estate: id
+        // client will be automatically set to current user on server
+      });
+      alert('Purchase successful! The property has been marked as sold.');
+      await loadEstate(); // Reload to show updated status
+    } catch (err) {
+      alert(err.response?.data?.message || err.response?.data?.errors?.[0]?.msg || 'Error purchasing property');
+    } finally {
+      setBuying(false);
+    }
+  };
+
   const handleImageSelect = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -109,13 +140,11 @@ const EstateDetail = () => {
       return;
     }
 
-    // If using existing image, check if estate has one
     if (useExisting && !estate.image) {
       alert('This estate has no image to analyze. Please upload an image first.');
       return;
     }
 
-    // If not using existing, check if new image selected
     if (!useExisting && !selectedImage) {
       alert('Please select an image first');
       return;
@@ -123,18 +152,15 @@ const EstateDetail = () => {
 
     setAnalyzingImage(true);
     try {
-      // If using existing image, send null, otherwise send the file
       const imageToAnalyze = useExisting ? null : selectedImage;
       const response = await estatesAPI.analyzeImage(id, imageToAnalyze);
       setImageAnalysis(response.data.analysis);
-      // Reload estate to get updated data
       await loadEstate();
     } catch (err) {
       alert(err.response?.data?.message || 'Error analyzing image. Make sure Google Vision API key is configured.');
     } finally {
       setAnalyzingImage(false);
       setSelectedImage(null);
-      // Reset file input
       const fileInput = document.getElementById('image-analyze-input');
       if (fileInput) fileInput.value = '';
     }
@@ -326,16 +352,36 @@ const EstateDetail = () => {
                 )}
               </div>
 
-              {canEdit && (
-                <div className="estate-actions mt-3">
-                  <Link to={`/estates/${id}/edit`} className="btn btn-primary">
-                    Edit Estate
-                  </Link>
-                  <button onClick={handleDelete} className="btn btn-danger">
-                    Delete Estate
+              <div className="estate-actions mt-3">
+                {canEdit && (
+                  <>
+                    <Link to={`/estates/${id}/edit`} className="btn btn-primary me-2">
+                      Edit Estate
+                    </Link>
+                    <button onClick={handleDelete} className="btn btn-danger me-2">
+                      Delete Estate
+                    </button>
+                  </>
+                )}
+                
+                {isAuthenticated && 
+                 user?.role === 'client' && 
+                 estate.status === 'available' && (
+                  <button 
+                    onClick={handleBuy} 
+                    className="btn btn-success btn-lg"
+                    disabled={buying}
+                  >
+                    {buying ? 'Processing...' : `Buy for $${estate.cost.toLocaleString()}`}
                   </button>
-                </div>
-              )}
+                )}
+                
+                {!isAuthenticated && estate.status === 'available' && (
+                  <Link to="/login" className="btn btn-success btn-lg">
+                    Login to Purchase
+                  </Link>
+                )}
+              </div>
             </div>
           </div>
 
