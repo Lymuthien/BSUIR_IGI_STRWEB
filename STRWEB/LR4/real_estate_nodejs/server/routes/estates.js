@@ -39,7 +39,7 @@ const upload = multer({
   }
 });
 
-// Get all estates (public - with search, sort, filter)
+
 router.get('/',
   [
     query('search').optional().trim(),

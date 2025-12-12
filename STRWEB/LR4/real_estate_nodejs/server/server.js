@@ -20,9 +20,9 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Session configuration
+
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'your-secret-key-change-in-production',
+  secret: process.env.SESSION_SECRET || 'secret-key-change-in-production',
   resave: false,
   saveUninitialized: false,
   cookie: {
@@ -32,17 +32,14 @@ app.use(session({
   }
 }));
 
-// Flash messages
+
 app.use(connectFlash());
 
-// Initialize Passport
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Serve static files (uploads)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Routes
 app.use('/api', require('./routes/index'));
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/estates', require('./routes/estates'));

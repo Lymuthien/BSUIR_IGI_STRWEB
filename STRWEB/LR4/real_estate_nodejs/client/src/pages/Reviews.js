@@ -68,7 +68,6 @@ const Reviews = () => {
     }
 
     try {
-      // Убираем поле estate, если оно пустое (сервер ожидает либо валидный ID, либо отсутствие поля)
       const submitData = { ...formData };
       if (!submitData.estate || submitData.estate.trim() === '') {
         delete submitData.estate;
